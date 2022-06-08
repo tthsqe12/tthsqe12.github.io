@@ -7,15 +7,6 @@ p {
 font-family: Garamond, serif;
 font-size:16
 }
-t {
-font-family: "Courier New", monospace;
-font-size:16;
-margin-left:auto;
-margin-right:auto;
-white-space: pre-wrap;
-word-wrap: break-word;
-width: 700px
-}
 tt {
 font-family: "Courier New", monospace;
 font-size:15;
@@ -24,13 +15,13 @@ font-size:15;
 </head>
 
 <body bgcolor="White">
-<table width="800" border="0" cellspacing="1" cellpadding="4" align="right" >
+<table width="900" border="0" cellspacing="1" cellpadding="4" align="right" >
 
 <p>
 Having grown up with Mathematica as my first programming language, it is only
 natural that I should want to tinker with the system now. Unfortunately, it is
 a proprietary system kept under the lock and key of WRI. The obvious solution
-to this problem is to program it again from the ground up! While I would have
+to this problem is to program it again from the ground up. While I would have
 used assembly language in the past for this endeavour, we can get things done
 a lot faster with C++, though not without some serious systemic performance
 problems in some corner cases.
@@ -103,11 +94,12 @@ Other features completely implemented from scratch:
 <ul>
 <li>
 A custom font renderer capable of rendering a full screen (with uncached glyphs)
-of text at about 20 frames per second. A custom renderer is needed because it is
+of text at about 20 frames per second. I chose a custom renderer because it is
 simpler than figuring out the right OS-specific interface for measuring the size
 of glyphs and drawing rotated characters, and then being disappointed with the
 quality of the results. It is also not trivial to figure out how to get an OS to
-draw square root symbols or curly brackets enclosing objects of arbitrary size.
+draw square root symbols or curly brackets enclosing objects of arbitrary size
+by stretching certain part of the glyphs.
 As some point is just easier to shade the darn pixels yourself.
 </li>
 <li>
@@ -716,7 +708,8 @@ related functions:
 
 Writing code like this is fun at first, but admittedly can get tiresome. As such
 <tt>asmcastle</tt> is not very far along: The parser is working and exceptions
-are used to signal a syntax error!
+are used to signal a syntax error, but there is no evaluation nor is there any
+arithmetic beyond integers.
 
 <h2 id="patternmatching">Pattern matching</h2>
 
@@ -746,7 +739,7 @@ boxes.
 <img src="boxsyntax.png">
 <p>
 The rotation boxes can be edited in real time, and of course,
-if the input is upside down, then the output is too!
+if the input is upside down, then the output is too.
 </p>
 <img src="rotation.png">
 
