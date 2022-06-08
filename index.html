@@ -65,7 +65,7 @@ functions, these notes are for you.
 
 <p>
 <a href="pfq_algorithms.pdf">Computing hypergeometric functions</a>
-This dicusses various ways of calculating the generalized hypergeometric
+This discusses various ways of calculating the generalized hypergeometric
 function to high precision for unrestricted values of the main argument.
 This includes discussions of the difficult cases such as calculating in
 high precision the example
@@ -84,9 +84,9 @@ These are my notes on this implementation.
 </p>
 
 <p>
-<a href="fft.pdf">Integer multiplication via Floating Point</a> How to
+<a href="fft.pdf">Integer multiplication via Floating Point</a> <i>aka</i> How to
 thoroughly beat GMP on modern processors at integer multiplication past sizes
-of a couple thousand bits.
+of a couple thousand bits. Might make it into FLINT once FLINT's build system is rewritten.
 </p>
 
 
@@ -96,23 +96,25 @@ This is my implementation of the pattern matching core of Mathematica.
 Of interest here is that, for a given natural number <tt>n</tt>, the snippet
 <pre>
     s = ReplaceList[ConstantArray[Pi, n], {x__..} :> {x}];
-    Assert[Union[Length/@s] === Divisors[n]];
-</pre>
+    Assert[Union[Length/@s] === Divisors[n]];</pre>
 runs in polynomial time, while WRI's implementation appears to have
 exponential running time.
 </p>
 
 <h2>Software</h2>
-
-
-
 <p>
-<a href="castle.html">Implementation of Mathematica's core</a> Of course I am
+<a href="castle.html">castle</a> Implementation of Mathematica's core. Of course I am
 not going to implement a function for querying the current wind direction,
 which, quite ironically, sums up modern software developement directions.
 Instead, this project does the core of the language including some fundamental
 algebraic operations. The control flow in this implementation is exceptional.
 Includes several C++ rants.
+</p>
+
+<p>
+<a href="https://oscar.computeralgebra.de/">OSCAR</a> This is a computer algebra
+system based on julia which I am actively supporting along with its
+ancillary packages.
 </p>
 
 <p>
