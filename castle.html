@@ -61,7 +61,7 @@ And, The Linux Edition was the first to be written, so it got called castle.
 Dependencies and external sources of code:
 <ul>
 <li>
-FLINT and arb, and therefore
+FLINT and Arb, and therefore
 </li>
 <li>
 GMP and MPFR
@@ -102,25 +102,26 @@ Other features completely implemented from scratch:
 </p>
 <ul>
 <li>
-A custom font renderer capable of rendering a full screen (with uncached gliphs)
+A custom font renderer capable of rendering a full screen (with uncached glyphs)
 of text at about 20 frames per second. A custom renderer is needed because it is
 simpler than figuring out the right OS-specific interface for measuring the size
-of gliphs and drawing rotated characters, and then being disappointed with the
+of glyphs and drawing rotated characters, and then being disappointed with the
 quality of the results. It is also not trivial to figure out how to get an OS to
 draw square root symbols or curly brackets enclosing objects of arbitrary size.
+As some point is just easier to shade the darn pixels yourself.
 </li>
 <li>
 A compiler for Mathematica patterns, which resemble regular expressions.
 </li>
 <li>
 The main evaluation loop and all of the supporting functions which constitute
-the interpreter for running the Mathematica language.
+the interpreter for running Mathematica.
 </li>
 <li>
 A serialization format, which is used to pass expressions between the kernel and the GUI.
 </li>
 <li>
-The appropriate wrappers of FLINT and ARB, so that polynomial factorization
+The appropriate wrappers of FLINT and Arb, so that polynomial factorization
 (<tt>Factor[x^2-y^2]</tt>) or calculation of pi (<tt>N[Pi,100]</tt>) is
 available at your finger tips as one-liners.
 </li>
