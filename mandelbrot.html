@@ -110,7 +110,7 @@ Finally, here are the branch cuts of the eighth term. Except for the ones on the
 <h2 id="invalid">Angle Pairings</h2>
 All rational angles with denominator 255:
 <img src="angle255.png">
-These angles pairings can be calculated using only simple rational arithmetic and the fact the rays \( Phi^{-1}(e^{2 \pi i \theta} (1,\infty))\) are disjoint for distinct (\ 0 \lt theta \lt 1 \).
+These angles pairings can be calculated using only simple rational arithmetic and the fact the rays \( \Phi^{-1}(e^{2 \pi i \theta} (1,\infty))\) are disjoint for distinct \( 0 \lt theta \lt 1 \).
 <pre>
 std::ostream& operator<<(std::ostream& s, mandel_frac x) {
    s << x.num << "/(2^" << x.period << "-1)";
@@ -124,8 +124,6 @@ mandel_frac next_frac(mandel_frac x, uword p)
    uword s = 0, t = 0;
    for (uword tt = 2; tt <= p; tt++) {
       uword ss = ui_cdiv(b*ui_pow2m1(tt)+1, ui_pow2m1(q));
-      // either nothing found previously: this is the best
-      //     or must be strictly less to replace, equality must be discarded to maintain minimal q
       if (t == 0 || ss*ui_pow2m1(t) < s*ui_pow2m1(tt)) {
          s = ss; t = tt;
       }
