@@ -30,6 +30,8 @@ There are many wrong formulas online and in software for calculating angles outs
 <a href="#preliminaries">Preliminaries</a>
 <br>
 <a href="#invalid">Invalid Formulas</a>
+<br>
+<a href="#anglepairs">Angle Pairing</a>
 </p>
 
 <h2 id="preliminaries">Preliminaries</h2>
@@ -107,10 +109,10 @@ Finally, here are the branch cuts of the eighth term. Except for the ones on the
 </p>
 <img src="level8.png">
 
-<h2 id="invalid">Angle Pairings</h2>
+<h2 id="anglepairs">Angle Pairings</h2>
 All rational angles with denominator 255:
 <img src="angle255.png">
-These angles pairings can be calculated using only simple rational arithmetic and the fact the rays \( \Phi^{-1}(e^{2 \pi i \theta} (1,\infty))\) are disjoint for distinct \( 0 \lt theta \lt 1 \).
+These angles pairings can be calculated using only simple rational arithmetic and the fact the rays \( \Phi^{-1}(e^{2 \pi i \theta} (1,\infty))\) are disjoint for distinct \( 0 \le \theta \lt 1 \).
 <pre>
 std::ostream& operator<<(std::ostream& s, mandel_frac x) {
    s << x.num << "/(2^" << x.period << "-1)";
