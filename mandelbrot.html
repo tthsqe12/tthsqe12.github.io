@@ -107,6 +107,61 @@ Finally, here are the branch cuts of the eighth term. Except for the ones on the
 </p>
 <img src="level8.png">
 
+<h2 id="invalid">Angle Pairings</h2>
+All rational angles with denominator 255:
+<img src="angle255.png">
+These angles pairings can be calculated using only simple rational arithmetic and the fact the rays \( Phi^{-1}(e^{2 \pi i \theta} (1,\infty))\) are disjoint for distinct (\ 0 \lt theta \lt 1 \).
+<pre>
+std::ostream& operator<<(std::ostream& s, mandel_frac x) {
+   s << x.num << "/(2^" << x.period << "-1)";
+   return s;
+}
+
+// find smallest y > x with y.period <= p
+mandel_frac next_frac(mandel_frac x, uword p)
+{
+   uword b = x.num, q = x.period;
+   uword s = 0, t = 0;
+   for (uword tt = 2; tt <= p; tt++) {
+      uword ss = ui_cdiv(b*ui_pow2m1(tt)+1, ui_pow2m1(q));
+      // either nothing found previously: this is the best
+      //     or must be strictly less to replace, equality must be discarded to maintain minimal q
+      if (t == 0 || ss*ui_pow2m1(t) < s*ui_pow2m1(tt)) {
+         s = ss; t = tt;
+      }
+   }
+   return mandel_frac(s, t);
+}
+
+mandel_frac out_frac_from_in(mandel_frac x)
+{
+   uword a = x.num, p = x.period;
+   if (p <= 2)
+      return mandel_frac(ui_pow2m1(p)-a, p);
+   else if (p == 3)
+      return mandel_frac(is_odd(a) ? a+1 : a-1, p);
+again:
+   x = next_frac(x, p);
+   if (x.period == p) return x;
+   x = out_frac_from_in(x);
+   goto again;
+}
+
+// find the fraction that is paired with x (x of period >= 2)
+mandel_frac find_frac_pair(mandel_frac x)
+{
+   uword p = x.period;
+   mandel_frac i(1, p), o(2, p);
+again:
+   if (i == x) return o;
+   if (o == x) return i;
+   CHECK(i < x);
+   i = next_frac(x < o ? i : o, p);
+   o = out_frac_from_in(i);
+   goto again;
+}
+</pre>
+
 </table>
 </body>
 </html>
