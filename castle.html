@@ -45,6 +45,8 @@ And, The Linux Edition was the first to be written, so it got called
 <br>
 <a href="#patternmatching">pattern matching</a>
 <br>
+<a href="#compiler">compiler</a>
+<br>
 <a href="#pic">screenshots</a>
 </p>
 
@@ -53,13 +55,7 @@ And, The Linux Edition was the first to be written, so it got called
 Dependencies and external sources of code:
 <ul>
 <li>
-FLINT and Arb, and therefore
-</li>
-<li>
-GMP and MPFR
-</li>
-<li>
-Kim Walisch's <a href="https://github.com/kimwalisch/primecount"> prime count</a>
+<s>FLINT and Arb, and therefore GMP and MPFR</s>
 </li>
 <li>
 Some symbol tables are stored with <a href="https://github.com/Tessil/hat-trie">a HAT-trie</a>
@@ -73,6 +69,8 @@ thrice the x-resolution and apply a simple filter to render on RGB display devic
 </ul>
 
 <p>
+This first point is important because these C libraries are not exception safe,
+and I would like the ability to safely abort a long running calculation.
 This last point is noticable on low resolution displays: If the pixels of these
 images line up with the pixels of your display device and you have an RGB format,
 then one of these images should appear crisper than the other. If not, then
@@ -715,14 +713,27 @@ arithmetic beyond integers.
 <h2 id="patternmatching">Pattern matching</h2>
 
 Mathematica patterns are essentially regular expressions applied to trees
-instead of plain old strings. My approach is described <a href="mma_patterns.pdf">here</a>
+instead of plain old strings. My approach is described <a href="mma_patterns.pdf">here</a>,
 and this is evidently completely different from WRI's approach.
 
-<h2 id="pic">Screenshots</h2>
+<h2 id="compiler">Expression Compiler</h2>
+Castle has had a compiler targeting its own internal byte code. This means that the code is still
+interpreted but that the interpretation is orders of magnitude faster than the main interpreter.
+For more speed, I am adding an x86-64 target. It is certainly possible to use llvm here, but it is
+much more fun to emit the machine code oneself. Since the compiler has to do type inference on
+Mathematica code anyways, much of SSA-based infrastructure for which one would use llvm already
+is present.
+<img src="compiler1.png">
+<img src="compiler2.png">
+<img src="compiler3.png">
+<img src="compiler4.png">
 
+<h2 id="pic">Screenshots</h2>
+<img src="screenshot1.png">
 <p>
-The algebra uses FLINT for the backend. The only downside here is that FLINT is not
-exception safe and there is no way to safely abort a calculation asynchronously.
+The very first version had poor man's bold and a rather primitive repl compared to the current
+version. The current version also treats spaces as multiplication, which is a big no-no, but
+for compatibility what are you going to do.
 </p>
 <img src="algebra.png">
 
@@ -756,6 +767,8 @@ The font system is completely custom-made and independent from the OS. The only
 OS-specific code is used for the piping to connect the kernel and GUI, and for
 the actual display of the bitmap to the screen.
 </p>
+<img src="sqrtnew.png">
+<!--
 <img src="format.png">
 <img src="sqrt.png">
 
@@ -770,7 +783,7 @@ Finally, we can have ray tracing in <tt>ContourPlot3D</tt>, though this one is
 slow even when the internal byte code is used for evaluation.
 </p>
 <img src="raytrace.png">
-
+-->
 </table>
 </body>
 </html>
