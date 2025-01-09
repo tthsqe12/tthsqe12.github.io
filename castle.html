@@ -729,8 +729,9 @@ must be present.
 <img src="compiler4.png">
 Here is a simple example of the internal byte code and two machine code targets. The "d3" and "d3diff"
 are calling conventions used by the ray tracer to evaluate <tt>f(x,y,z)</tt> and its gradient. The later
-is generated from the byte code rather than calling symbolic differentiation (<tt>D</tt>) since this allows
-for the easy differentiation of control flow constructs on which <tt>D</tt> does not operate.
+is generated from the byte code rather than from the result of symbolic differentiation (<tt>D</tt>).
+While this gives slightly larger code than expected in this simple example, it easily scales
+to loops and other control flow constructs on which <tt>D</tt> does not operate.
 <img src="compiler5.png">
 
 <h2 id="pic">Screenshots</h2>
