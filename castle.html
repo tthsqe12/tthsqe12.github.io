@@ -719,14 +719,19 @@ and this is evidently completely different from WRI's approach.
 <h2 id="compiler">Expression Compiler</h2>
 Castle has had a compiler targeting its own internal byte code. This means that the code is still
 interpreted but that the interpretation is orders of magnitude faster than the main interpreter.
-For more speed, I am adding an x86-64 target. It is certainly possible to use llvm here, but it is
+Directly targeting x86-64 can give more speed. It is certainly possible to use llvm here, but it is
 much more fun to emit the machine code oneself. Since the compiler has to do type inference on
 Mathematica code anyways, much of SSA-based infrastructure for which one would use llvm already
-is present.
+must be present.
 <img src="compiler1.png">
 <img src="compiler2.png">
 <img src="compiler3.png">
 <img src="compiler4.png">
+Here is a simple example of the internal byte code and two machine code targets. The "d3" and "d3diff"
+are calling conventions used by the ray tracer to evaluate <tt>f(x,y,z)</tt> and its gradient. The later
+is generated from the byte code rather than calling symbolic differentiation (<tt>D</tt>) since this allows
+for the easy differentiation of control flow constructs on which <tt>D</tt> does not operate.
+<img src="compiler5.png">
 
 <h2 id="pic">Screenshots</h2>
 <img src="screenshot1.png">
