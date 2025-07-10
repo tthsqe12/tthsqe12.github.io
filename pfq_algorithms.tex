@@ -48,6 +48,7 @@
 \newcommand{\FF}[6] {{}_{#1}{#2}_{#3} \left( \begin{array}{c} #4 \\ #5 \end{array} \Big| {#6}  \right)}
 \newcommand{\FFs}[6] {{}_{#1}{#2}_{#3} ( \begin{smallmatrix} #4 \\ #5 \end{smallmatrix} | {#6}  )}
 \newcommand{\FFe}[7] {{}_{#1}^{\,}{#2}_{#3}^{#4} \left( \begin{array}{c} #5 \\ #6 \end{array} \Big| {#7} \right)}
+\newcommand{\FFes}[7] {{}_{#1}^{\,}{#2}_{#3}^{#4} ( \begin{smallmatrix} #5 \\ #6 \end{smallmatrix} | {#7} )}
 \newcommand{\FFf}[5] {{}_{#1}{#2}_{#3} \left(#4 | {#5} \right)}
 \newcommand{\FFef}[6] {{}_{#1}^{\,}{#2}_{#3}^{#4} \left(#5 | {#6} \right)}
 
@@ -1041,7 +1042,7 @@ The formulas of the previous sections give the exact formulas
 \op{logH}(x) &= (\tfrac{1}{2}x^2+\tfrac{1}{2}x+\tfrac{1}{12}) \log x - \tfrac{1}{4} x^2 +\tfrac{1}{12} - \zeta'(-1) + \int_{0}^{\infty} \frac{-2t+2x \arctan( \tfrac{t}{x}) + t \log(1 + \tfrac{t^2}{x^2})}{\ee^{2\pi t}-1} \dd t\text{.}
 \end{align*}
 
-\subsubsection{Formulas for $\gamma = 0.577 \dots$}
+\subsection{Formulas for $\gamma = 0.577 \dots$}
 First, a simple derivation of a fact that follows from a limiting case of \eqref{entirerecp}
  and \eqref{equ_pUq_as_hyp} to $\FFf{2}{F}{2}{1,1;2,2}{z}$:
 \begin{theorem}
@@ -1099,27 +1100,36 @@ q-1 & \text{if }q \mid n\\
 \end{align*}
 \end{corollary}
 
-\section{Complete elliptic integral evaluations}
-With $F(z) = {}_2 F_1 (\frac12, \frac12; 1; z)$,
+\section{Tables}
+\begin{gather*}
+\FFs{4}{F}{3}{a,b,c-a,c-b}{\frac12, \frac{c}{2}, \frac{c+1}{2}}{\tfrac{z^2}{4(z-1)}} = (1-z)^a \FFs{2}{F}{1}{a,c-b}{c}{z} \FFs{2}{F}{1}{a,b}{c}{z} =  \FFes{2}{F}{1}{-}{a,b}{c}{\tfrac{z}{z-1}} \FFs{2}{F}{1}{a,b}{c}{z}
+\end{gather*}
+\subsection{Complete elliptic integral evaluations}
+In this section, set $F(z) = {}_2 F_1 (\frac12, \frac12; 1; z)$. We have
+\begin{align*}
+\FFs{2}{F}{1}{\frac14,\frac14}{1}{z} &= F(\tfrac12 - \tfrac{\sqrt{1-z}}{2})\text{,}\\
+\FFs{2}{F}{1}{\frac14,\frac34}{1}{z} &= (1-z)^{-1/4}F(\tfrac12 - \tfrac{1}{2\sqrt{1-z}})
+\end{align*}
 \begin{equation*}
-\frac{1}{\pi^2} \iint_0^{\pi} \tfrac{\dd u \dd v} {1 - a \cos u - b \cos v - c \cos u \cos v} = \tfrac{1}{\sqrt{1+a-b+c}\sqrt{1-a+b+c}} F(1-\tfrac{(1+a+b-c)(1-a-b-c)}{(1+a-b+c)(1-a+b+c)})
+\frac{1}{\pi^2} \iint_0^{\pi} \tfrac{\dd u \, \dd v} {1 - a \cos u - b \cos v - c \cos u \cos v} = \tfrac{1}{\sqrt{1+a-b+c}\sqrt{1-a+b+c}} F(1-\tfrac{(1+a+b-c)(1-a-b-c)}{(1+a-b+c)(1-a+b+c)})
 \end{equation*}
 \begin{equation*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \dd v \dd w} {1 - a \cos u \cos v \cos w} =  F(\tfrac{1-\sqrt{1-a^2}}{2})^2 = F(\tfrac{a}{2}\tfrac{\sqrt{1+a}-\sqrt{1-a}}{\sqrt{1+a}+\sqrt{1-a}})^2
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos u \cos v \cos w} =  F(\tfrac{1-\sqrt{1-a^2}}{2})^2 = F(\tfrac{a}{2}\tfrac{\sqrt{1+a}-\sqrt{1-a}}{\sqrt{1+a}+\sqrt{1-a}})^2
 \end{equation*}
-This last equation has the corollary
+This last equation is equivalent to
 $\FFs{3}{F}{2}{\frac12,\frac12,\frac12}{1,1}{z} = F(\tfrac{1 -\sqrt{1-z}}{2})^2$
 \begin{gather*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \dd v \dd w} {1 - a \cos v \cos w - b \cos u \cos w} =  F(\tfrac{1+a^2-b^2-\sqrt{(1-a^2+b^2)^2-4b^2}}{2})F(\tfrac{1-a^2-b^2-\sqrt{(1-a^2+b^2)^2-4b^2}}{2})\\
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - b \cos u \cos w} = \prod_{\pm} F(\tfrac{1 \pm a^2 \mp b^2-\sqrt{(1-a^2+b^2)^2-4b^2}}{2})\\
 = F(a\tfrac{\sqrt{1+a-b}\sqrt{1+a+b}-\sqrt{1-a-b}\sqrt{1-a+b}}{\sqrt{1+a-b}\sqrt{1+a+b}+\sqrt{1-a-b}\sqrt{1-a+b}})F(b\tfrac{\sqrt{1-a+b}\sqrt{1+a+b}-\sqrt{1-a-b}\sqrt{1+a-b}}{\sqrt{1-a+b}\sqrt{1+a+b}+\sqrt{1-a-b}\sqrt{1+a-b}})
 \end{gather*}
 This last equation has the corollary
 $\FFs{4}{F}{3}{\frac14,\frac14,\frac34,\frac34}{\frac12,1,1}{z} = F(\tfrac{1+\sqrt{-z} -\sqrt{1-z}}{2})F(\tfrac{1-\sqrt{-z} -\sqrt{1-z}}{2})$
 \begin{gather*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \dd v \dd w} {1 - a \cos v \cos w - b \cos u \cos w - b \cos u \cos v} = \tfrac{1}{1+a} \prod_{\pm} F(\tfrac{1}{2}-\tfrac{(1-a)\sqrt{(1-a)^2-4b^2}}{2(1+a)^2} \pm \tfrac{2\sqrt{a^2+a b^2}}{(1+a)^2})
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - \frac12 b \cos u \cos w - \frac12 b \cos u \cos v} = \tfrac{1}{1+a} \prod_{\pm} F(\tfrac{1}{2}-\tfrac{(1-a)\sqrt{(1-a)^2-b^2}}{2(1+a)^2} \pm \tfrac{\sqrt{4a^2+a b^2}}{(1+a)^2})
 \end{gather*}
 \begin{gather*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \dd v \dd w} {1 - a \cos u - b \cos v - b \cos w} = ?
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos u - \frac12 b \cos v - \frac12 b \cos w} = \tfrac{2\sqrt{1+x}\sqrt{b^2+a^2 x}}{\sqrt{2b^2 + 2b^2 x + a^2 x^2 + 2b \sqrt{1+x}\sqrt{b^2+b^2 x + a^2 x^2}}} \prod_{\pm} F(1-\tfrac{2b}{b+\sqrt{1+x}\sqrt{b^2+b^2 x+a^2 x^2} \pm x \sqrt{b^2+ a^2 x}}) \text{,}\\
+x = \tfrac{1-a^2+b^2 - \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}{1+a^2-b^2 + \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}
 \end{gather*}
 
 
