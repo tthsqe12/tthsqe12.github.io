@@ -154,7 +154,7 @@ Maybe start with
 \Head{2}{F}{1} \ArgS{a,b}{c}{z} \\ z \frac{\partial}{\partial z} \Head{2}{F}{1}\ArgS{a,b}{c}{z}
 \end{pmatrix}
  = \sum_{n=0}^{\infty}
-\prod_{k=1}^{n-1}
+\prod_{k=0}^{n-1}
 \tfrac{(k+a)(k+b)z}{(k+1)(k+c)}
 \begin{pmatrix}
 1 & 0 \\
@@ -174,7 +174,7 @@ This should give
 \Head{2}{F}{1} \ArgS{a,b}{c}{z} \\ z \frac{\partial}{\partial z} \Head{2}{F}{1}\ArgS{a,b}{c}{z}
 \end{pmatrix}
  = \sum_{n=0}^{\infty}
-\prod_{k=1}^{n-1}
+\prod_{k=0}^{n-1}
 \tfrac{(k+a)(k+b)z}{(k+1)(2k+c)(2k+c+1)}
 \begin{pmatrix}
 k+c & 1 \\
