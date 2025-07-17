@@ -142,13 +142,30 @@ u_{n+1} = \tfrac{2(2b-c)(n+a)}{(n+1)(n+c)} u_n + (1-\tfrac{2(1-2a+c)(n+a)}{(n+1)
 \end{equation*}
 
 \begin{theorem}
-Gosper's $f_k \to \Head{2}{F}{1}(a,b;c|z)$ is correct for $|\frac{z^2}{4(z-1)}|<1$.
+Gosper's $f_k \to \Head{2}{F}{1}(a,b;c|z)$ is correct for $\max(|\frac{z}{4}|,|\frac{z^2}{4z-4}|)<1$.
 \end{theorem}
 \begin{remark}
-The convergence criterion and iteration should be compared with Theorem \ref{thm_4e3_2e1_2e1}.
+Fateman cites Gosper claiming that $d_k$ and $e_k$ approach zero like $|\frac{z^2}{4z-4}|^k$, but this is not correct as $\frac{z}{4}$ needs to be thrown in as well. Compare Theorem \ref{thm_4e3_2e1_2e1}.
 \end{remark}
-\begin{proof}(sketch)
-Maybe start with
+\begin{proof}
+Gosper's 1974 ``Acceleration of Series'' adapted to matrcies: For sequences $A_{k,n}, B_{k,n}, S_{k,n}$ satisfying
+\begin{align*}
+\sum_{n \ge 0} A_{k,n} B_{k,n} &= \sum_{n \ge 0} A_{k,n} (B_{k,n}-S_{k,n}) + A_{k,n} S_{k,n}\\
+&= A_{k,0} S_{k,0} + \sum_{n \ge 0} A_{k,n} (B_{k,n}-S_{k,n}) + A_{k,n+1} S_{k,n+1}\\
+&=: A_{k,0} S_{k,0} + \sum_{n \ge 0} A_{k+1,n} B_{k+1,n}\text{,}
+\end{align*}
+iterating this last equality produces $\sum_{n \ge 0} A_{0,n} B_{0,n} = \sum_{k \ge 0} A_{k,0} S_{k,0}$. In the hypergeometric case, the $B_{k,n}$ will be simple and we would like the `right' ratio $R_{k,n} := A_{k,n}^{-1} A_{k,n+1}$ and the `up' ratio $U_{k,n} := A_{k,n}^{-1} A_{k+1,n}$ to be rational in $n$ and $k$. As long as the following relations hold, these ratios unique define $A_{k,n}$ given $A_{0,0}$ and the sum identity holds.
+\begin{align*}
+R_{k,n} U_{k,n+1} &= U_{k,n} R_{k+1,n}\\
+U_{k,n} B_{k+1,n} &= B_{k,n} - S_{k,n} + R_{k,n}S_{k,n+1}\text{.}
+\end{align*}
+We are looking for solutions with $R_{0,n} = \frac{(n+a)(n+b)z}{(n+1)(n+c)} (\begin{smallmatrix}
+1 & 0 \\
+0 & 1
+\end{smallmatrix})$ and $B_{0,n} = (\begin{smallmatrix}
+1 \\
+n
+\end{smallmatrix})$ since
 \begin{equation*}
 \begin{pmatrix}
 \Head{2}{F}{1} \ArgS{a,b}{c}{z} \\ z \frac{\partial}{\partial z} \Head{2}{F}{1}\ArgS{a,b}{c}{z}
@@ -156,36 +173,48 @@ Maybe start with
  = \sum_{n=0}^{\infty}
 \prod_{k=0}^{n-1}
 \tfrac{(k+a)(k+b)z}{(k+1)(k+c)}
-\begin{pmatrix}
-1 & 0 \\
-k+1 & 0
-\end{pmatrix}
-\cdot \begin{pmatrix}
+\cdot \left(\begin{smallmatrix}
 1 \\
-0
-\end{pmatrix}\text{,}
+n
+\end{smallmatrix}\right)\text{.}
 \end{equation*}
-...
-adapt Gosper's ``Acceleration of Series'' to matrices
-...
-This should give
+A brute force search turns up with the unique
+\begin{align*}
+R_{k,n} &= \tfrac{(n+k+a)(n+k+b)z}{(n+k+1)(n+2k+c)} (\begin{smallmatrix}
+1 & 0 \\
+0 & 1
+\end{smallmatrix})\text{,}\\
+B_{k,n} &= (\begin{smallmatrix}
+1 \\
+n+k
+\end{smallmatrix})\text{,}\\
+U_{k,n} &= \tfrac{(k+n+a)(k+n+b)z}{(k+n+1)(2k+n+c)(2k+n+c+1)}
+\left(\begin{smallmatrix}
+k+c & 1 \\
+\tfrac{a b z}{1-z} & \tfrac{(k+c-a-b)z}{z-1}
+\end{smallmatrix}\right)\text{,}\\
+S_{k,n} &= \left(\begin{smallmatrix}
+1 \\
+\tfrac{(n+k)((k+c-a-b)z-2k-n-c)-a b z}{(2k+n+c)(z-1)}
+\end{smallmatrix}\right)\text{,}
+\end{align*}
+which gives a final sum written on $n$ ($\sum_{n=0}^{\infty} A_{n,0}S_{n,0}$) as
 \begin{equation*}
 \begin{pmatrix}
 \Head{2}{F}{1} \ArgS{a,b}{c}{z} \\ z \frac{\partial}{\partial z} \Head{2}{F}{1}\ArgS{a,b}{c}{z}
-\end{pmatrix}
- = \sum_{n=0}^{\infty}
+\end{pmatrix} = \sum_{n=0}^{\infty}
 \prod_{k=0}^{n-1}
 \tfrac{(k+a)(k+b)z}{(k+1)(2k+c)(2k+c+1)}
-\begin{pmatrix}
+\left(\begin{smallmatrix}
 k+c & 1 \\
-\frac{a b z}{1-z} & \frac{(k+c-a-b)z}{z-1}
-\end{pmatrix}
-\cdot \begin{pmatrix}
+\tfrac{a b z}{1-z} & \tfrac{(k+c-a-b)z}{z-1}
+\end{smallmatrix}\right)
+\cdot \left(\begin{smallmatrix}
 1 \\
-\tfrac{n((n+c-b-a)z-(2n+c))-a b z}{(2n+c)(z-1)}
-\end{pmatrix}\text{,}
+\tfrac{n((n+c-b-a)z-2n-c)-a b z}{(2n+c)(z-1)}
+\end{smallmatrix}\right)\text{.}
 \end{equation*}
-and also shows that starting with $d_0=1, e_0=0$ results in $f_k \to z \frac{\partial}{\partial z} \Head{2}{F}{1}(a,b;c|z)$.
+The convergence is established by the term in the $k$-product being $(\frac{z}{4}, 0; 0,\frac{z^2}{4z-4})+ O(\frac{1}{k})$. This last equation also shows that starting with $d_0=1, e_0=0$ results in $f_k \to z \frac{\partial}{\partial z} \Head{2}{F}{1}(a,b;c|z)$.
 \end{proof}
 
 \subsection{near one}
