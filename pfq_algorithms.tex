@@ -12,6 +12,13 @@
 \addtolength{\voffset}{-1.0in}
 
 \usepackage{bbm}
+\newcommand{\ee}[0] {\mathbbm{e}}
+\newcommand{\ii}[0] {\mathbbm{i}}
+\newcommand{\dd}[0] {\mathbbm{d}}
+\newcommand{\one}[0] {\mathbbm{1}}
+%\newcommand{\ee}[0] {e}
+%\newcommand{\ii}[0] {i}
+%\newcommand{\dd}[0] {d}
 
 
 \newcommand{\op}[1]  { \operatorname{ #1 }}
@@ -27,11 +34,6 @@
 \newcommand{\gok}[0]  { \mathfrak{k}}
 \newcommand{\goe}[0]  { \mathfrak{e}}
 
-\newcommand{\ee}[0] {\mathbbm{e}}
-\newcommand{\ii}[0] {\mathbbm{i}}
-\newcommand{\dd}[0] {\mathbbm{d}}
-%\newcommand{\ee}[0] {e}
-%\newcommand{\ii}[0] {i}
 
 
 \numberwithin{equation}{section}
@@ -48,9 +50,18 @@
 
 \newcommand{\Head}[3] {{}_{#1}{#2}_{#3}}
 \newcommand{\Arg}[3] {\left( \begin{array}{c} #1 \\ #2 \end{array} \Big| {#3}  \right)}
-\newcommand{\ArgS}[3] {( \begin{smallmatrix} #1 \\ #2 \end{smallmatrix} | {#3})} 
+\newcommand{\ArgS}[3] {( \begin{smallmatrix} #1 \\ #2 \end{smallmatrix} | {#3})}
 
 \newcommand{\ArgKS}[1] {\ArgS{\frac12,\frac12}{1}{#1}}
+
+\newcommand{\HypJ}[2] {F_{#1}(#2)}
+\newcommand{\HypJreg}[2] {{\tilde{F}}_{#1}(#2)}
+
+\newcommand{\TwoHead}[3] {{#1}_{#3}^{#2}}
+\newcommand{\TwoArgS}[8] {( \begin{smallmatrix} #1 \\ #2 \end{smallmatrix} | \begin{smallmatrix} #3 \\ #4 \end{smallmatrix} | \begin{smallmatrix} #5 \\ #6 \end{smallmatrix} | {#7}, {#8})}
+
+\newcommand{\HypFfourS}[6] {\TwoHead{F}{2 0}{0 1} \ArgS{{#1},{#2};;}{;{#3};{#4}}{{#5},{#6}}}
+\newcommand{\HypFfour}[6] {\TwoHead{F}{2 0}{0 1}   \Arg{{#1},{#2};;}{;{#3};{#4}}{{#5},{#6}}}
 
 \newcommand{\FF}[6] {{}_{#1}{#2}_{#3} \left( \begin{array}{c} #4 \\ #5 \end{array} \Big| {#6}  \right)}
 \newcommand{\FFs}[6] {{}_{#1}{#2}_{#3} ( \begin{smallmatrix} #4 \\ #5 \end{smallmatrix} | {#6}  )}
@@ -75,7 +86,9 @@
 \begin{document}
 \maketitle
 
-\abstract{The generalized hypergeometric function $\FFf{p}{F}{q}{\bfa; \bfb}{z}$ is susceptible to various numerical evaluation techniques. Here we attempt to give effective strategies for unrestricted $z$ while restricting the parameters so that $||\bfa||+||\bfb||$ does not exceed the roughly the working bit precision. The problem of large parameters is \emph{not} considered, and the techiniques considered are rigorous, that is, they produce a proven enclosure of the value of the function.}
+%\abstract{The generalized hypergeometric function $\FFf{p}{F}{q}{\bfa; \bfb}{z}$ is susceptible to various numerical evaluation techniques. Here we attempt to give effective strategies for unrestricted $z$ while restricting the parameters so that $||\bfa||+||\bfb||$ does not exceed the roughly the working bit precision. The problem of large parameters is \emph{not} considered, and the techiniques considered are rigorous, that is, they produce a proven enclosure of the value of the function.}
+
+%\tableofcontents
 
 \section{Definitions}
 For $\mathbf{a}=a_1,\dots,a_p$ and  $\mathbf{b}=b_1,\dots,b_q$, set $(a)_n := \Gamma(a+n)/\Gamma(a)$ and $(\mathbf{a})_n := \prod_i (a_i)_n$ and define
@@ -96,6 +109,20 @@ $\sigma = \Sigma(\mathbf{b}) - \Sigma(\mathbf{a})$ is also relevent when $d \ge 
 Since functions accept numbers and not points on Riemann surfaces, we will use ${}_p F_{q} = {}_p F_{q}^{+}$ to denote the usual branch with continuity from below $\mathbb{R}_{+}$ and ${}_p^{\,} F_{q}^{-}$ for the non-standard continuity from above $\mathbb{R}_{+}$. For example, $\Head{1}{F}{0}^{-}(a|z) = (-1/z)^a (1-1/z)^{-a}$ and $\FFs{2}{F}{1}{a,b}{c}{z} = (1-z)^{-a} \FFes{2}{F}{1}{-}{a,c-b}{c}{\tfrac{z}{z-1}}$. Whenever a possibly infinite quantity $\Gamma(a_i-a_j)$ appears in a formula \footnote{that is, when the list $\bfa$ has duplicates modulo $\mathbb{Z}$} that formula should be interpreted via a limiting case of the general formula. Also, $\hat{\mathbf{a}}_i$ denotes the length $p-1$ vector with the $i^{\text{th}}$ entry omitted.
 
 The imaginary unit is denoted by $\ii = \sqrt{-1}$, and $\ee = 2.718\dots$ is Euler's number.
+
+\subsection{more functions}
+The bilateral series $\Head{p}{H}{q}$ is defined in Section \ref{section_bilateral}, and $G$ denotes the standard Meijer $G$-function. The series
+\begin{equation*}
+\sum_{m,n=0}^{\infty} \frac{(\bfa)_{m+n}(\bfa')_{m}(\bfa'')_{n}}{(\bfb)_{m+n}(\bfb')_{m}(\bfb'')_{n}} \frac{x^m}{m!} \frac{y^n}{n!}
+\end{equation*}
+will be notated as $\TwoHead{F}{p,p',p''}{q,q',q''} \ArgS{\bfa;\bfa';\bfa''}{\bfb;\bfb';\bfb''}{x,y}$ and the omission of $p''$ and $q''$ means that $p''=p'$ and $q''=q'$. The definition of these sums outside of their region of absolute convergence will be unspecified, but in the case of Appell's four functions, the following integral representations are a good start.
+\begin{align*}
+\TwoHead{F}{11}{10} \ArgS{a;b_1;b_2}{c;;}{x,y} &=\\
+&=\\
+\TwoHead{F}{11}{01} \ArgS{a;b_1;b_2}{;c_1;c_2}{x,y} &=\\
+\TwoHead{F}{02}{10} \ArgS{;a_1,b_1;a_2,b_2}{c;;}{x,y} &=\\
+\TwoHead{F}{20}{01} \ArgS{a,b;;}{;c_1;c_2}{x(1-y),y(1-x)} &=
+\end{align*}
 
 \section{The case $d=0$}
 Here we have several usual transcendental functions, rational possibilities, and algebraic possibilities.
@@ -128,7 +155,13 @@ The hypergeometric function can be evaluated non-rigorously near the the unit ci
 \end{equation}
 However, since computation of the $u_n$s is a bit expensive, it should only be used when absolutely neccessary. Furthermore, the convergence rate is only acceptable sufficiently far away from the branch cut $[1,\infty]$. The algebraic prefactor is not strictly necessary but there is good reason for it. It is present in many quadratic transformation formulas in special cases and has the effect of lowering the order of the recurrence relation for $u_n$ from $2p-1$ to $2p-2$.
 
-For $\Head{2}{F}{1}$, Fateman cites Gosper giving $f_k \to \Head{2}{F}{1}(a,b;c|z)$ (but no error bound) with 
+\subsubsection{$\Head{2}{F}{1}$}
+First of all, the $u_n$ in \eqref{balanced_anywhere} with $a_p:=a$ are bounded as $u_n \ll n^{2a+2b-2c-1} + n^{2a-2b-1}$ and satisfy
+\begin{equation*}
+u_0 = 1\text{,} \quad u_1 = \tfrac{4ab}{c}-2a\text{,} \quad 
+u_{n+1} = \tfrac{2(2b-c)(n+a)}{(n+1)(n+c)} u_n + (1-\tfrac{2(1-2a+c)(n+a)}{(n+1)(n+c)}) u_{n-1}\text{.}
+\end{equation*}
+Next, Fateman cites Gosper giving $f_k \to \Head{2}{F}{1}(a,b;c|z)$ (but no error bound) with 
 \begin{equation*}
 \begin{aligned}
 d_0 = 0\text{,} \quad d_{k+1} & = \tfrac{(k+a)(k+b)z}{(k+1)(2k+c)(2k+c+1)}(e_k-(k+c-b-a)\tfrac{z}{1-z} d_k)\\
@@ -136,11 +169,6 @@ e_0 =1\text{,} \quad e_{k+1} & = \tfrac{(k+a)(k+b)z}{(k+1)(2k+c)(2k+c+1)}(\tfrac
 f_0 = 0\text{,} \quad f_{k+1} &= f_{k} + e_k - \tfrac{k((k+c-b-a)z-(2k+c))-a b z}{(2k+c)(1-z)} d_k
 \end{aligned}
 \end{equation*}
-However, \eqref{balanced_anywhere} is not much different as the $u_n$ (with $a_p:=a$) satisfy $u_0 = 1$, $u_1 = \frac{4ab}{c}-2a$ and
-\begin{equation*}
-u_{n+1} = \tfrac{2(2b-c)(n+a)}{(n+1)(n+c)} u_n + (1-\tfrac{2(1-2a+c)(n+a)}{(n+1)(n+c)}) u_{n-1}\text{.}
-\end{equation*}
-
 \begin{theorem}
 Gosper's $f_k \to \Head{2}{F}{1}(a,b;c|z)$ is correct for $\max(|\frac{z}{4}|,|\frac{z^2}{4z-4}|)<1$.
 \end{theorem}
@@ -154,7 +182,7 @@ Gosper's 1974 ``Acceleration of Series'' adapted to matrcies: For sequences $A_{
 &= A_{k,0} S_{k,0} + \sum_{n \ge 0} A_{k,n} (B_{k,n}-S_{k,n}) + A_{k,n+1} S_{k,n+1}\\
 &=: A_{k,0} S_{k,0} + \sum_{n \ge 0} A_{k+1,n} B_{k+1,n}\text{,}
 \end{align*}
-iterating this last equality produces $\sum_{n \ge 0} A_{0,n} B_{0,n} = \sum_{k \ge 0} A_{k,0} S_{k,0}$. In the hypergeometric case, the $B_{k,n}$ will be simple and we would like the `right' ratio $R_{k,n} := A_{k,n}^{-1} A_{k,n+1}$ and the `up' ratio $U_{k,n} := A_{k,n}^{-1} A_{k+1,n}$ to be rational in $n$ and $k$. As long as the following relations hold, these ratios unique define $A_{k,n}$ given $A_{0,0}$ and the sum identity holds.
+iterating this last equality produces $\sum_{n \ge 0} A_{0,n} B_{0,n} = \sum_{k \ge 0} A_{k,0} S_{k,0}$. In the hypergeometric case, the $B_{k,n}$ will be simple and we would like the `right' ratio $R_{k,n} := A_{k,n}^{-1} A_{k,n+1}$ and the `up' ratio $U_{k,n} := A_{k,n}^{-1} A_{k+1,n}$ to be rational in $n$ and $k$. As long as the following relations hold, these ratios uniquely define $A_{k,n}$ given $A_{0,0}$ and the sum identity holds.
 \begin{align*}
 R_{k,n} U_{k,n+1} &= U_{k,n} R_{k+1,n}\\
 U_{k,n} B_{k+1,n} &= B_{k,n} - S_{k,n} + R_{k,n}S_{k,n+1}\text{.}
@@ -178,7 +206,7 @@ n
 n
 \end{smallmatrix}\right)\text{.}
 \end{equation*}
-A brute force search turns up with the unique
+A brute force search turns up with the solution
 \begin{align*}
 R_{k,n} &= \tfrac{(n+k+a)(n+k+b)z}{(n+k+1)(n+2k+c)} (\begin{smallmatrix}
 1 & 0 \\
@@ -217,15 +245,65 @@ k+c & 1 \\
 The convergence is established by the term in the $k$-product being $(\frac{z}{4}, 0; 0,\frac{z^2}{4z-4})+ O(\frac{1}{k})$. This last equation also shows that starting with $d_0=1, e_0=0$ results in $f_k \to z \frac{\partial}{\partial z} \Head{2}{F}{1}(a,b;c|z)$.
 \end{proof}
 
+Since the $A_{0,n}$ is actually a function of the real variable $n$, the series acceleration formula can be differentiated with respect to $n$ \footnote{more appropriately viewed as differentiating $\Sigma_{n \ge m} {A_{k,n} B_{k,n}} = \Sigma_{j \ge k} {A_{j,m} S_{j,m}}$ with respect to $m$}, and this accelerates limiting cases of the $\Head{2}{F}{1}$. With $\psi = \logG'$, define
+\begin{align*}
+\partial_k \Head{2}{F}{1}\ArgS{a,b}{c}{z} := \sum_{k=0}^{\infty} \partial_k \tfrac{(a)_k (b)_k}{(c)_k k!} z^k = \sum_{k=0}^{\infty} \tfrac{(a)_k (b)_k}{(c)_k k!} z^k(\log z + \psi(a+k) + \psi(b+k) - \psi(c+k)- \psi(1+k))\text{.}
+\end{align*}
+With $t=\log z + \psi(a) + \psi(b) - \psi(c)- \psi(1)$ and everything modulo $\Lambda^2$, the usual way to compute this with radius of convergence $|z|<1$ is
+\begin{equation*}
+\Head{2}{F}{1}(z) + \partial_k \Head{2}{F}{1}(z) \Lambda = (1+t\Lambda)
+\sum_{n=0}^{\infty}
+\prod_{k=0}^{n-1} \tfrac{(k+a)(k+b)z}{(k+c)(k+1)} (1+
+(\tfrac{1}{k+a} + \tfrac{1}{k+b} - \tfrac{1}{k+c} - \tfrac{1}{k+1})\Lambda)\text{,}
+\end{equation*}
+and the tangent-augmented series acceleration formula is (note $\partial_k$ and $z\frac{\partial}{\partial z}$ do commute)
+\begin{equation*}
+\begin{gathered}
+\begin{pmatrix}\Head{2}{F}{1}(z) + \partial_k \Head{2}{F}{1}(z) \Lambda \\
+z\frac{\partial}{\partial z}\Head{2}{F}{1}(z) + \partial_k z\frac{\partial}{\partial z}\Head{2}{F}{1}(z) \Lambda
+\end{pmatrix}
+ = (1+t\Lambda)\sum_{n=0}^{\infty}
+\prod_{k=0}^{n-1}
+\tfrac{(k+a)(k+b)z}{(k+1)(2k+c)(2k+c+1)}(1+(\tfrac{1}{k+a}+\tfrac{1}{k+b}-\tfrac{1}{k+1}-\tfrac{1}{2k+c}-\tfrac{1}{2k+c+1})\Lambda)
+\\
+\left(\begin{smallmatrix}
+k+c & 1 \\
+\tfrac{a b z}{1-z} & \tfrac{(k+c-a-b)z}{z-1}
+\end{smallmatrix}\right)
+\cdot \left(\begin{smallmatrix}
+1 \\
+\tfrac{n((n+c-b-a)z-2n-c)-a b z}{(2n+c)(z-1)} + \left(\tfrac{1}{1-z} + \tfrac{(n+c-a)(n+c-b)z}{(2n+c)^2(z-1)}\right)\Lambda
+\end{smallmatrix}\right)\text{.}
+\end{gathered}
+\end{equation*}
+
+
 \subsection{near one}
 This is the most interesting case as the function can fail to be defined at one. The existence of $F(1)$ is determined by $\Re(\sigma)> 0$. If $\sigma$ is not an integer we have
 \begin{equation}
 \label{nearone}
 \FF{p}{F}{p-1}{\mathbf{a}}{\mathbf{b}}{1-z} = \sum_{n=0}^{\infty} u_n \left(\begin{array}{c} \mathbf{a}\\\mathbf{b}\end{array} \right) z^{\sigma+n} + \sum_{n=0}^{\infty} v_n \left(\begin{array}{c} \mathbf{a}\\\mathbf{b}\end{array} \right) z^n
 \end{equation}
-with the $u_1,u_2,\dots$ determined from a recurrence by $u_0 = \Gamma(-\sigma)\Gamma(\mathbf{b})/\Gamma(\mathbf{a})$ and the $v_{p-1}, v_p, \dots$ are determined from a recurrence of order $p-1$ by $v_0, \dots, v_{p-2}$. Thus, the difficulty is computing these $v_0, \dots, v_{p-2}$. Gauss derived $v_0 = \Gamma(\sigma)\Gamma(b_1)/\Gamma(b_1-\bfa)$ when $p=2$.
+with the $u_1,u_2,\dots$ determined from a recurrence of order $p-1$ by $u_0 = \Gamma(-\sigma)\Gamma(\mathbf{b})/\Gamma(\mathbf{a})$ and the $v_{p-1}, v_p, \dots$ are determined from a recurrence of order $p-1$ by $v_0, \dots, v_{p-2}$. Thus, the difficulty is computing these $v_0, \dots, v_{p-2}$. Gauss derived $v_0 = \Gamma(\sigma)\Gamma(b_1)/\Gamma(b_1-\bfa)$ when $p=2$.
 
 If $\sigma$ is an integer, then at most one $\log(z)$ enters into the series.
+
+\subsubsection{$\Head{2}{F}{1}$}
+This needs special treatment as it serves as a base case for larger $p$. The value at $1$ is known in this case:
+\begin{equation*}
+\Head{2}{F}{1} \ArgS{a,b}{c}{1} = \tfrac{\Gamma(c)\Gamma(c-a-b)}{\Gamma(c-a)\Gamma(c-b)} \quad \text{ follows from } \Head{2}{F}{1} \ArgS{a,b}{c}{z} = \tfrac{\Gamma(c)}{\Gamma(b)\Gamma(c-b)} \int_0^1 t^{b-1} (1-t)^{c-b-1} (1-t z)^{-a} \dd t\text{.}
+\end{equation*}
+$\sigma$ is $c-a-b$. We know from the differential equation that the $u_n$ and $v_n$ series in \eqref{nearone} are hypergeometric. Furthermore, as function of $a,b,c$, the two functions $u_0$ and $v_0$ are analytic where the three hypergeometric function are. The value at $z=0$ determines $v_0$ for $\Re \sigma > 0$ which must hold everywhere by continuation. The value of $u_0$ similarly falls out from multiplying both sides by $z^{-\sigma}$, using $z^{a+b-c} \Head{2}{F}{1}(a,b;c|1-z) = \Head{2}{F}{1}(c-a,c-b;c|1-z)$, and again evaluating at $z=0$. In total,
+\begin{equation*}
+\Head{2}{F}{1} \ArgS{a,b}{c}{1-z} = \tfrac{\Gamma(c)\Gamma(-\sigma)}{\Gamma(a)\Gamma(b)} z^{\sigma} \Head{2}{F}{1} \ArgS{c-a,c-b}{1+\sigma}{z} + \tfrac{\Gamma(c)\Gamma(\sigma)}{\Gamma(c-a)\Gamma(c-b)} \Head{2}{F}{1} \ArgS{a,b}{1-\sigma}{z}\text{.}
+\end{equation*}
+When $\sigma=\pm n$ is an integer, the limiting case takes the form
+\begin{equation*}
+\Head{2}{F}{1} \ArgS{a,b}{c}{1-z} = \begin{cases} \tfrac{\Gamma(c)\Gamma(n)}{\Gamma(a)\Gamma(b)} z^{-n} \sum_{k=0}^{n-1} \tfrac{(c-a)_k(c-b)_k}{(1-n)_k k!} z^k - \tfrac{(-1)^{n}}{n!} \tfrac{\Gamma(c)}{\Gamma(c-a)\Gamma(c-b)} \partial_k \Head{2}{F}{1} \ArgS{a,b}{1+n}{z}\text{,} &\sigma = -n\\
+\tfrac{\Gamma(c)\Gamma(n)}{\Gamma(c-a)\Gamma(c-b)} \sum_{k=0}^{n-1} \tfrac{(a)_k(b)_k}{(1-n)_k k!} z^k - \tfrac{(-1)^{n}}{n!} \tfrac{\Gamma(c)}{\Gamma(a)\Gamma(b)} z^n \partial_k \Head{2}{F}{1} \ArgS{c-a,c-b}{1+n}{z}\text{,} &\sigma = +n
+\end{cases}
+\text{.}
+\end{equation*}
 
 \subsubsection{generic approach}
 We simply evaluate Equation \eqref{nearone} and its derivatives up to and including order $p-1$ at $z=1/4$ to solve for the $u_0,v_0,\dots,v_{p-2}$. The explicit formula for $u_0$ is surprisingly useless in this approach.
@@ -400,13 +478,13 @@ and approximately $|z|^{1/3}$ terms have to be summed before the terms start to 
 \label{entirerecp}
 \begin{alignedat}{1}
 \FF{p}{F}{q}{\mathbf{a}}{\mathbf{b}}{z}&\overset{?}{=}\sum_{i=1}^{p} \frac{\Gamma(\mathbf{b}) \Gamma(\hat{\mathbf{a}}_i-a_i)}{\Gamma(\hat{\mathbf{a}}_i)\Gamma(\mathbf{b}-a_i)} (-z)^{-a_i} \FF{q+1}{F}{p-1}{a_i,1+a_i-\mathbf{b}}{1+a_i-\hat{\mathbf{a}}_i}{\frac{(-1)^d}{z}}\\
-&+\sum_{\zeta^d=1} c_{\zeta} \frac{\Gamma(\mathbf{b})}{d^{\frac{1}{2}} (2 \pi )^{\frac{d-1}{2}} \Gamma(\mathbf{a})} \ee^{d \zeta z^{1/d}}(\zeta z^{1/d})^{\frac{d-1}{2}-\sigma} \left(1+\frac{u_1}{\zeta z^{1/d}}+\frac{u_2}{\zeta^2 z^{2/d}}+\cdots\right)\text{,}
+&+\sum_{\zeta^d=1} c_{\zeta} \frac{\Gamma(\mathbf{b})}{d^{\frac{1}{2}} (2 \pi )^{\frac{d-1}{2}} \Gamma(\mathbf{a})} \ee^{d \zeta z^{1/d}}(\zeta z^{1/d})^{\frac{d-1}{2}-\sigma} \left(1+\frac{u_1}{d \zeta z^{1/d}}+\frac{u_2}{d^2 \zeta^2 z^{2/d}}+\cdots\right)\text{,}
 \end{alignedat}
 \end{equation}
 which consists of $q+1$ divergent series, might useful (recall that $p+d=q+1$). The first $p$ series are hypergeometric and $1/d$--Borel summable. The last $d$ series in $z^{-1/d}$ are $1$--Borel summable, and the coefficients $u_i$, which are polynomials in $\mathbf{a}$ and $\mathbf{b}$, satisfy recurrences of order $q$ with $u_0=1$ sufficient to define the whole sequence. According to E. M. Wright in ``The Asymptotic Expansion of the Generalized Hypergeometric Function'', $c_{1}=1$ and the $u_i$ may also be defined by
 \begin{equation*}
 \frac{(2 \pi )^{\frac{d-1}{2}} d^{\frac{d-1}{2}-\sigma
-   }}{d^{\frac12} d^{dn}n!}\frac{(\bfa)_n}{(\bfb)_n} \sim \sum_{i=0}^{\infty}\frac{d^i u_i}{\Gamma \left(1+d
+   }}{d^{\frac12} d^{dn}n!}\frac{(\bfa)_n}{(\bfb)_n} \sim \sum_{i=0}^{\infty}\frac{u_i}{\Gamma \left(1+d
    n-\frac{d-1}{2}+\sigma+i\right)}\text{,} \quad n \to \infty\text{.}
 \end{equation*}
 
@@ -415,9 +493,9 @@ Since just one term ($\zeta=1$) on the right hand side of \eqref{entirerecp} is 
 \subsection{the function ${}_p U_q$}
 The resummation of the divergent series $\Sigma_n u_n z^n$ starts with the function $\hat{U}(\xi) = \sum_{n=0}^{\infty} u_n \xi^n/n!$ with non-zero radius of convergence. Any singularity of $\hat{U}(\xi)$ stands in the way of resumming $\Sigma_n u_n z^n$. With $\xi \partial_{\xi}$ on the left, the differential equation for $\hat{U}(\xi)$ has the form
 \begin{equation*}
-\sum_{i=0}^{q+1} (\xi \partial_\xi)^i \Phi_{i}(\xi)\hat{U}(\xi) = 0\text{,} \quad \text{ where } \quad \xi \Phi_{q+1}(\xi) = (\xi-d)^p ((\xi-d)^d-(-d)^d)\text{.}
+\sum_{i=0}^{q+1} (\xi \partial_\xi)^i \Phi_{i}(\xi)\hat{U}(\xi) = 0\text{,} \quad \text{ where } \quad \xi \Phi_{q+1}(\xi) = (\xi-1)^p ((\xi-1)^d-(-1)^d)\text{.}
 \end{equation*}
-Thus there are $p+d-1$ singularities at the center or on the perimeter of the circle centered at $\xi=d$ with a radius of $d$, and we have the following lemma with $\theta$ defined as
+Thus there are $p+d-1$ singularities at the center or on the perimeter of the circle centered at $\xi=1$ with a radius of $1$, and we have the following lemma with $\theta$ defined as
 \begin{equation*}
 \theta := \begin{cases}
 \frac{\pi}{2} + \frac{\pi}{d}\text{,} & d > 1\\
@@ -438,7 +516,7 @@ For a direction $\omega$ chosen so that $\Re \omega > 0$ and $|\arg(-z \omega)| 
 \end{equation*}
 defines an analytic function on $\mathbb{C} \setminus \mathbb{R}_{+}$ such that for any $\zeta$ with $\zeta^d=1$ a solution of the hypergeometric differential equation is given by
 \begin{equation*}
-f_{\zeta}(z) := \ee^{d \zeta z^{1/d}} (\zeta z^{1/d})^{\frac{d-1}{2}-\sigma} \FF{p}{U}{q}{\bfa}{\bfb}{\frac{1}{\zeta z^{1/d}}}\text{.}
+f_{\zeta}(z) := \ee^{d \zeta z^{1/d}} (\zeta z^{1/d})^{\frac{d-1}{2}-\sigma} \FF{p}{U}{q}{\bfa}{\bfb}{\frac{1}{d \zeta z^{1/d}}}\text{.}
 \end{equation*}
 \end{lemma}
 The parameter symmetries in the following lemma indicate that a more symmetric defintion of the $U(z)$ series is in order. For now we keep the $(\bfa ; \bfb)$ of the original hypergeometric differential equation, but a notation where the following symmetry is self-evident would be more desirable.
@@ -451,10 +529,10 @@ Set $\sigma_i = \Sigma\bfb^i-\Sigma\bfa^i$ so that $\sigma_1 = \sigma$ and $\sig
 \begin{gather*}
 \FF{p}{U}{q}{\bfa}{\bfb}{z} \sim 1+ \left(\frac{(d-1)(d-11)}{24 d}+\frac{\sigma _1}{d}+\frac{\sigma _1^2}{2
    d}-\frac{\sigma
-   _2}{2}\right)z\\
+   _2}{2}\right)d z\\
 +\left(\frac{(d-1)\left(d^3-23 d^2+359 d-769\right)}{1152 d^2} +\frac{\left(d^2-24 d+47\right) \sigma _1}{24d^2} + \frac{\left(d^2-12 d+95\right) \sigma _1^2}{48d^2} \right.\\
 \left. -\frac{\left(d^2-12 d+47\right) \sigma_2}{48 d}+\frac{5\sigma_1^3}{6d^2}-\frac{\sigma_1 \sigma_2}{d}+\frac{\sigma_3}{6}+ \frac{\sigma _1^4}{8 d^2}-\frac{\sigma_1^2 \sigma _2}{4d}+\frac{\sigma
-   _2^2}{8}\right)z^2+\cdots\text{.}
+   _2^2}{8}\right)d^2 z^2+\cdots\text{.}
 \end{gather*}
 \end{lemma}
 
@@ -462,8 +540,8 @@ Set $\sigma_i = \Sigma\bfb^i-\Sigma\bfa^i$ so that $\sigma_1 = \sigma$ and $\sig
 We have $\FFf{0}{U}{2}{\tfrac{1}{3},\tfrac{2}{3}}{z}=1$ and the following approximation of the size of the discontinuity in $\FFf{0}{U}{2}{\tfrac{1}{3},\tfrac{1}{2}}{z}$, with a plot of the imaginary part of $U(z)$ shown below.
 \begin{equation*}
 \frac{\FFf{0}{U}{2}{\tfrac{1}{3},\tfrac{1}{2}}{x-\epsilon \ii}-\FFf{0}{U}{2}{\tfrac{1}{3},\tfrac{1}{2}}{x+ \epsilon \ii}}{2\ii} \sim \begin{cases}
-\ee^{-\frac{9}{2x}} \sin \left(\frac{2 \pi }{9}-\frac{3 \sqrt{3}}{2 x}\right)\text{,} & x \text{ small}\\
-\frac{1}{4} \Gamma\left(\frac{2}{3}\right) \sqrt{\frac{3}{\pi }} \, x^{1/6}\text{,} & x \text{ large}
+\ee^{-\frac{3}{2x}} \sin \left(\frac{2 \pi }{9}-\frac{\sqrt{3}}{2 x}\right)\text{,} & x \text{ small}\\
+\frac{\sqrt{\pi} (3x)^{1/6}}{2\Gamma(\frac13)} \text{,} & x \text{ large}
 \end{cases}\text{,} \quad x > 0.
 \end{equation*}
 \begin{center}
@@ -630,7 +708,7 @@ Now, since the $F_{\beta}(z)$ are either entire or have simple prefactors as $z$
 \label{entirerecp2}
 \begin{alignedat}{1}
 \FF{p}{F}{q}{\mathbf{a}}{\mathbf{b}}{z}&=\sum_{i=1}^{p} \frac{\Gamma(\mathbf{b}) \Gamma(\hat{\mathbf{a}}_i-a_i)}{\Gamma(\hat{\mathbf{a}}_i)\Gamma(\mathbf{b}-a_i)} (-z)^{-a_i} \FFe{q+1}{F}{p-1}{-}{a_i,1+a_i-\mathbf{b}}{1+a_i-\hat{\mathbf{a}}_i}{\frac{(-1)^d}{z}}\\
-&+\sum_{\zeta^d=1} c^{(\pm)} (\zeta |\bfa; \bfb) \frac{\Gamma(\mathbf{b})}{d^{\frac{1}{2}} (2 \pi )^{\frac{d-1}{2}} \Gamma(\mathbf{a})} \ee^{d \zeta z^{1/d}}(\zeta z^{1/d})^{\frac{d-1}{2}-\sigma} \FFe{p}{U}{q}{-}{\bfa}{\bfb}{\frac{1}{\zeta z^{1/d}}}\text{,}
+&+\sum_{\zeta^d=1} c^{(\pm)} (\zeta |\bfa; \bfb) \frac{\Gamma(\mathbf{b})}{d^{\frac{1}{2}} (2 \pi )^{\frac{d-1}{2}} \Gamma(\mathbf{a})} \ee^{d \zeta z^{1/d}}(\zeta z^{1/d})^{\frac{d-1}{2}-\sigma} \FFe{p}{U}{q}{-}{\bfa}{\bfb}{\frac{1}{d\zeta z^{1/d}}}\text{,}
 \end{alignedat}
 \end{equation}
 and this is the correct form of \eqref{entirerecp}. The $c^{(\pm)}(\zeta)$ here are interesting combinatorial exponential sums: with the even integer $\ell$ determined uniquely as before from $\pi \ell = \mp d \arg(\zeta^{\mp1})$, they are
@@ -650,7 +728,7 @@ Lemma \ref{lamma_minimal_asmp} gives integral representations of the the $d$ asy
 \begin{gather*}
 \int_{-\ii \infty}^{+\ii \infty} \frac{\Gamma(1-(1,\bfb)-s)}{\Gamma(1-\bfa-s)} \ee^{\pm j \pi s} (-z)^s \frac{\dd s}{2\pi \ii} = 
 \ee^{\pm \pi \ii \operatorname{sgn}(j-\frac{1}{2}) (\frac{d-1}{2}-\sigma)} d^{-\frac{1}{2}} (2\pi)^{\frac{d-1}{2}} \times \\
-\ee^{d \zeta z^{1/d}}(\zeta z^{1/d})^{\frac{d-1}{2}-\sigma} \FFe{p}{U}{q}{-}{\bfa}{\bfb}{\frac{1}{\zeta z^{1/d}}}\text{,}
+\ee^{d \zeta z^{1/d}}(\zeta z^{1/d})^{\frac{d-1}{2}-\sigma} \FFe{p}{U}{q}{-}{\bfa}{\bfb}{\frac{1}{d\zeta z^{1/d}}}\text{,}
 \end{gather*}
 and the $p$ algebraic asymptotic solutions are given by
 \begin{gather*}
@@ -697,15 +775,15 @@ The bad situation near $z<0$ can be illustrated explicitly by continuing with th
 \label{optimized}
 \begin{aligned}
 \FFf{0}{F}{2}{\tfrac{1}{3},\tfrac{1}{2}}{-x^3} &= \frac{\Gamma\left(\frac{1}{3}\right)}{\sqrt{3 \pi }} \ee^{3 x/2} x^{1/6} \cos \left(\frac{\pi}{18} + \frac{3 \sqrt{3}
-   x}{2}\right)\frac{U(-\ee^{-2 \pi \ii/3}/x)+U(-\ee^{2 \pi \ii/3}/x)}{2}\\
+   x}{2}\right)\frac{U(-\ee^{-2 \pi \ii/3}/(3x))+U(-\ee^{2 \pi \ii/3}/(3x))}{2}\\
 &+\frac{\Gamma\left(\frac{1}{3}\right)}{\sqrt{3 \pi }} \ee^{3 x/2} x^{1/6} \sin \left(\frac{\pi }{18} + \frac{3 \sqrt{3}
    x}{2}\right)
-   \frac{U(-\ee^{-2\pi \ii/3}/x)-U(-\ee^{2\pi \ii/3}/x)}{2\ii}\\
- &+\frac{\sqrt{3}}{2} \frac{\Gamma\left(\frac{1}{3}\right)}{\sqrt{3 \pi }} \ee^{-3x} x^{1/6} U(-1/x)
+   \frac{U(-\ee^{-2\pi \ii/3}/(3x))-U(-\ee^{2\pi \ii/3}/(3x))}{2\ii}\\
+ &+\frac{\sqrt{3}}{2} \frac{\Gamma\left(\frac{1}{3}\right)}{\sqrt{3 \pi }} \ee^{-3x} x^{1/6} U(-1/(3x))
 \text{.}
 \end{aligned}
 \end{equation}
-What is to be gained from rewritting the formula this way? First, since the two fractions involving $U$ are just the real and imaginary parts of $U$, each of the three terms on the right hand side is a real number. Second, since $U(z) \sim 1-\frac{1}{108}z + \cdots$, it is clear that, as long as the value of the cosine is not too small, a good relative approximation for $x$ large is given by
+What is to be gained from rewritting the formula this way? First, since the two fractions involving $U$ are just the real and imaginary parts of $U$, each of the three terms on the right hand side is a real number. Second, since $U(z) \sim 1-\frac{1}{36}z + \cdots$, it is clear that, as long as the value of the cosine is not too small, a good relative approximation for $x$ large is given by
 \begin{equation*}
 \FFf{0}{F}{2}{\tfrac{1}{3},\tfrac{1}{2}}{-x^3} \approx \frac{\Gamma\left(\frac{1}{3}\right)}{\sqrt{3 \pi }} e^{3 x/2} x^{1/6}
    \cos \left(\frac{\pi }{18} + \frac{3 \sqrt{3}
@@ -768,7 +846,7 @@ G(z) = \sum_{j=1}^{m} \frac{\Gamma(\hat{\bfbeta}_j - b_j)\Gamma(1+b_j-\bfalpha)}
 and this is useful if $|z|$ is not too large. We need the asymptotic expansion of $G(z)$ for large $z$. What is interesting here is that the poles of $\Gamma(1-\bfalpha+s)$ do not even give a hint of the correct algebraic portion; we have from \eqref{entirerecp2},
 \begin{align*}
 G((-1)^{p-m-n}z) &= \sum_{i=1}^{n} \frac{h_{i}^{(\pm)}(\bfalpha, \bfgamma; \bfbeta, \bfdelta)}{(2\pi \ii)^{p-n} } \frac{\Gamma(a_i-\hat{\bfa}_i)\Gamma(1-a_i+\bfbeta)}{\Gamma(a_i-\bfdelta)} (-z)^{a_i-1}\FF{q}{F}{p-1}{1-a_i+\bfb}{1-a_i+\hat{\bfa}_i}{\frac{(-1)^{d}}{z}}\\
-&+\sum_{\zeta^d=1} \frac{g_{\zeta}^{(\pm)}(\bfalpha, \bfgamma; \bfbeta, \bfdelta)}{d^{\frac{1}{2}} (2\pi)^{\frac{d-1}{2}} (2\pi \ii)^{1+p-m-n}} \ee^{d \zeta z^{1/d}}(\zeta z^{1/d})^{\Sigma \bfb - \Sigma \bfa - \frac{d-1}{2}} \FF{p}{U}{q-1}{1+b_j-\bfa}{1+b_j-\hat{\bfb}_j}{\frac{1}{\zeta z^{1/d}}}\text{,}
+&+\sum_{\zeta^d=1} \frac{g_{\zeta}^{(\pm)}(\bfalpha, \bfgamma; \bfbeta, \bfdelta)}{d^{\frac{1}{2}} (2\pi)^{\frac{d-1}{2}} (2\pi \ii)^{1+p-m-n}} \ee^{d \zeta z^{1/d}}(\zeta z^{1/d})^{\Sigma \bfb - \Sigma \bfa - \frac{d-1}{2}} \FF{p}{U}{q-1}{1+b_j-\bfa}{1+b_j-\hat{\bfb}_j}{\frac{1}{d\zeta z^{1/d}}}\text{,}
 \end{align*}
 where the ${}_p U_{q-1}$s on the right hand side are independent of the choice of $j$ (Lemma \ref{lemma_pUq_inv}), and the $h_i$ and $g_{\zeta}$ are entire functions of the parameters.
 \begin{align*}
@@ -809,6 +887,7 @@ The function is in general discontinuous on the unit circle. The expansion \eqre
 
 
 \section{Bilateral series}
+\label{section_bilateral}
 The F series is a sum over Half of the integers. Accordingly, there is an H series which sums over the Full set of integers: we have ${}_p H_q(\bfa; \bfb|z)$ defined as the formal sum of $z^n (\bfa)_n/(\bfb)_n$ over \emph{all} $n$. Specifically,
 \begin{equation*}
 \FF{p}{H}{q}{\bfa}{\bfb}{z} := \FF{p+1}{F}{q}{\bfa,1}{\bfb}{z}-1 + \FFe{q+1}{F}{p}{-}{1-\bfb,1}{1-\bfa}{\frac{(-1)^{p-q}}{z}} \text{,}
@@ -836,6 +915,676 @@ Assuming we are on the side of the branch cut where $\log(z-1) = \pm \pi i + \lo
 &+ \Gamma(-\sigma) z^{\sigma} \left(\frac{\Gamma(b_1)\Gamma(b_2)}{\Gamma(a_1)\Gamma(a_2)} + \ee^{\mp \pi \ii \sigma} \frac{\Gamma(1-b_1)\Gamma(1-b_2)}{\Gamma(1-a_1)\Gamma(1-a_2)} + O(z)\right)\text{.}
 \end{align*}
 
+
+
+\section{Identities}
+
+Set $\HypJ{a}{z} := \Head{0}{F}{1} \ArgS{}{a}{z}$
+
+\subsection{integrals and series}
+
+\begin{equation*}
+\frac{\frac{\partial^n}{\partial z^n} z^{a-1+n}(1-z)^{b-a+n}}{z^{a-1}(1-z)^{b-a}} = (a)_n \, \Head{2}{F}{1} \ArgS{-n,b+n}{a}{z}
+\end{equation*}
+
+\begin{equation*}
+\int_0^1 \Head{2}{F}{1} \ArgS{-m,b+m}{a}{z} \Head{2}{F}{1} \ArgS{-n,b+n}{a}{z} \, z^{a-1}(1-z)^{b-a} \dd z = \tfrac{\Gamma (a)^2 \Gamma(b-a+1+n) n!}{(b+2 n) \Gamma (a+n) \Gamma(b+n)} \one_{m=n}
+\end{equation*}
+
+\begin{theorem}
+\begin{align*}
+\tfrac{(1-y)^{b-a}}{(1-x-y)^b} &= \sum_{n=0}^{\infty} \tfrac{(a)_n y^n}{n!} \Head{2}{F}{1} \ArgS{-n,b}{a}{\tfrac{-x}{y}}\\
+\tfrac{(1-x)^{a-b}(1-y)^{1-a}}{1-x-y} &= \sum_{n=0}^{\infty} \tfrac{(a)_n (y-x)^n}{n!} \Head{2}{F}{1} \ArgS{-n,b+n}{a}{\tfrac{x(y-1)}{y-x}}\\
+\Head{2}{F}{1} \ArgS{c,b-c}{a}{x} \Head{2}{F}{1} \ArgS{c,b-c}{1+b-a}{y} &= \sum_{n=0}^{\infty} \tfrac{(b-c)_n (c)_n (y-x)^n}{(1-a+b)_n n!} \Head{2}{F}{1} \ArgS{-n,b+n}{a}{\tfrac{x(y-1)}{y-x}}\\
+\HypFfourS{a}{b}{c_1}{c_2}{x(1-y)}{y(1-x)} &= \sum_{n=0}^{\infty} \tfrac{(a)_n (b)_n (y-x)^n}{(c_2)_n n!} \Head{2}{F}{1} \ArgS{-n,c_1+c_2-1+n}{c_1}{\tfrac{x(y-1)}{y-x}}
+\end{align*}
+\end{theorem}
+
+\begin{theorem}
+\begin{equation*}
+(1 - \ee^{\ii \theta} \tfrac{v}{u})^{a-1}
+\HypJreg{a}{-(u-\ee^{\ii\theta}v)(u-\ee^{-\ii\theta}v)}  = \sum_{m=-\infty}^{\infty} u^m v^m \ee^{m \ii \theta} \HypJreg{a+m}{-u^2} \HypJreg{1+m}{-v^2}\text{,} \quad |\ee^{\pm \ii \theta} \tfrac{v}{u}| < 1
+\end{equation*}
+\begin{equation*}
+\HypJ{1+a}{-(u-\ee^{\ii\theta}v)(u-\ee^{-\ii\theta}v)} = \sum_{m=0}^{\infty} \tfrac{(2a)_m u^m v^m}{(a)_m (1+a)_m m!} \HypJ{1+a+m}{-u^2} \HypJ{1+a+m}{-v^2} \Head{2}{F}{1} \ArgS{-m,2a+m}{\frac{1}{2} + a}{\tfrac{1-\cos \theta}{2}}
+\end{equation*}
+\end{theorem}
+
+\begin{theorem}
+\begin{align*}
+\tfrac{\Gamma(a+b-1)}{\Gamma(a)\Gamma(b)} \HypJ{a}{u} \HypJ{b}{v} &= \frac{1}{2 \pi \ii}\int_{-1}^{(0+)} t^{-b} (1+t)^{a+b-2} \HypJ{a+b-1}{\tfrac{(1+t)(ut+v)}{t}} \dd t\text{,} \quad 1 < \Re\, a+b\\
+&= \frac{1}{\pi} \int_{-\frac{\pi}{2}} ^{\frac{\pi}{2}} \ee^{(a-b) \ii \theta} (2 \cos \theta)^{a+b-2} \HypJ{a+b-1}{2\cos \theta (\ee^{\ii \theta} u + \ee^{-\ii \theta} v)} \dd \theta \\
+\tfrac{\Gamma(\frac12)\Gamma(a-\frac12)}{\Gamma(a)} \HypJ{a}{-u^2} \HypJ{a}{-v^2}& = \int_{0}^{\pi} \sin(\theta)^{2a-2} \HypJ{a}{-(u-\ee^{\ii\theta}v)(u-\ee^{-\ii\theta}v)} \dd \theta \text{,} \quad 1 < \Re \, a\\
+\tfrac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)} \HypJ {a+b}{u+v} &= \int_{0}^{1} t^{a-1}(1-t)^{b-1} \HypJ{a}{u t} \HypJ{b}{v(1-t)} \dd t \text{,} \quad 0 < \Re \, a, \Re\, b
+\end{align*}
+\end{theorem}
+
+\begin{theorem}
+\begin{align*}
+\int_{0}^{\infty} \ee^{-z t} \HypJ{a}{u t} t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{1}{F}{1}\ArgS{s}{a}{\tfrac{u}{z}})\\
+\int_{0}^{\infty} \ee^{-z t} \HypJ{a}{u t} \HypJ{b}{u t} t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{3}{F}{3}\ArgS{\frac{a+b}{2},\frac{a+b-1}{2},s}{a,b,a+b-1}{\tfrac{4u}{z}})\\
+\int_{0}^{\infty} \ee^{-z t} \Head{2}{F}{0}(a,b|\tfrac{-1}{t}) t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{2}{F}{1} \ArgS{a,b}{1-s}{z}+\tfrac{\Gamma (-s) \Gamma (a+s) \Gamma (b+s)}{\Gamma (a) \Gamma(b)} \Head{2}{F}{1}\ArgS{a+s,b+s}{1+s}{z}\\
+&= \tfrac{\Gamma(b-a) \Gamma(a+s)}{\Gamma(b)} z^{-a-s} \Head{2}{F}{1}\ArgS{a,a+s}{1+a-b}{\tfrac{1}{z}} + \tfrac{\Gamma(a-b)\Gamma (b+s)}{\Gamma (a)} z^{-b-s} \Head{2}{F}{1}\ArgS{b,b+s}{1+b-a}{\tfrac{1}{z}}
+\end{align*}
+\end{theorem}
+
+
+\begin{theorem}
+For $d \in \{0, \frac12\}$,
+\begin{align*}
+\HypJ{a}{- \alpha t} t^{s-1} &= \mathcal{M}_s^{-1}[\alpha^{-s} \tfrac{\Gamma(s) \Gamma(a)}{\Gamma(a-s)}](t)\text{,}\\
+\tfrac{2}{\pi} K_v(4 z^{1/4}) + \ee^{2 \pi \ii  d} Y_v(4z^{1/4}) &=
+\csc \pi  v \, (2^{-v} z^{-v/4} (\HypJreg{1-v}{4\sqrt{z}}-e^{2 i \pi  d} \HypJreg{1-v}{-4   \sqrt{z}})\\
+& \quad \quad \quad \quad - 2^v z^{v/4} (\HypJreg{1+v}{4 \sqrt{z}} - \ee^{2 \pi \ii  d} \cos \pi  v  \HypJreg {1+v}{-4\sqrt{z}}))\\
+&= \mathcal{M}_s^{-1}[\tfrac{\Gamma(\frac{1}{2}-d+s-\frac{v}{4}) \Gamma(\frac12-d+s+\frac{v}{4}) \Gamma(d+s+\frac{v}{4})}{\Gamma(1-d-s+\frac{v}{4})^2 \Gamma(d+s-\frac{v}{4})}](z)\text{,}\\
+\tfrac{2}{\pi}  \cos \tfrac{\pi  v}{2} K_v(4 z^{1/4}) + \ee^{2 \pi \ii  d} (\cos \tfrac{\pi  v}{2} Y_v(4z^{1/4}) &+ \sin \tfrac{\pi  v}{2} J_v(4z^{1/4}))\\
+&=
+\tfrac12 \csc \tfrac{\pi  v}{2} \, (2^{-v} z^{-v/4} (\HypJreg{1-v}{4\sqrt{z}}-e^{2 i \pi  d} \HypJreg{1-v}{-4   \sqrt{z}})\\
+&\quad \quad \quad \quad \quad - 2^v z^{v/4} (\HypJreg{1+v}{4 \sqrt{z}} - \ee^{2 \pi \ii  d}  \HypJreg {1+v}{-4\sqrt{z}}))\\
+&= \mathcal{M}_s^{-1}[\tfrac{\Gamma(\frac{1}{2}-d+s-\frac{v}{4}) \Gamma(\frac12-d+s+\frac{v}{4})}{\Gamma(1-d-s-\frac{v}{4}) \Gamma(1-d-s+\frac{v}{4})}](z)\text{.}
+\end{align*}
+\end{theorem}
+
+\begin{theorem}
+For $0 < \Re \, s$,
+\begin{equation*}
+\int_{0}^{\infty} \HypJ{a}{-\alpha t} \HypJ{b}{-\beta t} t^{s-1} \dd t = 
+\begin{cases}
+\alpha^{-s}\tfrac{\Gamma(s) \Gamma(a)}{\Gamma(a-s)}  \Head{2}{F}{1} \ArgS{s,1+s-a}{b}{\tfrac{\beta}{\alpha}}\text{,} & 0 < \beta < \alpha, \quad \Re\, 2s < \Re \, a + b\\
+\alpha^{-s} \tfrac{\Gamma(s) \Gamma(a)\Gamma(b)\Gamma(a+b-2s-1)}{\Gamma(a-s)\Gamma(b-s)\Gamma(a+b-s-1)}\text{,} & \beta = \alpha, \quad \Re \, 2s+1 < \Re \, a + b\\
+\beta^{-s}\tfrac{\Gamma(s) \Gamma(b)}{\Gamma(b-s)}  \Head{2}{F}{1} \ArgS{s,1+s-b}{a}{\tfrac{\alpha}{\beta}}\text{,} & 0 < \alpha < \beta, \quad \Re\, 2s < \Re \, a + b
+\end{cases}
+\end{equation*}
+\begin{equation*}
+\int_{0}^{\infty} \HypJ{a}{-\alpha t} \HypJ{b}{-\beta t} t^{b-1} \dd t = \begin{cases}
+ 0 \text{,} &0 < \alpha < \beta\\
+ \alpha^{1-a} (\alpha-\beta)^{a-b-1} \tfrac{\Gamma(a)\Gamma(b)}{\Gamma(a-b)}\text{,} &0 < \beta < \alpha
+\end{cases} \quad 0 < \Re b < \Re a\text{.}
+\end{equation*}
+\end{theorem}
+
+\begin{theorem}
+\begin{align*}
+\int_{0}^{\infty} \HypJ{a}{-\alpha^2 t} \HypJ{b}{-\beta^2 t} \HypJ{c}{-\gamma^2 t} t^{s-1} \dd t &= 
+\alpha^{-2s} \tfrac{\Gamma(s) \Gamma(a)}{\Gamma(a-s)} \HypFfourS{1+s-a}{s}{b}{c}{\tfrac{\beta^2}{\alpha^2}} {\tfrac{\gamma^2}{\alpha^2}} \text{,} \quad 0 < \beta + \gamma < \alpha\text{,}\\
+& !TODO! : 0 < \gamma < \beta < \alpha < \beta + \gamma\\
+\int_{0}^{\infty} \HypJreg{s}{-\alpha^2 t} \HypJreg{s}{-\beta^2 t} \HypJreg{s}{-\gamma^2 t} t^{s-1} \dd t &= 
+\tfrac{((\beta+\gamma-\alpha)^+(\alpha+\gamma-\beta)^+(\alpha+\beta-\gamma)^+ (\alpha+\beta+\gamma))^{s-\frac32}}{(2\alpha \beta \gamma)^{2s-2} \Gamma(\frac12) \Gamma(s-\frac12)}\text{,}  \quad \Re \, s > \tfrac32\text{.}
+\end{align*}
+\end{theorem}
+
+\subsection{series}
+\begin{equation*}
+\Head{0}{F}{1}(a|x) = \sum_{n=0}^{\infty} \frac{(-1)^n}{\tfrac{\pi(2n+1)}{4}} \Head{0}{F}{1}(a|x-(\tfrac{\pi(2n+1)}{4})^2)
+\end{equation*}
+
+\subsection{contiguous}
+Recall $\theta = z \frac{\partial}{\partial z}$. The last row of these matrices follows from the hypegeometric differential equation.
+\begin{gather*}
+\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1+1,a_2}{b_1+1}{z}
+=
+\begin{pmatrix}
+1 & \tfrac{1}{a_1}\\
+\frac{a_1 a_2 z}{a_1(1-z)} & \tfrac{a_2 z+a_1-b_1}{a_1(1-z)}
+\end{pmatrix}
+\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1+1}{z}\\
+\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1}{z}
+=
+\begin{pmatrix}
+1 & \tfrac{1}{b_1}\\
+\frac{a_1 a_2 z}{b_1(1-z)} & \tfrac{(a_1+a_2-b_1)z}{b_1(1-z)}
+\end{pmatrix}
+\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1+1}{z}\\
+\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1+1,a_2,a_3}{b_1+1,b_2+1}{z}
+=
+\begin{pmatrix}
+1 & \tfrac{1}{a_1} & 0\\
+0 & 1 & \tfrac{1}{a_1}\\
+\frac{a_1 a_2 a_3 z}{a_1(1-z)} & \frac{(a_2 a_3 +a_1 a_3 + a_1 a_2) z - b_1 b_2}{a_1(1-z)} & \tfrac{(a_2+a_3) z + a_1-b_1-b_2}{a_1(1-z)}
+\end{pmatrix}
+\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_2}{b_1+1,b_2+1}{z}\\
+\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_3}{b_1,b_2+1}{z}
+=
+\begin{pmatrix}
+1 & \tfrac{1}{b_1} & 0\\
+0 & 1 & \tfrac{1}{b_1}\\
+\frac{a_1 a_2 a_3 z}{b_1(1-z)} & \tfrac{(a_2 a_3 +a_1 a_3 + a_1 a_2)z-b_1 b_2}{b_1(1-z)} & \tfrac{(a_1+a_2+a_3-b_1)z-b_2}{b_1(1-z)}
+\end{pmatrix}
+\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_3}{b_1+1,b_2+1}{z}
+\end{gather*}
+
+\begin{theorem}
+Let $\bfm$ and $\bfn$ be integer vectors. There exists a matrix $M$ of rational functions in $z$ of degree bounded by $\sum |\bfm| + \sum |\bfn|$ (?) such that
+\begin{equation*}
+(1 \, \theta \, \dots \, \theta^{p-1})^\intercal \Head{p}{F}{p-1} \ArgS{\bfa + \bfm}{\bfb + \bfn}{z} = M (1 \, \theta \, \dots \, \theta^{p-1})^\intercal \Head{p}{F}{p-1} \ArgS{\bfa}{\bfb}{z}
+\end{equation*}
+thus any $p+1$ such contiguous functions are linearly dependent over $\bbC(z)$.
+\end{theorem}
+
+\subsection{products}
+\begin{equation*}
+(a-b) \Head{1}{F}{2} \ArgS{1}{1+a,1+b}{z} = a \, \Head{0}{F}{1}\ArgS{}{1+a-b}{z} \Head{1}{F}{2} \ArgS{b}{1+b,1+b-a}{z} - b \, \Head{0}{F}{1}\ArgS{}{1+b-a}{z} \Head{1}{F}{2} \ArgS{a}{1+a,1+a-b}{z}
+\end{equation*}
+
+The product of two $\Head{0}{F}{1}$s follows easily from the $\Head{2}{F}{1}(1)$ evaluation.
+\begin{theorem}
+\label{thm_0f1_prod}
+($\Head{2}{E}{3} = \Head{0}{E}{1} \cdot \Head{0}{E}{1}$):
+\begin{equation*}
+\Head{2}{F}{3} \ArgS{\frac{a+b}{2},\frac{a+b-1}{2}}{a,b,a+b-1}{4z} = \Head{0}{F}{1}(a|z)\Head{0}{F}{1}(b|z)\\
+\end{equation*}
+\begin{equation*}
+\left(\begin{array}{r}
+\Head{4}{F}{1} \ArgS{\frac12 \pm \frac{a}{2} \pm \frac{b}{2}} {\frac12} {4 z^2}\\
+(a - b) (a + b) z \Head{4}{F}{1} \ArgS{1 \pm \frac{a}{2} \pm \frac{b}{2}} {\frac32} {4 z^2}
+\end{array}\right)
+ =
+\begin{pmatrix}
+\frac12 & \frac12 \\
+\frac12 & -\frac12
+\end{pmatrix}
+\begin{pmatrix}
+\Head{2}{F}{0}\ArgS{\frac12 - a, \frac12 + a}{}{-z} \Head{2}{F}{0} \ArgS{\frac12 - b, \frac12 + b}{}{z}\\
+\Head{2}{F}{0} \ArgS{\frac12 - a, \frac12 + a} {}{z} \Head{2}{F}{0} \ArgS{\frac12 - b, \frac12+ b} {}{-z}
+\end{pmatrix}
+\end{equation*}
+\begin{equation*}
+\Head{2}{U}{3} \ArgS{\frac{1+a+b}2,\frac{2+a+b}2}{1+a,1+b,1+a+b}{z} = \Head{2}{F}{0} \ArgS{\frac12 - a, 1\frac12+a}{}{z} \Head{2}{F}{0} \ArgS{\frac12-b, \frac12+b} {}{z}
+\end{equation*}
+\end{theorem}
+Of course $\Head{2}{E}{1}(a,b;c|z)^2$ has no additional singularities, but it is hypergeometric only in the following case.
+\begin{theorem}
+($\Head{3}{E}{2} = \Head{2}{E}{1}^2$):
+\begin{align*}
+\Head{3}{F}{2} \ArgS{2a,2b,a+b}{2a+2b,\frac12+a+b}{z} &= \Head{2}{F}{1} \ArgS{a,b}{\frac12+a+b}{z}^2\\
+\Head{3}{F}{2} \ArgS{\frac12,\frac12 + 2a,\frac12-2a}{1+2b,1-2b}{z} &= \Head{2}{F}{1} \ArgS{\frac14+a+b,\frac14-a+b}{1+2b}{z} \Head{2}{F}{1} \ArgS{\frac14+a-b,\frac14-a-b}{1-2b}{z}
+\end{align*}
+\end{theorem}
+In general, $\Head{2}{E}{1}(a,b;c|z)\Head{2}{E}{1}(a',b';c'|z)$ has additional singularities at the roots of a quadratic polynomial in $z$ with coefficients depending on $a,b,c,a',b',c'$. This polynomial simplifies to $2z-1$ in the case $a'=a, b'=b, c'=1+a+b-c$, leading to the following quadratic transformation.
+\begin{theorem}
+\label{thm_4e3_2e1_2e1}
+($\Head{4}{E}{3} = \Head{2}{E}{1} \cdot \Head{2}{E}{1}$):
+\begin{equation*}
+\Head{4}{F}{3} \ArgS{a, b, \frac{a + b}{2}, \frac{1 + a + b}{2}}{a + b, 1 + a + b - c, c}{4 z (1 - z)} = 
+ \Head{2}{F}{1} \ArgS{a, b}{1 + a + b - c}{z} \Head{2}{F}{1} \ArgS{a, b}{c}{z}\text{,}
+\end{equation*}
+and the `reciprocal' products:
+\begin{equation*}
+\FFs{4}{F}{3}{a,b,c-a,c-b}{c, \frac{c}{2}, \frac{c+1}{2}}{\tfrac{z^2}{4(z-1)}} = (1-z)^a \FFs{2}{F}{1}{a,c-b}{c}{z} \FFs{2}{F}{1}{a,b}{c}{z} \quad =  \FFes{2}{F}{1}{-}{a,b}{c}{\tfrac{z}{z-1}} \FFs{2}{F}{1}{a,b}{c}{z}
+\end{equation*}
+\begin{equation*}
+\left(\begin{array}{r}
+\frac{1}{(1-z)^{\frac12+a}} \Head{4}{F}{3} \ArgS{\frac12+a,\frac12-a,\frac12+b,\frac12-b}{\frac{1}{2}, 1-c, 1+c}{\tfrac{z^2}{4(z-1)}}\\
+\frac{a b c}{(\frac12+c)(\frac12-c)} \frac{z}{(1-z)^{1+a}} \Head{4}{F}{3} \ArgS{1+a,1-a,1+b,1-b}{\frac32, \frac32+c, \frac32-c}{\tfrac{z^2}{4(z-1)}}
+\end{array}\right)
+ =
+\begin{pmatrix}
+\tfrac12 & \tfrac12 \\
+\tfrac12 & -\tfrac12
+\end{pmatrix}
+\begin{pmatrix}
+\Head{2}{F}{1}\ArgS{\frac12+a+c,\frac12+b+c}{1+2c}{z} \Head{2}{F}{1}\ArgS{\frac12+a-c,\frac12-b-c}{1-2c}{z}
+\\
+\Head{2}{F}{1} \ArgS{\frac12+a+c,\frac12-b+c}{1+2c}{z}\Head{2}{F}{1} \ArgS{\frac12+a-c,\frac12+b-c}{1-2c}{z} \end{pmatrix}
+\end{equation*}
+\end{theorem}
+\begin{corollary}
+($\Head{2}{E}{3} = \Head{1}{E}{1} \cdot \Head{1}{E}{1}$):
+\begin{equation*}
+\Head{2}{F}{3} \ArgS{a, b - a}{b, \frac{b}{2}, \frac{b + 1}{2}}{\tfrac{z^2}{4}} = \Head{1}{F}{1} \ArgS{a}{b}{-z} \Head{1}{F}{1} \ArgS{a}{b}{z}
+\end{equation*}
+\begin{equation*}
+\left(\begin{array}{r}
+\Head{2}{F}{3} \ArgS{\frac12+a,\frac12-a}{\frac{1}{2}, 1-b, 1+b}{\tfrac{z^2}{4}}\\
+\frac{a b z}{(\frac12+b)(\frac12-b)} \Head{2}{F}{3} \ArgS{1+a,1-a}{\frac32, \frac32+b, \frac32-b}{\tfrac{z^2}{4}}
+\end{array}\right)
+ =
+\begin{pmatrix}
+\tfrac12 & \tfrac12 \\
+\tfrac12 & -\tfrac12
+\end{pmatrix}
+\begin{pmatrix}
+\Head{1}{F}{1}\ArgS{\frac12+a+b}{1+2b}{-z} \Head{1}{F}{1}\ArgS{\frac12+a-b}{1-2b}{z}
+\\
+\Head{1}{F}{1} \ArgS{\frac12+a+b}{1+2c}{z}\Head{1}{F}{1} \ArgS{\frac12+a-b}{1-2b}{-z} \end{pmatrix}
+\end{equation*}
+\begin{align*}
+\Head{4}{F}{1} \ArgS{a, b, \frac{a+b}{2}, \frac{1+a+b}{2}}{a + b}{4 z^2} &= \Head{2}{F}{0} \ArgS{a, b}{}{-z}\Head{2}{F}{0}\ArgS{a, b}{}{z}\\
+\Head{2}{U}{3} \ArgS{1 - a - b, a + b}{\frac12, 1 + a - b, 1 - a + b}{z} &= \Head{2}{F}{0} \ArgS{1 - 2 a, 1 - 2 b}{}{z} \Head{2}{F}{0} \ArgS{2 a, 2 b} {}{z} 
+\end{align*}
+\end{corollary}
+
+\subsection{Multiple integral evaluations via the complete elliptic integral}
+\begin{remark}
+The following conversions from $\Head{2}{F}{1}(\frac12, \frac12; 1 | z)$ for $\Re z > \frac12$ are not done correctly in the integral evaluations, so the range of valid parameters is reduced for the $\Head{2}{F}{1}(\frac14, \frac14; 1)$ expressions.
+\begin{align*}
+\FFs{2}{F}{1}{\frac14,\frac14}{1}{z} &= \Head{2}{F}{1} \ArgKS{\tfrac12 - \tfrac{\sqrt{1-z}}{2}}\text{,}\\
+\tfrac{4\sqrt{\pi}}{\Gamma(\frac14)^2} \sqrt{1-z} \Head{2}{F}{1} \ArgS{\frac34,\frac34}{\frac32}{1-z} + \FFs{2}{F}{1}{\frac14,\frac14}{1}{z} &= \Head{2}{F}{1} \ArgKS{\tfrac12 + \tfrac{\sqrt{1-z}}{2}}\text{,}\\
+\FFs{2}{F}{1}{\frac14,\frac34}{1}{z} &= (1-z)^{-1/4}\Head{2}{F}{1} \ArgKS{\tfrac12 - \tfrac{1}{2\sqrt{1-z}}}\\
+\sqrt{2} \Head{2}{F}{1} \ArgS{\frac14,\frac34}{1}{1-z} \pm \ii \, \FFs{2}{F}{1}{\frac14,\frac34}{1}{z} &= (1-z)^{-1/4}\Head{2}{F}{1} \ArgKS{\tfrac12 + \tfrac{1}{2\sqrt{1-z}}}
+\end{align*}
+\end{remark}
+\begin{theorem} Rank 2:
+\begin{equation*}
+\frac{1}{\pi^2} \iint_0^{\pi} \tfrac{\dd u \, \dd v} {1 - a \cos u - b \cos v - c \cos u \cos v} = \tfrac{1}{\sqrt{1+a-b+c}\sqrt{1-a+b+c}} \Head{2}{F}{1} \ArgKS{1-\tfrac{(1+a+b-c)(1-a-b-c)}{(1+a-b+c)(1-a+b+c)}}
+\end{equation*}
+\end{theorem}
+
+\begin{theorem} Rank 3:
+\begin{equation*}
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos u \cos v \cos w} = \Head{2}{F}{1} \ArgKS{\tfrac{1-\sqrt{1-a^2}}{2}}^2 = \Head{2}{F}{1} \ArgKS{\tfrac{a}{2}\tfrac{\sqrt{1+a}-\sqrt{1-a}}{\sqrt{1+a}+\sqrt{1-a}}}^2 = \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{a^2}^2
+\end{equation*}
+equivalent to $\FFs{3}{F}{2}{\frac12,\frac12,\frac12}{1,1}{z} = \Head{2}{F}{1} \ArgKS{\tfrac{1 -\sqrt{1-z}}{2}}^2$.
+\end{theorem}
+
+\begin{theorem} Rank 4:
+\begin{align*}
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - b \cos u \cos w} &= \HypFfourS{\frac12}{\frac12}{1}{1}{a^2}{b^2}\\
+ &= \prod_{a \leftrightarrow b} \Head{2}{F}{1} \ArgKS{\tfrac{1 + a^2 - b^2-\sqrt{(1-a^2+b^2)^2-4b^2}}{2}}\\
+&= \prod_{a \leftrightarrow b} \Head{2}{F}{1} \ArgKS{a\tfrac{\sqrt{1+a-b}\sqrt{1+a+b}-\sqrt{1-a-b}\sqrt{1-a+b}}{\sqrt{1+a-b}\sqrt{1+a+b}+\sqrt{1-a-b}\sqrt{1-a+b}}}\\
+&= \prod_{a \leftrightarrow b} \Head{2}{F}{1}\ArgS{\frac14,\frac14}{1}{4a b \tfrac{(a+b)\sqrt{1+a-b}\sqrt{1-a+b} + (a-b) \sqrt{1+a+b}\sqrt{1-a-b}}{(a+b)\sqrt{1+a-b}\sqrt{1-a+b} - (a-b) \sqrt{1+a+b}\sqrt{1-a-b}}}
+\end{align*}
+with the corollary
+$\FFs{4}{F}{3}{\frac14,\frac14,\frac34,\frac34}{\frac12,1,1}{z} = \Head{2}{F}{1}\ArgKS{\tfrac{1+\sqrt{-z} -\sqrt{1-z}}{2}} \Head{2}{F}{1}\ArgKS{\tfrac{1-\sqrt{-z} -\sqrt{1-z}}{2}}$ (also by Theorem \ref{thm_4e3_2e1_2e1}).
+\end{theorem}
+
+\begin{theorem} Rank 4:
+\begin{align*}
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - \frac12 b \cos u \cos w - \frac12 b \cos u \cos v} &= \tfrac{1}{1+a} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{1}{2}-\tfrac{(1-a)\sqrt{1-a+b}\sqrt{1-a-b}}{2(1+a)^2} \pm \tfrac{\sqrt{a}\sqrt{4a+ b^2}}{(1+a)^2}}\\
+&= \tfrac{1}{1+a} \prod_{\pm} \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{ \tfrac{b^2}{(1+a)^2} \tfrac{(1-a)\sqrt{4a+b^2} \mp 2 \sqrt{a}\sqrt{1-a+b}\sqrt{1-a-b}}{(1-a)\sqrt{4a+b^2} \pm 2 \sqrt{a}\sqrt{1-a+b}\sqrt{1-a-b}} }
+\end{align*}
+The special case $b = 2a$ is recorded by Glasser (quoting Iwata) in the first form.
+\end{theorem}
+
+\begin{theorem} Rank 4: with $x = \tfrac{1-a^2+b^2 - \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}{1+a^2-b^2 + \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}$,
+\begin{align*}
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos u - \frac12 b \cos v - \frac12 b \cos w} &= \tfrac{\sqrt{1+x}\sqrt{b^2+a^2 x}}{b} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{1}{2}-\tfrac{\sqrt{1+x}\sqrt{b^2+b^2 x + a^2 x^2}}{2b} \pm \tfrac{x\sqrt{b^2+a^2 x}}{2b}}\\
+&= \tfrac{\sqrt{1+x}\sqrt{b^2+a^2 x}}{b} \prod_{\pm} \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{\tfrac{a^2 x^2}{b^2}\tfrac{\sqrt{b^2+b^2 x + a^2 x^2} \mp \sqrt{1+x}\sqrt{b^2+a^2 x}}{\sqrt{b^2+b^2 x + a^2 x^2} \pm \sqrt{1+x}\sqrt{b^2+a^2 x}}}\\
+&=\tfrac{2\sqrt{1+x}\sqrt{b^2+a^2 x}}{\sqrt{2b^2 + 2b^2 x + a^2 x^2 + 2b \sqrt{1+x}\sqrt{b^2+b^2 x + a^2 x^2}}} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{\sqrt{1+x}\sqrt{b^2+b^2 x+a^2 x^2} \pm x \sqrt{b^2+ a^2 x}-b}{\sqrt{1+x}\sqrt{b^2+b^2 x+a^2 x^2} \pm x \sqrt{b^2+ a^2 x}+b}}
+\end{align*}
+The special case $b = 2a$ is recorded by Glasser (quoting Joyce) in the third form.
+\end{theorem}
+
+\section{${}_0 F_1$, ${}_1 F_1$ and ${}_2 F_0$} This includes all Bessel functions, Airy functions, and confluent functions, and one confusing aspect of these cases is that the ${}_p U_{q}$ series are themselves hypergeometric.
+\begin{align*}
+\FFf{0}{U}{1}{b_1}{z} &= \FFf{2}{F}{0}{-\tfrac{1}{2}+b_1, \tfrac{3}{2}-b_1}{\tfrac{1}{2}z}\text{,}\\
+\FFf{1}{U}{1}{a_1;b_1}{z} &= \FFf{2}{F}{0}{1-a_1, b_1-a_1}{z}\text{,}
+\end{align*}
+which are generalized slightly via
+\begin{equation}
+\label{equ_pUq_as_hyp}
+\begin{alignedat}{5}
+\FFf{1}{U}{2}{1;b_1,b_2}{z} &= \FFf{2}{F}{0}{\tfrac{1}{2}+b_1-b_2, \tfrac{1}{2}+b_2-b_1}{\tfrac{1}{2}z}\text{,}\\
+\FFf{2}{U}{2}{a_1,1;b_1,b_2}{z} &= \FFf{2}{F}{0}{b_1-a_1, b_2-a_1}{z}\text{.}
+\end{alignedat}
+\end{equation}
+\subsection{${}_0 F_1$}
+As a consequence of \eqref{entirerecp2}, we have, for example,
+\begin{equation*}
+2 \sqrt{\pi} z^{\frac{1}{4}+\frac{b}{2}}\frac{{}_0 F_1(1+b|z)}{\Gamma(1+b)} = \ee^{2\sqrt{z}}  {}_2 F_0(\tfrac{1}{2}+b,\tfrac{1}{2}-b|\tfrac{1}{4\sqrt{z}}) + \ee^{\pm \pi \ii(\frac{1}{2}-b)}\ee^{-2\sqrt{z}}  {}_2 F_0(\tfrac{1}{2}+b,\tfrac{1}{2}-b|\tfrac{-1}{4\sqrt{z}})\text{.}
+\end{equation*}
+This means the various Bessel functions defined by
+\begin{align*}
+I_{\nu}(2z) &= \frac{z^{\nu} {}_0 F_1(1+\nu| z^2)}{\Gamma(1+\nu)}\text{,}\\
+K_{\nu}(2z) &= -\frac{\pi}{2\sin \pi \nu} \frac{z^{\nu} {}_0 F_1(1+\nu| z^2)}{\Gamma(1+\nu)} + \frac{\pi}{2\sin \pi \nu} \frac{z^{-\nu} {}_0 F_1(1-\nu| z^2)}{\Gamma(1-\nu)} \text{,}\\
+J_{\nu}(2z) &= \frac{z^{\nu} {}_0 F_1(1+\nu| -z^2)}{\Gamma(1+\nu)}\text{,}\\
+Y_{\nu}(2z) &= \frac{\cos \pi \nu}{\sin \pi \nu} \frac{z^{\nu} {}_0 F_1(1+\nu| -z^2)}{\Gamma(1+\nu)} - \frac{1}{\sin \pi \nu} \frac{z^{-\nu} {}_0 F_1(1-\nu| -z^2)}{\Gamma(1-\nu)}\text{,}
+\end{align*}
+have the following ${}_2F_0$ representations for $z \ne 0$ (recall $\pm = (\log (z) - \log (-z))/(\pi \ii)$).
+\begin{align*}
+I_{\nu-\frac{1}{2}}(z) &= \frac{\ee^{\pm \pi \ii \nu}\ee^{-z}}{ \sqrt{2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{-1}{2z}) + \frac{\ee^{z}}{ \sqrt{2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{1}{2z})\text{,}\\
+K_{\nu-\frac{1}{2}}(z) &= \frac{\ee^{-z}}{ \sqrt{2z/\pi}} {}_2 F_0(\nu,1-\nu|\tfrac{-1}{2z})\text{,}\\
+J_{\nu-\frac{1}{2}}(z) &= \frac{\ee^{\pm \pi \ii \frac{\nu}{2} \mp \ii z}}{\sqrt{2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{\pm \ii}{2 z}) + \tfrac{z^{2\nu}}{(z^2)^{\nu}} \frac{\ee^{\mp \pi \ii \frac{\nu}{2} \pm \ii z}}{\sqrt{2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{\mp \ii}{2 z})\text{,}\\
+Y_{\nu-\frac{1}{2}}(z) &= \frac{\ee^{\pm \pi \ii \frac{\nu}{2} \mp \ii z}}{\sqrt{-2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{\pm \ii}{2 z}) - (2-\tfrac{z^{2\nu}}{(z^2)^{\nu}}) \frac{\ee^{\mp \pi \ii \frac{\nu}{2} \pm \ii z}}{\sqrt{-2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{\mp \ii}{2 z})\text{.}
+\end{align*}
+These last two are slightly cleaner in the equivalent form with $H_{\nu}^{(i)}(z) = J_{\nu}(z) - (-1)^i \ii Y_{\nu}(z)$
+\begin{equation*}
+\sqrt{\frac{\pi z}{2}} \begin{pmatrix}
+\ee^{-\ii (z - \frac{\pi \nu}{2})}H_{\nu-\frac{1}{2}}^{(1)}(z)\\
+\ee^{+\ii (z - \frac{\pi \nu}{2})}H_{\nu-\frac{1}{2}}^{(2)}(z)
+\end{pmatrix}
+=
+\left\{
+\begin{aligned}
+&(\begin{smallmatrix} 1&0\\ 0 &1\end{smallmatrix})\text{,} \quad \quad \quad \tfrac{-\pi}{2} < \arg z \le \tfrac{\pi}{2}\\
+&(\begin{smallmatrix} 1& 0\\ 2\ii \sin(\pi \nu) \ee^{2 \ii z} &1\end{smallmatrix})\text{, } \quad \arg z> \tfrac{\pi}{2}\\
+&(\begin{smallmatrix} 1&-2\ii \sin(\pi \nu) \ee^{-2 \ii z}\\ 0  &1\end{smallmatrix})\text{, } \arg z \le \tfrac{-\pi}{2}
+\end{aligned}
+\right\}
+\begin{pmatrix}
+{}_2 F_0(\nu,1-\nu|\tfrac{-\ii}{2 z})\\
+{}_2 F_0(\nu,1-\nu|\tfrac{+\ii}{2 z})
+\end{pmatrix}\text{,}
+\end{equation*}
+which we recognize simply as a different branch \eqref{equ_2f0_branch} of the ${}_2 F_0$s, matching the branch of the l.h.s. As long as $\arg z \ne \pi$, the correction matrices differ from the identity by a exponentially small amount.
+
+\subsubsection{parameter derivative}
+$\frac{\partial}{\partial b} \Head{0}{F}{1}(b|z)$ satisfies an inhomogenous $\Head{0}{E}{1}(b)$ equation. Using the method of variation of parameters and Theorem \ref{thm_0f1_prod} to evaluate the integrals produces
+\begin{align*}
+\tfrac{\partial}{\partial b} \Head{0}{F}{1}\ArgS{}{1+b}{z} &= (\tfrac{1}{2 b} + \tfrac{z}{1-b^2} \Head{3}{F}{4}\ArgS{1,1,\frac32}{2,2,2-b,2+b}{4z})\Head{0}{F}{1}\ArgS{}{1+b}{z}-\tfrac{1}{2b}\Head{2}{F}{3}\ArgS{b,\frac12+b}{1+b,1+b,1+2 b}{4 z}\Head{0}{F}{1}\ArgS{}{1-b}{z}\text{,}\\
+\tfrac{\partial}{\partial b} \Head{2}{F}{0}\ArgS{\frac12+b,\frac12-b}{}{z} &= -2 b z \Head{4}{F}{1} \ArgS{\frac12, \frac12, \frac12 +b, \frac12-b}{\frac32}{4 z^2} \Head{2}{F}{0} \ArgS{\frac12+b, \frac12-b}{}{z} - 2 b z^2 \Head{2}{U}{3}\ArgS{b,\frac12+b}{1+b, 1+b,1+2b}{z} \Head{2}{F}{0} \ArgS{\frac12+b,\frac12-b}{}{-z}\text{.}
+\end{align*}
+
+\subsubsection{integral evaluations}
+The first here follows from \eqref{equ_gamma_hankel} and the second from the first.
+\begin{align*}
+\frac{1}{2\pi \ii} \int_{-\infty}^{(0+)} \frac{\ee^{t + \frac{z}{t}}}{t^{1+b}} \dd t &= \frac{{}_0 F_{1} (1+b|z)}{\Gamma(1+b)}\\
+\int_{0}^{\infty} \frac{\ee^{-\frac{z}{t} - z t}}{t^{1+b}} \dd t & = \Gamma(b) z^{-b} {}_0 F_{1} (1-b|z^2) + \Gamma(-b) z^{b} {}_0 F_{1} (1+b|z^2) \\
+\int_{0}^{\infty} \frac{\ee^{-\frac{z_1}{t} - z_2 t}}{t^{1+b}} \dd t & = \Gamma(a) z_1^{-b} {}_0 F_{1} (1-b|z_1 z_2) + \Gamma(-a) z_2^{b} {}_0 F_{1} (1+b| z_1 z_2)
+\end{align*}
+The last two only converge as written for restricted $z \ne 0$. The integrals can converge everywhere if the approach to the end points is twisted accordingly. The following are direct calculations combined with \eqref{divrecp}, and $a=\frac12$ is the case of interest.
+
+\newcommand{\soltwo}[1] {\tfrac{\Gamma(b)\Gamma(\frac12+b)}{\pi \Gamma(1-a+b)} z^{-2b} \FFs{1}{F}{2}{a-b}{\frac12-b,1-b}{#1}}
+
+\newcommand{\solzero}[1] {\tfrac{\Gamma(a)}{\Gamma(\frac12) \Gamma(1+b)} \FFs{1}{F}{2}{a}{\frac12,1+b}{#1}}
+
+\newcommand{\solone}[1] {\tfrac{\Gamma(\frac12+a)}{\Gamma(\frac32) \Gamma(\frac32 + b)} z \FFs{1}{F}{2}{\frac12+a}{\frac32, \frac32+b}{#1}}
+
+\begin{align*}
+&\tfrac{2}{\Gamma(\tfrac12) \Gamma(1-a+b)} \int_0^1 \ee^{-2 z t} t^{2a-1} (1-t^2)^{b-a} \dd t = \solzero{z^2} - \solone{z^2}\text{,}\\
+&\tfrac{2}{\Gamma(\tfrac12) \Gamma(1-a+b)} \int_0^{\infty} \ee^{-2 z t} t^{2a-1} (1+t^2)^{b-a} \dd t = \tfrac{\Gamma(a)\Gamma(\frac12+a)}{\pi \Gamma(1-a+b)} z^{-2a} {}_3 F_0(a-b,a,\tfrac12+a|\tfrac{-1}{z^2})\\
+ &= \soltwo{-z^2} - \tfrac{\sin \pi (a-b)}{\sin \pi b} \solzero{-z^2} + \tfrac{\sin \pi (a-b)}{\cos \pi b} \solone{-z^2}\text{,}\\
+ &\tfrac{2}{\Gamma(\tfrac12) \Gamma(1-a+b)} \int_1^{\infty} \ee^{-2 z t} t^{2a-1} (t^2-1)^{b-a} \dd t\\ 
+&= \soltwo{z^2} - \tfrac{\sin \pi a}{\sin \pi b} \solzero{z^2} + \tfrac{\cos \pi a}{\cos \pi b} \solone{z^2}\text{.}
+\end{align*}
+\let\soltwo\undefined
+\let\solone\undefined
+\let\solzero\undefined
+These ``squared'' formulas should be compared with the non-squared version next. The three integrals are linearly dependent as $I_2(\ii z) = \ee^{-\ii \pi a } I_1(z) + \ee^{-\ii \pi b} I_3(z)$.
+
+\subsection{${}_1 F_1$ and ${}_2 F_0$}
+As before, $I_2(-z) = \ee^{-\ii \pi a } I_1(z) + \ee^{-\ii \pi b} I_3(z)$, for
+\newcommand{\soltwo}[1] {\tfrac{\Gamma(b)}{ \Gamma(1-a+b)} z^{-b} \FFs{1}{F}{1}{a-b}{1-b}{#1}}
+\newcommand{\solzero}[1] {\tfrac{\Gamma(a)}{ \Gamma(1+b)} \FFs{1}{F}{1}{a}{1+b}{#1}}
+\begin{align*}
+\tfrac{1}{\Gamma(1-a+b)} \int_0^1 \ee^{-z t} t^{a-1} (1-t)^{b-a} \dd t &= \solzero{-z}\text{,}\\
+\tfrac{1}{\Gamma(1-a+b)} \int_0^{\infty} \ee^{-z t} t^{a-1} (1+t)^{b-a} \dd t &= \tfrac{\Gamma(a)}{\Gamma(1-a+b)} z^{-a} {}_2 F_0(a-b,a|\tfrac{-1}{z})\\
+ &= \soltwo{z} - \tfrac{\sin \pi (a-b)}{\sin \pi b} \solzero{z}\text{,}\\
+\tfrac{1}{\Gamma(1-a+b)} \int_1^{\infty} \ee^{-z t} t^{a-1} (t-1)^{b-a} \dd t &= \ee^{-z} z^{a-b-1} {}_2 F_0(1-a,1-a+b|\tfrac{-1}{z})\\ 
+&= \soltwo{-z} - \tfrac{\sin \pi a}{\sin \pi b} \solzero{-z}\text{.}
+\end{align*}
+\let\soltwo\undefined
+\let\solzero\undefined
+
+For $s=+$ or $-$, we will set $\FFs{}{U}{s}{a}{b}{z} = (s z)^{-a} {}_2 F_0(a,1+a-b|\tfrac{-1}{z})$ with $s=+$ being the default. $f(z) = {}_1 F_1(a;b|z)$ satisfies (along with $z^{1-b} {}_1 F_1(1-b+a;2-b|z)$ and $\FFs{}{U}{}{a}{b}{z}$ and $\ee^{z} \FFs{}{U}{}{b-a}{b}{-z}$)
+\begin{equation*}
+f''(z) - (1-\tfrac{b}{z})f'(z) - \tfrac{a}{z} f(z) = 0\text{.}
+\end{equation*}
+$f(z) = {}_2 F_0(a,b|\tfrac{-1}{z})$ satisfies (along with $\ee^{z} z^{a+b-1} {}_2 F_0(1-a,1-b|\frac{1}{z})$)
+\begin{equation*}
+f''(z) - (1+\tfrac{a+b-1}{z})f'(z) + \tfrac{a b}{z^2} f(z) = 0\text{.}
+\end{equation*}
+with the various connection formulas taking the form
+\begin{equation}
+\label{equ_2f0_recp}
+\begin{alignedat}{7}
+{}_2 F_0(a,b|\tfrac{-1}{z}) &= &\tfrac{\Gamma(b-a)}{\Gamma(b)} z^{a} \FFs{1}{F}{1}{a}{1+a-b}{z}& + &\tfrac{\Gamma(a-b)}{\Gamma(a)} z^{b} \FFs{1}{F}{1}{b}{1+b-a}{z}\\
+\ee^{z} (-z)^{a+b-1} {}_2 F_0(1-a,1-b|\tfrac{1}{z}) &= & \tfrac{\Gamma(b-a)}{\Gamma(1-a)} (-z)^{a} \FFs{1}{F}{1}{a}{1+a-b}{z}& +
+&\tfrac{\Gamma(a-b)}{\Gamma(1-b)} (-z)^{b} \FFs{1}{F}{1}{b}{1+b-a}{z}\\
+\FFs{1}{F}{1}{a}{b}{z} &= &\ee^{z} \FFs{1}{F}{1}{b-a}{b}{-z}&\text{,}\\
+\tfrac{1}{\Gamma(b)} \FFs{1}{F}{1}{a}{b}{z} &= &\tfrac{(-z)^{-a}}{\Gamma(b-a)} {}_2 F_{0}(a,1+a-b,\tfrac{-1}{z})& +
+&\tfrac{\ee^z z^{a-b}}{\Gamma(a)} {}_2 F_{0}(b-a,1-a,\tfrac{1}{z})\text{,}\\
+&= &\tfrac{1}{\Gamma(b-a)} \FFs{}{U}{-}{a}{b}{z}& + &\tfrac{1}{\Gamma(a)} \ee^{z} \FFs{}{U}{-}{b-a}{b}{-z}&
+\end{alignedat}
+\end{equation}
+This connection formula says that the following vector is multiplied by the following matrix as $z$ crosses the negative real axis (resp. positive real axis).
+\begin{equation}
+\label{equ_2f0_branch}
+\begin{pmatrix}
+{}_2 F_0(a, b | \tfrac{-1}{z})\\
+\ee^{z} (-z)^{a+b-1} {}_2 F_0(1-a, 1-b | \tfrac{1}{z})
+\end{pmatrix}
+: \quad \quad
+\begin{pmatrix}
+1 & \frac{2\pi \ii}{\Gamma(a)\Gamma(b)} \\
+0 & 1
+\end{pmatrix}
+\text{,  resp. }
+\begin{pmatrix}
+1 & 0 \\
+\frac{-2\pi \ii \ee^{\pi \ii (a+b)}}{\Gamma(1-a)\Gamma(1-b)} & \ee^{2\pi \ii (a+b)}
+\end{pmatrix}\text{.}
+\end{equation}
+
+\subsection{solution of ${}_1 F_1$ equation around $0$}
+
+
+\subsubsection{case $b \notin \bbZ$}
+We can assume wlog we are simply calculating ${}_1 F_1(a;b|z) = \sum c_k z^k$ and possibly its derivative. Set $c'_k := (k+1)c_{k+1}$. With $M_0=I$ and
+\begin{equation*}
+M_k = \frac{1}{k}\begin{pmatrix} 0 & 1\\
+0 & \frac{a+k}{b+k}\end{pmatrix} M_{k-1}\text{,}
+\end{equation*}
+we have $(\begin{smallmatrix} f(z) \\ f'(z) \end{smallmatrix}) = S (\begin{smallmatrix} c_0 \\ c'_0 \end{smallmatrix})$ where 
+$S = \sum_{k=0}^{\infty} M_k z^k$.\\
+The first row of $S$ is annihilated by the operator
+\begin{gather*}
+\theta(\theta+b-1) - (\theta+a-1)z = (\theta+b-1) ( \theta - \tfrac{\theta+a-1}{\theta+b-1} z)\text{,}
+\end{gather*}
+and the residual for truncation at $n$ is given by $q(z) = - n c_n \tfrac{z^n}{n}$.\\
+The second row of $S$ is annihilated by $\theta(\theta+b) - (\theta+a)z$,
+and the residual for truncation at $n$ is given by $q(z) = - n c'_n \tfrac{z^n}{n}$.
+Alternatively, if $\rho<1$ is an upper bound on $\tfrac{z(k+a)}{(k+1)(k+b)}$ for $k\ge n$,
+\begin{equation*}
+\Big| \sum_{k=n}^{\infty} c_k z^k \Big| < \frac{|c_n z^n|}{1-\rho}\text{,} \quad \quad \quad
+\Big| \sum_{k=n}^{\infty} c'_k z^k \Big| < \frac{|c'_n z^n|}{1-\rho'}\text{.}
+\end{equation*}
+\subsubsection{case $b \in \bbZ$}
+We can assume wlog that $1-b \ge 0$. The general solution takes the form
+\begin{equation*}
+\sum_{k=0}^{\infty} (c_{k,0}+c_{k,1} \log(z)) z^k\text{,}
+\end{equation*}
+and we will identify $c_k = c_{k,0}+c_{k,1} \log(z)$ with the polynomial $c_{k,0} \Lambda + c_{k,1}$ modulo $\Lambda^2$. The two free coefficients are $\chi_0 := c_{0,0}$ and $\chi_1 = c_{1-b,0}$ (or $\chi_1 = c_{0,1}$ if $b=1$). Let $M_k \in (\bbC[\Lambda]/\Lambda^2)^{2 \times 1}$ be such that $c_{k,1} + c_{k,0} \Lambda = M_k (\begin{smallmatrix} \chi_0 \\ \chi_1\end{smallmatrix})$. We have
+\begin{equation*}
+M_k = \begin{cases}
+(\Lambda, 1)\text{,} & k=0=1-b\\
+(\Lambda, 0)\text{,} & k=0 \ne 1-b\\
+\frac{\Lambda+k+a-1}{\Lambda+k} \frac{M_{k-1}}{\Lambda} + (0,\Lambda)\text{,} & k=1-b\\
+\frac{\Lambda+k+a-1}{(\Lambda+k)(\Lambda+k+b-1)} M_{k-1}
+\end{cases}
+\text{,}
+\end{equation*}
+with the convention that when a polynomial modulo $\Lambda^2$ is divided exactly by $\Lambda$, the result is zero-exented to the full precision.
+
+\subsection{solution of ${}_1 F_1$ equation around a non-singular point $x_0$}
+$f(z) = {}_1 F_1(a;b|z)$ satisfies
+\begin{equation*}
+f''(z) - (1-\tfrac{b}{z})f'(z) - \tfrac{a}{z} f(z) = 0\text{.}
+\end{equation*}
+We are given $c_0=f(x_0)$ and $c_1=f'(x_0)$ as the coefficients $
+f(x_0+z) = \sum_{k=0}^{\infty} c_k z^k$ and would like to calculate $f(x_0+z)$ and $f'(x_0+z)$ via power series. Set $c'_k := (k+1)c_{k+1}$. With $M_0=I$ and
+\begin{equation*}
+M_k = \frac{1}{k} \begin{pmatrix} 0 & 1\\
+\frac{k+a-1}{x_0} & 1 - \frac{k+b-1}{x_0}\end{pmatrix} M_{k-1}\text{,}
+\end{equation*}
+we have $M_k (\begin{smallmatrix} c_0 \\ c_1 \end{smallmatrix}) = (\begin{smallmatrix} c_k \\ c'_k \end{smallmatrix})$. With $S = \sum_{k=0}^{\infty} M_k z^k$, we have $S (\begin{smallmatrix} f(x_0) \\ f'(x_0) \end{smallmatrix}) = (\begin{smallmatrix} f(z+x_0) \\ f'(z+x_0)\end{smallmatrix})$. Fix a truncation point $n$.\\
+The first row of $S$, i.e. $\sum c_k z^k$, is annihilated by the operator
+\begin{gather*}
+\theta(\theta-1) x_0 + (\theta-1)(\theta+b-2-x_0)z + (2-a-\theta)z^2 \\
+= (\theta-1) \Big( \theta + \tfrac{b-2-x_0}{x_0} z +\sum_{j=2}^{\infty} (2-b+\tfrac{(1-a)x_0}{\theta-1})\tfrac{z^j}{(-x_0)^j} \Big) (z+x_0)^{-1}\text{,}
+\end{gather*}
+and the residual for truncation at $n$ is given by
+\begin{equation*}
+q(z) = -x_0 n c_n \tfrac{z^n}{n} - ((b-1+n-x_0)c_n + x_0 c'_n) \tfrac{z^{n+1}}{n+1}\text{.}
+\end{equation*}
+The second row of $S$, i.e. $\sum c'_k z^k$, is annihilated by the similar operator
+\begin{gather*}
+\theta(\theta-1) x_0 + (\theta-1)(\theta+b-1-x_0)z + (1-a-\theta)z^2\text{,}
+\end{gather*}
+and the residual for truncation at $n$ is given by
+\begin{equation*}
+q(z) = -x_0 n c'_n \tfrac{z^n}{n} - (a+n) c_n \tfrac{z^{n+1}}{n+1}\text{.}
+\end{equation*}
+These are easily combined into a bound on $\sum_{k=n}^{\infty} M_k z^k$.
+
+\subsection{continued fraction}
+The inequalities
+\begin{equation*}
+\int_{0}^{\infty} \ee^{-t(1+\frac{b}{x})} t^{a-1}x^{-b} \dd t < \int_{0}^{\infty} \ee^{-t} t^{a-1}(x+t)^{-b} \dd t < \int_{0}^{\infty} \ee^{-t} t^{a-1}x^{-b} \dd t
+\end{equation*}
+give, for $a,b,x>0$,
+\begin{equation}
+\label{equ_0f2_bound}
+(1+\tfrac{b}{x})^{-a} < {}_2 F_0(a,b|\tfrac{-1}{x}) < 1\text{.}
+\end{equation}
+For more accuracy for large $x$, Taylor's form of the remainder gives
+\begin{equation*}
+\Big| (1+\tfrac{t}{x})^{-b} - \sum_{k=0}^{n-1} \frac{(b)_k t^k}{ k! (-x)^k} \Big| \le \frac{(b)_n t^n}{ n!x^n} \text{,}
+\end{equation*}
+which, when integrated, shows that we may take $\ee^{?} = 1$ in \eqref{equ_2f0_asymp} when $a,b,x>0$.
+
+For any integer $n$, we have
+\begin{equation}
+\label{equ_2f0_cf}
+\frac{{}_2 F_0(b,a+1|\tfrac{-1}{x})}{{}_2 F_0(b+1,a+1|\tfrac{-1}{x})} = 1+\frac{a+1}{x} \,_{+} \frac{b+1}{1}  \,_{+} \cdots \,_{+} \frac{a+n}{x} \,_{+} \frac{b+n}{\frac{{}_2 F_0(b+n,a+n+1|\tfrac{-1}{x})}{{}_2 F_0(b+n+1,a+n+1|\tfrac{-1}{x})}}\text{.}
+\end{equation}
+Since the r.h.s remainder is easily bounded by \eqref{equ_0f2_bound}, this gives a rigorous algorithm for the quotient. For general $a,b,x$, \eqref{equ_2f0_asymp} can be used. The asymptotics of this remainder ($\sqrt{n/x}$) can be obtained from the following asmptotic series in $n^{-1/2}$, which follows along the same lines as the derivation of the asymptotic formula for $\Gamma$.
+\begin{equation*}
+{}_2 F_0(a+n,b+n|\tfrac{-1}{x}) = 2^{-1/2} \ee^{n-2\sqrt{n x} + \frac{x}{2}} (\tfrac{x}{n})^{n+\frac{a}{2}+\frac{b}{2}-\frac{1}{4}} \left(1 + \tfrac{12(a-b)^2-3-24(a+b-1)x-4 x^2}{48\sqrt{n x}} + O(\tfrac{1}{n}) \right)\text{.}
+\end{equation*}
+
+
+\subsection{resummation of ${}_2 F_0(1,a_1)$}
+Olver gave an effective absolute error estimate of the form
+\begin{equation}
+\label{equ_2f0_asymp}
+\Big| {}_2 F_0(a,b|\tfrac{-1}{x}) - \sum_{k=0}^{n-1} \frac{(a)_k (b)_k}{ k! (-x)^k} \Big| \le \frac{|(a)_n (b)_n|}{ n! |x|^n} \ee^{?}\text{,}
+\end{equation}
+but this remainder necessarily has a minimal size, so this formula is only useful up to a certain limited precision depending on the sizes of $a$ and $x$. On the other hand, any of the formulas \eqref{equ_2f0_recp} will require many terms for large $|x|$. Thus, more techniques are in order for large $|x|$, but not so large that \eqref{equ_2f0_asymp} applies.
+
+Setting $b=0$ in \eqref{equ_2f0_cf} immedately gives a formula for this case. However, this continued fraction cannot converge for $x<0$ and is ultimately logarithmically convergent where it does converge, so this is also of limited use.
+\eqref{equ_2f0_recp} has the special case
+\begin{align*}
+\ee^{-x} x^{a-1} {}_2 F_0(1,1-a|\tfrac{-1}{x}) = \Gamma(a, x) &= \Gamma(a) - \tfrac{x^a}{a} {}_1 F_1(a;a+1|-x)\\
+&= \Gamma(a) - \tfrac{x^a}{a} \ee^{-x} {}_1 F_1(1;a+1|x)
+\end{align*}
+
+Analytic continuation can be used for an effective algorithm between this and \eqref{equ_2f0_asymp}, and this is simple enough in this special case to deserve special treatment. If we fix $a$ and put
+\begin{equation*}
+e^z \int_0^z  e^{-t} (1+\tfrac{t}{x})^{a-1} \dd t =: \sum_{k=1}^{\infty} c_k(a,x) z^k \quad \quad |z| < |x|
+\end{equation*}
+in the $(1,2)$ entry of a matrix, then the whole matrix can be be calculated as
+\begin{equation}
+\label{equ_gamma_upper_transport}
+S(x,z) := \begin{pmatrix}
+\ee^z & \ee^{x+z} x^{1-a} (\Gamma(a,x) - \Gamma(a,x+z))\\
+0 & (1+\tfrac{z}{x})^{a-1}
+\end{pmatrix} = \sum_{k=0}^{\infty} \prod_{j=k}^{1} \frac{z}{j} \begin{pmatrix} 1 & 1 \\ 0 & \tfrac{a-j}{x} \end{pmatrix}\text{.}
+\end{equation}
+Truncation bounds for the diagonal entries are easy \eqref{equ_f0_maj}, and the $(1,2)$ tail is majorized as
+\begin{align*}
+S_{1,2}(x,z) - \sum_{k=1}^{n-1} c_k z^k & \ll \frac{z^n \ee^{\beta_1 z + \beta_2(- \log(1-\frac{z}{|x|})-\frac{z}{|x|})}}{|x| - z} \left((\gamma_0)^{+} + (\gamma_1-\tfrac{n \beta_1 \gamma_0}{n+1})^{+} z +(\tfrac{n \beta_1^2 \gamma_0 -n |x|^{-2} \beta_2 \gamma_0 -2(n+1)\beta_1 \gamma_1}{2(n+2)})^{+} z^2 \right)\text{,}\\
+\beta_1 &= |\tfrac{1+a+x}{x}|\text{,} \quad \quad \quad
+\beta_2 =  \max_{\theta \ge n} |1+a+\tfrac{a x}{\theta-1}| \le \max(|1+a|, |1+a + \tfrac{a x}{n-1}|)\\
+\gamma_0 &= |x c_n|\text{,} \quad \quad \quad \quad \gamma_1 = |\tfrac{(a-n) c_{n-1}}{n(n+1)}| 
+\end{align*}
+Set $S = S(x_1, x_2-x_1)$. The triple of data $(\ee^{-x_2}, x_2^{1-a}, \Gamma(a, x_2))$ can be moved to a triple at $x_1$ via
+\begin{align*}
+\ee^{-x_1} &= \ee^{-x_2} S_{1,1}\text{,}\\
+x_1^{1-a} &= x_2^{1-a} S_{2,2}\text{,}\\
+\Gamma(a, x_1) &= \Gamma(a,x_2) + \frac{\ee^{-x_2} S_{1,2}}{x_1^{1-a}}\text{,}\\
+{}_2 F_0(1,1-a|\tfrac{-1}{x_1}) S_{1,1} &= S_{1,2}+ {}_2 F_0(1,1-a|\tfrac{-1}{x_2}) S_{2,2}\text{,}
+\end{align*}
+and this constitutes a reverse algorithm. The forward algorithm is similar: Suppose we have the data $(\ee^{x_1}, x_1^{a-1})$ at $x_1$ and would like to calculate $\Gamma(a,x_1)$. We can push the problem to a new point $x_2$ via
+\begin{align*}
+\ee^{x_2} &= \ee^{x_1} S_{1,1}\text{,}\\
+x_2^{a-1} &= x_1^{a-1} S_{2,2}\text{,}\\
+\Gamma(a, x_1) &= \frac{x_1^{a-1} S_{1,2}}{ \ee^{x_2}} + \Gamma(a,x_2)\text{.}
+\end{align*}
+
+\subsection{resummation of ${}_3 F_1(1,a_1,a_2;b_1)$}
+First, with the goal of effectively calculating the tail of the corresponding Laplace integral, we seek an analogue of the asymptotic for the upper gamma function,
+\begin{equation*}
+\int_{z}^{\infty} e^{-t} \left(1+\tfrac{t}{x}\right)^{-a_1} \dd t \sim \ee^{-z} \left(1+\tfrac{z}{x}\right)^{-a_1} \sum_{k=0}^{\infty} \frac{(a_1)_k}{(-z-x)^k} \text{.}
+\end{equation*}
+This is given via various connection formulas by
+\begin{equation}
+\label{equ_3f1_int_tail}
+\begin{alignedat}{3}
+\int_{z}^{\infty} e^{-t} \FFs{2}{F}{1}{a_1,a_2}{b_1}{\tfrac{-t}{x}} \dd t &\sim \frac{\Gamma(b_1)\Gamma(a_2-a_1)}{\Gamma(a_2)\Gamma(b_1-a_1)}\ee^{-z} \left(1+\tfrac{z}{x}\right)^{-a_1} \sum_{k=0}^{\infty} \frac{(a_1)_k}{(-z-x)^k} \sum_{j=0}^{k} \frac{(-x)^j(b_1-a_2)_j}{j!(1+a_1-a_2)_j}\\
+&+\frac{\Gamma(b_1)\Gamma(a_1-a_2)}{\Gamma(a_1)\Gamma(b_1-a_2)}\ee^{-z} \left(1+\tfrac{z}{x}\right)^{-a_2} \sum_{k=0}^{\infty} \frac{(a_2)_k}{(-z-x)^k} \sum_{j=0}^{k} \frac{(-x)^j(b_1-a_1)_j}{j!(1+a_2-a_1)_j} \text{.}
+\end{alignedat}
+\end{equation}
+\begin{remark}
+This formula uses the $p=2$ case of \eqref{nearone} and in fact does not generalize to any ${}_p F_{p-1}$, where possibly slower `convergence' is required for a simple formula:
+\begin{equation*}
+\int_{z}^{\infty} e^{-t} \FFf{p}{F}{p-1}{\bfa; \bfb}{\tfrac{-t}{x}}  \dd t \sim \sum_{i=1}^{p} \frac{\Gamma(\mathbf{b}) \Gamma(\hat{\mathbf{a}}_i-a_i)}{\Gamma(\mathbf{b}-a_i) \Gamma(\hat{\mathbf{a}}_i)} \ee^{-z} \left(\tfrac{z}{x}\right)^{-a_i} \sum_{k=0}^{\infty} \frac{(a_i)_k}{(-z)^k} \sum_{j=0}^{k} \frac{x^j(1+a_i-\mathbf{b})_j}{j!(1+a_i-\hat{\mathbf{a}}_i)_j}\text{.}
+\end{equation*}
+\end{remark}
+Next, since we would like to calculate
+\begin{equation*}
+\FFs{3}{F}{1}{1,a_1,a_2}{b_1}{\tfrac{-1}{x}} = \int_{0}^{\infty} e^{-t} \FFs{2}{F}{1}{a_1,a_2}{b_1}{\tfrac{-t}{x}} \dd t\text{,}
+\end{equation*}
+we need an analogue of \eqref{equ_gamma_upper_transport}. Due to the special properties of the ${}_1 F_{0}$ in that case, we were always able to shift the lower limit of integration to $0$ in that case. This is no longer possible, so we will consider $x$ fixed in addition to $a_1,a_2,b_1$. The analogue of the $(2,2)$ entry of the matrix is the expansion
+\begin{equation*}
+\FFs{2}{F}{1}{a_1,a_2}{b_1}{\tfrac{-t}{x}} =: \sum_{k=0}^{\infty} d_k(z_1) (t-z_1)^k\text{.}
+\end{equation*}
+The $d_k$ satisfy a recurrence of order 2, and the $S$ function is now a 3x3 sum with 7 entries.
+\begin{equation*}
+S(z,t) := \sum_{k=0}^{\infty} \prod_{j=k}^{1} \frac{t}{k} \begin{pmatrix} 1 & 1 & 0\\ 0 & 0 & 1 \\ 0 & -\frac{(k+a_1-1)(k+a_2-1)}{z (z+x)} & \frac{1-b_1-k}{z}+ \frac{b_1-a_1-a_2-k}{z+x} \end{pmatrix}\text{,} \quad |t| < |z|,|z+x|
+\end{equation*}
+When $z=0$, the last row of the displayed matrix should be $0,0,-\tfrac{(a_1+k)(a_2+k)}{(b_1+k)x}$ with convergence $|t| < |x|$.
+
+Finally, suppose we have the data $(\ee^{z_1}, d_0(z_1), d_1(z_1))$ at a point $z_1$. At $z_1=0$ this data is trivial. The data at a new point $z_2$ along with the integral between $z_1$ and $z_2$ is given by
+\begin{equation*}
+\begin{pmatrix}
+\ee^{z_2} & \ee^{z_2} \int_{z_1}^{z_2} e^{-t} {}_2 F_1(\tfrac{-t}{x}) \dd t \\
+0 & d_0(z_2)\\
+0 & d_1(z_2)
+\end{pmatrix} = 
+S(z_1,z_2-z_1)
+\begin{pmatrix}
+1 & 0\\
+0 & d_0(z_1)\\
+0 & d_1(z_1)
+\end{pmatrix}\text{.}
+\end{equation*}
+We simply iterate this along an appropriate path starting at $0$ until \eqref{equ_3f1_int_tail} applies.
+
+\subsection{truncation bounds for ${}_3 F_1(1,a_1,a_2;b_1)$ resummation}
+TODO
+
+\subsection{bad resummation}
+The calculation of ${}_2 F_0$ follows the process in Section \ref{section_negd}. With $\hat{f}(\xi) = \sum_{n=0}^{\infty} \frac{(a)_n (b)_n}{n!^2} \xi^n$, the function $F(x) = \ee^{\omega x} \int_0^x \ee^{-\omega t} \hat{F}(z \omega t) dt$ is annihilated by ($\theta := x \partial_x$)
+\begin{equation*}
+(\theta -1)^2 \theta - w (\theta -1)(z (\theta -2+a)
+   (\theta -2+b)+\theta -1) x + w^2 z (\theta -2+a) (\theta -2+b) x^2
+\end{equation*}
+and for any $x_0$ with $x_0 \left(1-w x_0 z\right)\neq 0$ the function $\tilde{F}(x) = F(x+x_0)$ is annihilated by
+\begin{gather*}
+x_0 \left(1-w x_0 z\right)\theta (\theta -1)(\theta -2)\,+\\
+(\theta-1) (\theta-2) \left(\theta  \left(1-2 w x_0 z\right)-w x_0 (z (a+b-5)+1)+w^2 x_0^2 z-2\right)x \,+\\
+w (\theta -2)
+   \left(-z \theta ^2+\left(-z(a+b-6)+2 w x_0 z-1\right)\theta+w x_0 z (a+b-5)-(a-3)
+   (b-3) z+2\right) x^2\,+\\
+w^2 z (\theta-3+a) (\theta-3+b) x^3
+\end{gather*}
+
+In general, given $\hat{f}(\xi)$ we would like to compute $\lim_{x \to \infty} \omega \ee^{-\omega x}F(x)$ where
+\begin{gather*}
+F(x) := \ee^{\omega x} \int_0^x \ee^{-\omega t} \hat{f}(z (\omega t)^d) dt\text{,}\\
+F'(x) - w F(x) = \hat{f}(z (\omega x)^d)\text{.}
+\end{gather*}
+Initial conditions for $\hat{f}(\xi)$ at $\xi=0$ easily translate to initial condition for $F(x)$ at $x=0$ when combined with $F(0) = 0$. Next, we integrate these initial conditions from $0$ to some $x_0$ to produce $F(x_0), F'(x_0), \dots F^{(r+1)}(x_0)$ for some $r$. Finally, we need to estimate the tail $\int_{x_0}^{\infty} \ee^{-\omega t} \delta(t) dt$ where $\delta(x) = F'(x) - w F(x)$. Bounding the coefficients of the differential equation for $\delta$ gives a crude bound of the form $|\delta(x)| < \ee^{\lambda (x-x_0)} || \langle \delta(x_0), \delta'(x_0), \dots, \delta^{(r)}(x_0) \rangle ||$ for $x>x_0$. If $\lambda < \Re \omega$, then we are done.
+
+
+
+\section{${}_0 F_0$ and ${}_1 F_0$}
+Majorant method bounds:
+\begin{equation}
+\label{equ_f0_maj}
+\begin{alignedat}{3}
+\ee^z - \sum_{k=0}^{n-1} \frac{z^k}{k!} &\ll z^n e^z \frac{1}{n!}\\
+(1-z)^{-a} - \sum_{k=0}^{n-1} \frac{(a)_k z^k}{k!} &\ll z^n (1-z)^{-|a-1|} \frac{|(a)_n|}{n \, n!}\\
+\end{alignedat}
+\end{equation}
+Ratio test bounds (assuming $\rho < 1$):
+\begin{equation}
+\begin{alignedat}{3}
+\Big| \sum_{k=n}^{\infty} \frac{z^k}{k!} \Big| &\le \frac{|z|^n}{n!} \frac{1}{1-\rho}\text{,} \quad \quad \rho \ge \max_{k \ge n} | \tfrac{z}{k+1} | \\
+\Big|\sum_{k=n}^{\infty} \frac{(a)_k z^k}{k!} \Big| &\le \frac{|(a)_n z|^n}{n!} \frac{1}{1-\rho}\text{,} \quad \quad \rho \ge \max_{k \ge n} | \tfrac{(a+k)z}{k+1} | \\
+\end{alignedat}
+\end{equation}
 
 \section{The $\Gamma$ function}
 For the definition of the $\Gamma$ function we will take
@@ -1160,13 +1909,14 @@ as the first integral is $-\gamma + O(z)$ by \eqref{equ_loggamma_laplace}, and t
 \end{proof}
 
 \begin{theorem}
+For $q > 1$,
 \begin{equation*}
-\sum_{n=0}^{\infty}z^{n-x} \ee^{-q^{n-x}} = \sum_{n=0}^{\infty} \tfrac{(-1)^n z^{-x} q^{-n x}}{(1-z q^n)n!} + \sum_{m=-\infty}^{\infty} e^{2\pi \ii m x} \tfrac{1}{\log q}\Gamma(\tfrac{\log z + 2 \pi \ii m}{\log q})\text{.}
+\sum_{n=0}^{\infty}z^{n} \ee^{-q^{n-x}} = \sum_{n=0}^{\infty} \tfrac{(-1)^n q^{-n x}}{(1-z q^n)n!} + \sum_{m=-\infty}^{\infty} \ee^{(\log z + 2\pi \ii m) x} \tfrac{1}{\log q}\Gamma(\tfrac{\log z + 2 \pi \ii m}{\log q})\text{.}
 \end{equation*}
 \end{theorem}
 The coefficients incur a pole when $1=z q^n$ for some $n \ge 0$, in which case the probablematic terms must be evaluated separately via limits. For example, when $z=1$, we have
 \begin{equation*}
-\sum_{n=0}^{\infty} \ee^{-q^{n-x}} = x + \tfrac{1}{2} - \tfrac{\gamma}{\log q} + \sum_{n=1}^{\infty} \tfrac{(-1)^n q^{-n x}}{(1-q^n)n!} + \sum_{m \ne 0} e^{2\pi \ii m x}
+\sum_{n=0}^{\infty} \ee^{-q^{n-x}} = x + \tfrac{1}{2} - \tfrac{\gamma}{\log q} + \sum_{n=1}^{\infty} \tfrac{(-1)^n q^{-n x}}{(1-q^n)n!} + \sum_{m \ne 0} \ee^{2\pi \ii m x}
 \tfrac{1}{\log q}\Gamma(\tfrac{2 \pi \ii m}{\log q})\text{.}
 \end{equation*}
 
@@ -1198,511 +1948,6 @@ q-1 & \text{if }q \mid n\\
 \text{, for integral } q>1 \text{.}
 \end{align*}
 \end{corollary}
-
-\section{Identities}
-
-\subsection{contiguous}
-Recall $\theta = z \frac{\partial}{\partial z}$. The last row of these matrices follows from the hypegeometric differential equation.
-\begin{gather*}
-\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1+1,a_2}{b_1+1}{z}
-=
-\begin{pmatrix}
-1 & \tfrac{1}{a_1}\\
-\frac{a_1 a_2 z}{a_1(1-z)} & \tfrac{a_2 z+a_1-b_1}{a_1(1-z)}
-\end{pmatrix}
-\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1+1}{z}\\
-\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1}{z}
-=
-\begin{pmatrix}
-1 & \tfrac{1}{b_1}\\
-\frac{a_1 a_2 z}{b_1(1-z)} & \tfrac{(a_1+a_2-b_1)z}{b_1(1-z)}
-\end{pmatrix}
-\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1+1}{z}\\
-\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1+1,a_2,a_3}{b_1+1,b_2+1}{z}
-=
-\begin{pmatrix}
-1 & \tfrac{1}{a_1} & 0\\
-0 & 1 & \tfrac{1}{a_1}\\
-\frac{a_1 a_2 a_3 z}{a_1(1-z)} & \frac{(a_2 a_3 +a_1 a_3 + a_1 a_2) z - b_1 b_2}{a_1(1-z)} & \tfrac{(a_2+a_3) z + a_1-b_1-b_2}{a_1(1-z)}
-\end{pmatrix}
-\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_2}{b_1+1,b_2+1}{z}\\
-\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_3}{b_1,b_2+1}{z}
-=
-\begin{pmatrix}
-1 & \tfrac{1}{b_1} & 0\\
-0 & 1 & \tfrac{1}{b_1}\\
-\frac{a_1 a_2 a_3 z}{b_1(1-z)} & \tfrac{(a_2 a_3 +a_1 a_3 + a_1 a_2)z-b_1 b_2}{b_1(1-z)} & \tfrac{(a_1+a_2+a_3-b_1)z-b_2}{b_1(1-z)}
-\end{pmatrix}
-\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_3}{b_1+1,b_2+1}{z}
-\end{gather*}
-
-\begin{theorem}
-Let $\bfm$ and $\bfn$ be integer vectors. There exists a matrix $M$ of rational functions in $z$ of degree bounded by $\sum |\bfm| + \sum |\bfn|$ (?) such that
-\begin{equation*}
-(1 \, \theta \, \dots \, \theta^{p-1})^\intercal \Head{p}{F}{p-1} \ArgS{\bfa + \bfm}{\bfb + \bfn}{z} = M (1 \, \theta \, \dots \, \theta^{p-1})^\intercal \Head{p}{F}{p-1} \ArgS{\bfa}{\bfb}{z}
-\end{equation*}
-thus any $p+1$ such contiguous functions are linearly dependent over $\bbC(z)$.
-\end{theorem}
-
-\subsection{products}
-\begin{theorem}
-($\Head{3}{E}{2} = \Head{2}{E}{1}^2$):
-\begin{align*}
-\Head{3}{F}{2} \ArgS{2a,2b,a+b}{2a+2b,\frac12+a+b}{z} &= \Head{2}{F}{1} \ArgS{a,b}{\frac12+a+b}{z}^2\\
-\Head{3}{F}{2} \ArgS{\frac12,\frac12 + 2a,\frac12-2a}{1+2b,1-2b}{z} &= \Head{2}{F}{1} \ArgS{\frac14+a+b,\frac14-a+b}{1+2b}{z} \Head{2}{F}{1} \ArgS{\frac14+a-b,\frac14-a-b}{1-2b}{z}
-\end{align*}
-\end{theorem}
-
-\begin{theorem}
-\label{thm_4e3_2e1_2e1}
-($\Head{4}{E}{3} = \Head{2}{E}{1} \cdot \Head{2}{E}{1}$):
-\begin{equation*}
-\FFs{4}{F}{3}{a,b,c-a,c-b}{c, \frac{c}{2}, \frac{c+1}{2}}{\tfrac{z^2}{4(z-1)}} = (1-z)^a \FFs{2}{F}{1}{a,c-b}{c}{z} \FFs{2}{F}{1}{a,b}{c}{z} \quad =  \FFes{2}{F}{1}{-}{a,b}{c}{\tfrac{z}{z-1}} \FFs{2}{F}{1}{a,b}{c}{z}
-\end{equation*}
-\begin{equation*}
-\left(\begin{array}{r}
-\frac{1}{(1-z)^{\frac12+a}} \Head{4}{F}{3} \ArgS{\frac12+a,\frac12-a,\frac12+b,\frac12-b}{\frac{1}{2}, 1-c, 1+c}{\tfrac{z^2}{4(z-1)}}\\
-\frac{a b c}{(\frac12+c)(\frac12-c)} \frac{z}{(1-z)^{1+a}} \Head{4}{F}{3} \ArgS{1+a,1-a,1+b,1-b}{\frac32, \frac32+c, \frac32-c}{\tfrac{z^2}{4(z-1)}}
-\end{array}\right)
- =
-\begin{pmatrix}
-\tfrac12 & \tfrac12 \\
-\tfrac12 & -\tfrac12
-\end{pmatrix}
-\begin{pmatrix}
-\Head{2}{F}{1}\ArgS{\frac12+a+c,\frac12+b+c}{1+2c}{z} \Head{2}{F}{1}\ArgS{\frac12+a-c,\frac12-b-c}{1-2c}{z}
-\\
-\Head{2}{F}{1} \ArgS{\frac12+a+c,\frac12-b+c}{1+2c}{z}\Head{2}{F}{1} \ArgS{\frac12+a-c,\frac12+b-c}{1-2c}{z} \end{pmatrix}
-\end{equation*}
-\end{theorem}
-
-\subsection{Multiple integral evaluations via the complete elliptic integral}
-\begin{remark}
-The following conversions from $\Head{2}{F}{1}(\frac12, \frac12; 1 | z)$ for $\Re z > \frac12$ are not done correctly in the integral evaluations, so the range of valid parameters is reduced for the $\Head{2}{F}{1}(\frac14, \frac14; 1)$ expressions.
-\begin{align*}
-\FFs{2}{F}{1}{\frac14,\frac14}{1}{z} &= \Head{2}{F}{1} \ArgKS{\tfrac12 - \tfrac{\sqrt{1-z}}{2}}\text{,}\\
-\tfrac{4\sqrt{\pi}}{\Gamma(\frac14)^2} \sqrt{1-z} \Head{2}{F}{1} \ArgS{\frac34,\frac34}{\frac32}{1-z} + \FFs{2}{F}{1}{\frac14,\frac14}{1}{z} &= \Head{2}{F}{1} \ArgKS{\tfrac12 + \tfrac{\sqrt{1-z}}{2}}\text{,}\\
-\FFs{2}{F}{1}{\frac14,\frac34}{1}{z} &= (1-z)^{-1/4}\Head{2}{F}{1} \ArgKS{\tfrac12 - \tfrac{1}{2\sqrt{1-z}}}\\
-\sqrt{2} \Head{2}{F}{1} \ArgS{\frac14,\frac34}{1}{1-z} \pm \ii \, \FFs{2}{F}{1}{\frac14,\frac34}{1}{z} &= (1-z)^{-1/4}\Head{2}{F}{1} \ArgKS{\tfrac12 + \tfrac{1}{2\sqrt{1-z}}}
-\end{align*}
-\end{remark}
-\begin{theorem} Rank 2:
-\begin{equation*}
-\frac{1}{\pi^2} \iint_0^{\pi} \tfrac{\dd u \, \dd v} {1 - a \cos u - b \cos v - c \cos u \cos v} = \tfrac{1}{\sqrt{1+a-b+c}\sqrt{1-a+b+c}} \Head{2}{F}{1} \ArgKS{1-\tfrac{(1+a+b-c)(1-a-b-c)}{(1+a-b+c)(1-a+b+c)}}
-\end{equation*}
-\end{theorem}
-
-\begin{theorem} Rank 3:
-\begin{equation*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos u \cos v \cos w} = \Head{2}{F}{1} \ArgKS{\tfrac{1-\sqrt{1-a^2}}{2}}^2 = \Head{2}{F}{1} \ArgKS{\tfrac{a}{2}\tfrac{\sqrt{1+a}-\sqrt{1-a}}{\sqrt{1+a}+\sqrt{1-a}}}^2 = \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{a^2}^2
-\end{equation*}
-equivalent to $\FFs{3}{F}{2}{\frac12,\frac12,\frac12}{1,1}{z} = \Head{2}{F}{1} \ArgKS{\tfrac{1 -\sqrt{1-z}}{2}}^2$.
-\end{theorem}
-
-\begin{theorem} Rank 4:
-\begin{align*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - b \cos u \cos w} &= \prod_{a \leftrightarrow b} \Head{2}{F}{1} \ArgKS{\tfrac{1 + a^2 - b^2-\sqrt{(1-a^2+b^2)^2-4b^2}}{2}}\\
-&= \prod_{a \leftrightarrow b} \Head{2}{F}{1} \ArgKS{a\tfrac{\sqrt{1+a-b}\sqrt{1+a+b}-\sqrt{1-a-b}\sqrt{1-a+b}}{\sqrt{1+a-b}\sqrt{1+a+b}+\sqrt{1-a-b}\sqrt{1-a+b}}}\\
-&= \prod_{a \leftrightarrow b} \Head{2}{F}{1}\ArgS{\frac14,\frac14}{1}{4a b \tfrac{(a+b)\sqrt{1+a-b}\sqrt{1-a+b} + (a-b) \sqrt{1+a+b}\sqrt{1-a-b}}{(a+b)\sqrt{1+a-b}\sqrt{1-a+b} - (a-b) \sqrt{1+a+b}\sqrt{1-a-b}}}
-\end{align*}
-with the corollary
-$\FFs{4}{F}{3}{\frac14,\frac14,\frac34,\frac34}{\frac12,1,1}{z} = \Head{2}{F}{1}\ArgKS{\tfrac{1+\sqrt{-z} -\sqrt{1-z}}{2}} \Head{2}{F}{1}\ArgKS{\tfrac{1-\sqrt{-z} -\sqrt{1-z}}{2}}$ (also by Theorem \ref{thm_4e3_2e1_2e1}).
-\end{theorem}
-
-\begin{theorem} Rank 4:
-\begin{align*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - \frac12 b \cos u \cos w - \frac12 b \cos u \cos v} &= \tfrac{1}{1+a} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{1}{2}-\tfrac{(1-a)\sqrt{1-a+b}\sqrt{1-a-b}}{2(1+a)^2} \pm \tfrac{\sqrt{a}\sqrt{4a+ b^2}}{(1+a)^2}}\\
-&= \tfrac{1}{1+a} \prod_{\pm} \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{ \tfrac{b^2}{(1+a)^2} \tfrac{(1-a)\sqrt{4a+b^2} \mp 2 \sqrt{a}\sqrt{1-a+b}\sqrt{1-a-b}}{(1-a)\sqrt{4a+b^2} \pm 2 \sqrt{a}\sqrt{1-a+b}\sqrt{1-a-b}} }
-\end{align*}
-The special case $b = 2a$ is recorded by Glasser (quoting Iwata) in the first form.
-\end{theorem}
-
-\begin{theorem} Rank 4: with $x = \tfrac{1-a^2+b^2 - \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}{1+a^2-b^2 + \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}$,
-\begin{align*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos u - \frac12 b \cos v - \frac12 b \cos w} &= \tfrac{\sqrt{1+x}\sqrt{b^2+a^2 x}}{b} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{1}{2}-\tfrac{\sqrt{1+x}\sqrt{b^2+b^2 x + a^2 x^2}}{2b} \pm \tfrac{x\sqrt{b^2+a^2 x}}{2b}}\\
-&= \tfrac{\sqrt{1+x}\sqrt{b^2+a^2 x}}{b} \prod_{\pm} \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{\tfrac{a^2 x^2}{b^2}\tfrac{\sqrt{b^2+b^2 x + a^2 x^2} \mp \sqrt{1+x}\sqrt{b^2+a^2 x}}{\sqrt{b^2+b^2 x + a^2 x^2} \pm \sqrt{1+x}\sqrt{b^2+a^2 x}}}\\
-&=\tfrac{2\sqrt{1+x}\sqrt{b^2+a^2 x}}{\sqrt{2b^2 + 2b^2 x + a^2 x^2 + 2b \sqrt{1+x}\sqrt{b^2+b^2 x + a^2 x^2}}} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{\sqrt{1+x}\sqrt{b^2+b^2 x+a^2 x^2} \pm x \sqrt{b^2+ a^2 x}-b}{\sqrt{1+x}\sqrt{b^2+b^2 x+a^2 x^2} \pm x \sqrt{b^2+ a^2 x}+b}}
-\end{align*}
-The special case $b = 2a$ is recorded by Glasser (quoting Joyce) in the third form.
-\end{theorem}
-
-\section{${}_0 F_0$ and ${}_1 F_0$}
-Majorant method bounds:
-\begin{equation}
-\label{equ_f0_maj}
-\begin{alignedat}{3}
-\ee^z - \sum_{k=0}^{n-1} \frac{z^k}{k!} &\ll z^n e^z \frac{1}{n!}\\
-(1-z)^{-a} - \sum_{k=0}^{n-1} \frac{(a)_k z^k}{k!} &\ll z^n (1-z)^{-|a-1|} \frac{|(a)_n|}{n \, n!}\\
-\end{alignedat}
-\end{equation}
-Ratio test bounds (assuming $\rho < 1$):
-\begin{equation}
-\begin{alignedat}{3}
-\Big| \sum_{k=n}^{\infty} \frac{z^k}{k!} \Big| &\le \frac{|z|^n}{n!} \frac{1}{1-\rho}\text{,} \quad \quad \rho \ge \max_{k \ge n} | \tfrac{z}{k+1} | \\
-\Big|\sum_{k=n}^{\infty} \frac{(a)_k z^k}{k!} \Big| &\le \frac{|(a)_n z|^n}{n!} \frac{1}{1-\rho}\text{,} \quad \quad \rho \ge \max_{k \ge n} | \tfrac{(a+k)z}{k+1} | \\
-\end{alignedat}
-\end{equation}
-
-
-\section{${}_0 F_1$, ${}_1 F_1$ and ${}_2 F_0$} This includes all Bessel functions, Airy functions, and confluent functions, and it is worth mentioning that the ${}_p U_{q}$ series are hypergeometric.
-\begin{align*}
-\FFf{0}{U}{1}{b_1}{z} &= \FFf{2}{F}{0}{-\tfrac{1}{2}+b_1, \tfrac{3}{2}-b_1}{\tfrac{1}{4}z}\text{,}\\
-\FFf{1}{U}{1}{a_1;b_1}{z} &= \FFf{2}{F}{0}{1-a_1, b_1-a_1}{z}\text{,}
-\end{align*}
-which are generalized slightly via
-\begin{equation}
-\label{equ_pUq_as_hyp}
-\begin{alignedat}{5}
-\FFf{1}{U}{2}{1;b_1,b_2}{z} &= \FFf{2}{F}{0}{\tfrac{1}{2}+b_1-b_2, \tfrac{1}{2}+b_2-b_1}{\tfrac{1}{4}z}\text{,}\\
-\FFf{2}{U}{2}{a_1,1;b_1,b_2}{z} &= \FFf{2}{F}{0}{b_1-a_1, b_2-a_1}{z}\text{.}
-\end{alignedat}
-\end{equation}
-\subsection{${}_0 F_1$}
-As a consequence of \eqref{entirerecp2}, we have, for example,
-\begin{equation*}
-2 \sqrt{\pi} z^{\frac{1}{4}+\frac{b}{2}}\frac{{}_0 F_1(1+b|z)}{\Gamma(1+b)} = \ee^{2\sqrt{z}}  {}_2 F_0(\tfrac{1}{2}+b,\tfrac{1}{2}-b|\tfrac{1}{4\sqrt{z}}) + \ee^{\pm \pi \ii(\frac{1}{2}-b)}\ee^{-2\sqrt{z}}  {}_2 F_0(\tfrac{1}{2}+b,\tfrac{1}{2}-b|\tfrac{-1}{4\sqrt{z}})\text{.}
-\end{equation*}
-This means the various Bessel functions defined by
-\begin{align*}
-I_{\nu}(2z) &= \frac{z^{\nu} {}_0 F_1(1+\nu| z^2)}{\Gamma(1+\nu)}\text{,}\\
-K_{\nu}(2z) &= -\frac{\pi}{2\sin \pi \nu} \frac{z^{\nu} {}_0 F_1(1+\nu| z^2)}{\Gamma(1+\nu)} + \frac{\pi}{2\sin \pi \nu} \frac{z^{-\nu} {}_0 F_1(1-\nu| z^2)}{\Gamma(1-\nu)} \text{,}\\
-J_{\nu}(2z) &= \frac{z^{\nu} {}_0 F_1(1+\nu| -z^2)}{\Gamma(1+\nu)}\text{,}\\
-Y_{\nu}(2z) &= \frac{\cos \pi \nu}{\sin \pi \nu} \frac{z^{\nu} {}_0 F_1(1+\nu| -z^2)}{\Gamma(1+\nu)} - \frac{1}{\sin \pi \nu} \frac{z^{-\nu} {}_0 F_1(1-\nu| -z^2)}{\Gamma(1-\nu)}\text{,}
-\end{align*}
-have the following ${}_2F_0$ representations for $z \ne 0$ (recall $\pm = (\log (z) - \log (-z))/(\pi \ii)$).
-\begin{align*}
-I_{\nu-\frac{1}{2}}(z) &= \frac{\ee^{\pm \pi \ii \nu}\ee^{-z}}{ \sqrt{2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{-1}{2z}) + \frac{\ee^{z}}{ \sqrt{2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{1}{2z})\text{,}\\
-K_{\nu-\frac{1}{2}}(z) &= \frac{\ee^{-z}}{ \sqrt{2z/\pi}} {}_2 F_0(\nu,1-\nu|\tfrac{-1}{2z})\text{,}\\
-J_{\nu-\frac{1}{2}}(z) &= \frac{\ee^{\pm \pi \ii \frac{\nu}{2} \mp \ii z}}{\sqrt{2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{\pm \ii}{2 z}) + \tfrac{z^{2\nu}}{(z^2)^{\nu}} \frac{\ee^{\mp \pi \ii \frac{\nu}{2} \pm \ii z}}{\sqrt{2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{\mp \ii}{2 z})\text{,}\\
-Y_{\nu-\frac{1}{2}}(z) &= \frac{\ee^{\pm \pi \ii \frac{\nu}{2} \mp \ii z}}{\sqrt{-2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{\pm \ii}{2 z}) - (2-\tfrac{z^{2\nu}}{(z^2)^{\nu}}) \frac{\ee^{\mp \pi \ii \frac{\nu}{2} \pm \ii z}}{\sqrt{-2\pi z}} {}_2 F_0(\nu,1-\nu|\tfrac{\mp \ii}{2 z})\text{.}
-\end{align*}
-These last two are slightly cleaner in the equivalent form with $H_{\nu}^{(i)}(z) = J_{\nu}(z) - (-1)^i \ii Y_{\nu}(z)$
-\begin{equation*}
-\sqrt{\frac{\pi z}{2}} \begin{pmatrix}
-\ee^{-\ii (z - \frac{\pi \nu}{2})}H_{\nu-\frac{1}{2}}^{(1)}(z)\\
-\ee^{+\ii (z - \frac{\pi \nu}{2})}H_{\nu-\frac{1}{2}}^{(2)}(z)
-\end{pmatrix}
-=
-\left\{
-\begin{aligned}
-&(\begin{smallmatrix} 1&0\\ 0 &1\end{smallmatrix})\text{,} \quad \quad \quad \tfrac{-\pi}{2} < \arg z \le \tfrac{\pi}{2}\\
-&(\begin{smallmatrix} 1& 0\\ 2\ii \sin(\pi \nu) \ee^{2 \ii z} &1\end{smallmatrix})\text{, } \quad \arg z> \tfrac{\pi}{2}\\
-&(\begin{smallmatrix} 1&-2\ii \sin(\pi \nu) \ee^{-2 \ii z}\\ 0  &1\end{smallmatrix})\text{, } \arg z \le \tfrac{-\pi}{2}
-\end{aligned}
-\right\}
-\begin{pmatrix}
-{}_2 F_0(\nu,1-\nu|\tfrac{-\ii}{2 z})\\
-{}_2 F_0(\nu,1-\nu|\tfrac{+\ii}{2 z})
-\end{pmatrix}\text{,}
-\end{equation*}
-which we recognize simply as a different branch \eqref{equ_2f0_branch} of the ${}_2 F_0$s, matching the branch of the l.h.s. As long as $\arg z \ne \pi$, the correction matrices differ from the identity by a exponentially small amount.
-\subsubsection{integral evaluations}
-The first here follows from \eqref{equ_gamma_hankel} and the second from the first.
-\begin{align*}
-\frac{1}{2\pi \ii} \int_{-\infty}^{(0+)} \frac{\ee^{t + \frac{z}{t}}}{t^{1+b}} \dd t &= \frac{{}_0 F_{1} (1+b|z)}{\Gamma(1+b)}\\
-\int_{0}^{\infty} \frac{\ee^{-\frac{z}{t} - z t}}{t^{1+b}} \dd t & = \Gamma(b) z^{-b} {}_0 F_{1} (1-b|z^2) + \Gamma(-b) z^{b} {}_0 F_{1} (1+b|z^2) \\
-\int_{0}^{\infty} \frac{\ee^{-\frac{z_1}{t} - z_2 t}}{t^{1+b}} \dd t & = \Gamma(a) z_1^{-b} {}_0 F_{1} (1-b|z_1 z_2) + \Gamma(-a) z_2^{b} {}_0 F_{1} (1+b| z_1 z_2)
-\end{align*}
-The last two only converge as written for restricted $z \ne 0$. The integrals can converge everywhere if the approach to the end points is twisted accordingly. The following are direct calculations combined with \eqref{divrecp}, and $a=\frac12$ is the case of interest.
-
-\newcommand{\soltwo}[1] {\tfrac{\Gamma(b)\Gamma(\frac12+b)}{\pi \Gamma(1-a+b)} z^{-2b} \FFs{1}{F}{2}{a-b}{\frac12-b,1-b}{#1}}
-
-\newcommand{\solzero}[1] {\tfrac{\Gamma(a)}{\Gamma(\frac12) \Gamma(1+b)} \FFs{1}{F}{2}{a}{\frac12,1+b}{#1}}
-
-\newcommand{\solone}[1] {\tfrac{\Gamma(\frac12+a)}{\Gamma(\frac32) \Gamma(\frac32 + b)} z \FFs{1}{F}{2}{\frac12+a}{\frac32, \frac32+b}{#1}}
-
-\begin{align*}
-&\tfrac{2}{\Gamma(\tfrac12) \Gamma(1-a+b)} \int_0^1 \ee^{-2 z t} t^{2a-1} (1-t^2)^{b-a} \dd t = \solzero{z^2} - \solone{z^2}\text{,}\\
-&\tfrac{2}{\Gamma(\tfrac12) \Gamma(1-a+b)} \int_0^{\infty} \ee^{-2 z t} t^{2a-1} (1+t^2)^{b-a} \dd t = \tfrac{\Gamma(a)\Gamma(\frac12+a)}{\pi \Gamma(1-a+b)} z^{-2a} {}_3 F_0(a-b,a,\tfrac12+a|\tfrac{-1}{z^2})\\
- &= \soltwo{-z^2} - \tfrac{\sin \pi (a-b)}{\sin \pi b} \solzero{-z^2} + \tfrac{\sin \pi (a-b)}{\cos \pi b} \solone{-z^2}\text{,}\\
- &\tfrac{2}{\Gamma(\tfrac12) \Gamma(1-a+b)} \int_1^{\infty} \ee^{-2 z t} t^{2a-1} (t^2-1)^{b-a} \dd t\\ 
-&= \soltwo{z^2} - \tfrac{\sin \pi a}{\sin \pi b} \solzero{z^2} + \tfrac{\cos \pi a}{\cos \pi b} \solone{z^2}\text{.}
-\end{align*}
-\let\soltwo\undefined
-\let\solone\undefined
-\let\solzero\undefined
-These ``squared'' formulas should be compared with the non-squared version next. The three integrals are linearly dependent as $I_2(\ii z) = \ee^{-\ii \pi a } I_1(z) + \ee^{-\ii \pi b} I_3(z)$.
-
-\subsection{${}_1 F_1$ and ${}_2 F_0$}
-As before, $I_2(-z) = \ee^{-\ii \pi a } I_1(z) + \ee^{-\ii \pi b} I_3(z)$, for
-\newcommand{\soltwo}[1] {\tfrac{\Gamma(b)}{ \Gamma(1-a+b)} z^{-b} \FFs{1}{F}{1}{a-b}{1-b}{#1}}
-\newcommand{\solzero}[1] {\tfrac{\Gamma(a)}{ \Gamma(1+b)} \FFs{1}{F}{1}{a}{1+b}{#1}}
-\begin{align*}
-\tfrac{1}{\Gamma(1-a+b)} \int_0^1 \ee^{-z t} t^{a-1} (1-t)^{b-a} \dd t &= \solzero{-z}\text{,}\\
-\tfrac{1}{\Gamma(1-a+b)} \int_0^{\infty} \ee^{-z t} t^{a-1} (1+t)^{b-a} \dd t &= \tfrac{\Gamma(a)}{\Gamma(1-a+b)} z^{-a} {}_2 F_0(a-b,a|\tfrac{-1}{z})\\
- &= \soltwo{z} - \tfrac{\sin \pi (a-b)}{\sin \pi b} \solzero{z}\text{,}\\
-\tfrac{1}{\Gamma(1-a+b)} \int_1^{\infty} \ee^{-z t} t^{a-1} (t-1)^{b-a} \dd t &= \ee^{-z} z^{a-b-1} {}_2 F_0(1-a,1-a+b|\tfrac{-1}{z})\\ 
-&= \soltwo{-z} - \tfrac{\sin \pi a}{\sin \pi b} \solzero{-z}\text{.}
-\end{align*}
-\let\soltwo\undefined
-\let\solzero\undefined
-
-For $s=+$ or $-$, we will set $\FFs{}{U}{s}{a}{b}{z} = (s z)^{-a} {}_2 F_0(a,1+a-b|\tfrac{-1}{z})$ with $s=+$ being the default. $f(z) = {}_1 F_1(a;b|z)$ satisfies (along with $z^{1-b} {}_1 F_1(1-b+a;2-b|z)$ and $\FFs{}{U}{}{a}{b}{z}$ and $\ee^{z} \FFs{}{U}{}{b-a}{b}{-z}$)
-\begin{equation*}
-f''(z) - (1-\tfrac{b}{z})f'(z) - \tfrac{a}{z} f(z) = 0\text{.}
-\end{equation*}
-$f(z) = {}_2 F_0(a,b|\tfrac{-1}{z})$ satisfies (along with $\ee^{z} z^{a+b-1} {}_2 F_0(1-a,1-b|\frac{1}{z})$)
-\begin{equation*}
-f''(z) - (1+\tfrac{a+b-1}{z})f'(z) + \tfrac{a b}{z^2} f(z) = 0\text{.}
-\end{equation*}
-with the various connection formulas taking the form
-\begin{equation}
-\label{equ_2f0_recp}
-\begin{alignedat}{7}
-{}_2 F_0(a,b|\tfrac{-1}{z}) &= &\tfrac{\Gamma(b-a)}{\Gamma(b)} z^{a} \FFs{1}{F}{1}{a}{1+a-b}{z}& + &\tfrac{\Gamma(a-b)}{\Gamma(a)} z^{b} \FFs{1}{F}{1}{b}{1+b-a}{z}\\
-\ee^{z} (-z)^{a+b-1} {}_2 F_0(1-a,1-b|\tfrac{1}{z}) &= & \tfrac{\Gamma(b-a)}{\Gamma(1-a)} (-z)^{a} \FFs{1}{F}{1}{a}{1+a-b}{z}& +
-&\tfrac{\Gamma(a-b)}{\Gamma(1-b)} (-z)^{b} \FFs{1}{F}{1}{b}{1+b-a}{z}\\
-\FFs{1}{F}{1}{a}{b}{z} &= &\ee^{z} \FFs{1}{F}{1}{b-a}{b}{-z}&\text{,}\\
-\tfrac{1}{\Gamma(b)} \FFs{1}{F}{1}{a}{b}{z} &= &\tfrac{(-z)^{-a}}{\Gamma(b-a)} {}_2 F_{0}(a,1+a-b,\tfrac{-1}{z})& +
-&\tfrac{\ee^z z^{a-b}}{\Gamma(a)} {}_2 F_{0}(b-a,1-a,\tfrac{1}{z})\text{,}\\
-&= &\tfrac{1}{\Gamma(b-a)} \FFs{}{U}{-}{a}{b}{z}& + &\tfrac{1}{\Gamma(a)} \ee^{z} \FFs{}{U}{-}{b-a}{b}{-z}&
-\end{alignedat}
-\end{equation}
-This connection formula says that the following vector is multiplied by the following matrix as $z$ crosses the negative real axis (resp. positive real axis).
-\begin{equation}
-\label{equ_2f0_branch}
-\begin{pmatrix}
-{}_2 F_0(a, b | \tfrac{-1}{z})\\
-\ee^{z} (-z)^{a+b-1} {}_2 F_0(1-a, 1-b | \tfrac{1}{z})
-\end{pmatrix}
-: \quad \quad
-\begin{pmatrix}
-1 & \frac{2\pi \ii}{\Gamma(a)\Gamma(b)} \\
-0 & 1
-\end{pmatrix}
-\text{,  resp. }
-\begin{pmatrix}
-1 & 0 \\
-\frac{-2\pi \ii \ee^{\pi \ii (a+b)}}{\Gamma(1-a)\Gamma(1-b)} & \ee^{2\pi \ii (a+b)}
-\end{pmatrix}\text{.}
-\end{equation}
-
-\subsection{solution of ${}_1 F_1$ equation around $0$}
-
-
-\subsubsection{case $b \notin \bbZ$}
-We can assume wlog we are simply calculating ${}_1 F_1(a;b|z) = \sum c_k z^k$ and possibly its derivative. Set $c'_k := (k+1)c_{k+1}$. With $M_0=I$ and
-\begin{equation*}
-M_k = \frac{1}{k}\begin{pmatrix} 0 & 1\\
-0 & \frac{a+k}{b+k}\end{pmatrix} M_{k-1}\text{,}
-\end{equation*}
-we have $(\begin{smallmatrix} f(z) \\ f'(z) \end{smallmatrix}) = S (\begin{smallmatrix} c_0 \\ c'_0 \end{smallmatrix})$ where 
-$S = \sum_{k=0}^{\infty} M_k z^k$.\\
-The first row of $S$ is annihilated by the operator
-\begin{gather*}
-\theta(\theta+b-1) - (\theta+a-1)z = (\theta+b-1) ( \theta - \tfrac{\theta+a-1}{\theta+b-1} z)\text{,}
-\end{gather*}
-and the residual for truncation at $n$ is given by $q(z) = - n c_n \tfrac{z^n}{n}$.\\
-The second row of $S$ is annihilated by $\theta(\theta+b) - (\theta+a)z$,
-and the residual for truncation at $n$ is given by $q(z) = - n c'_n \tfrac{z^n}{n}$.
-Alternatively, if $\rho<1$ is an upper bound on $\tfrac{z(k+a)}{(k+1)(k+b)}$ for $k\ge n$,
-\begin{equation*}
-\Big| \sum_{k=n}^{\infty} c_k z^k \Big| < \frac{|c_n z^n|}{1-\rho}\text{,} \quad \quad \quad
-\Big| \sum_{k=n}^{\infty} c'_k z^k \Big| < \frac{|c'_n z^n|}{1-\rho'}\text{.}
-\end{equation*}
-\subsubsection{case $b \in \bbZ$}
-We can assume wlog that $1-b \ge 0$. The general solution takes the form
-\begin{equation*}
-\sum_{k=0}^{\infty} (c_{k,0}+c_{k,1} \log(z)) z^k\text{,}
-\end{equation*}
-and we will identify $c_k = c_{k,0}+c_{k,1} \log(z)$ with the polynomial $c_{k,0} \Lambda + c_{k,1}$ modulo $\Lambda^2$. The two free coefficients are $\chi_0 := c_{0,0}$ and $\chi_1 = c_{1-b,0}$ (or $\chi_1 = c_{0,1}$ if $b=1$). Let $M_k \in (\bbC[\Lambda]/\Lambda^2)^{2 \times 1}$ be such that $c_{k,1} + c_{k,0} \Lambda = M_k (\begin{smallmatrix} \chi_0 \\ \chi_1\end{smallmatrix})$. We have
-\begin{equation*}
-M_k = \begin{cases}
-(\Lambda, 1)\text{,} & k=0=1-b\\
-(\Lambda, 0)\text{,} & k=0 \ne 1-b\\
-\frac{\Lambda+k+a-1}{\Lambda+k} \frac{M_{k-1}}{\Lambda} + (0,\Lambda)\text{,} & k=1-b\\
-\frac{\Lambda+k+a-1}{(\Lambda+k)(\Lambda+k+b-1)} M_{k-1}
-\end{cases}
-\text{,}
-\end{equation*}
-with the convention that when a polynomial modulo $\Lambda^2$ is divided exactly by $\Lambda$, the result is zero-exented to the full precision.
-
-\subsection{solution of ${}_1 F_1$ equation around a non-singular point $x_0$}
-$f(z) = {}_1 F_1(a;b|z)$ satisfies
-\begin{equation*}
-f''(z) - (1-\tfrac{b}{z})f'(z) - \tfrac{a}{z} f(z) = 0\text{.}
-\end{equation*}
-We are given $c_0=f(x_0)$ and $c_1=f'(x_0)$ as the coefficients $
-f(x_0+z) = \sum_{k=0}^{\infty} c_k z^k$ and would like to calculate $f(x_0+z)$ and $f'(x_0+z)$ via power series. Set $c'_k := (k+1)c_{k+1}$. With $M_0=I$ and
-\begin{equation*}
-M_k = \frac{1}{k} \begin{pmatrix} 0 & 1\\
-\frac{k+a-1}{x_0} & 1 - \frac{k+b-1}{x_0}\end{pmatrix} M_{k-1}\text{,}
-\end{equation*}
-we have $M_k (\begin{smallmatrix} c_0 \\ c_1 \end{smallmatrix}) = (\begin{smallmatrix} c_k \\ c'_k \end{smallmatrix})$. With $S = \sum_{k=0}^{\infty} M_k z^k$, we have $S (\begin{smallmatrix} f(x_0) \\ f'(x_0) \end{smallmatrix}) = (\begin{smallmatrix} f(z+x_0) \\ f'(z+x_0)\end{smallmatrix})$. Fix a truncation point $n$.\\
-The first row of $S$, i.e. $\sum c_k z^k$, is annihilated by the operator
-\begin{gather*}
-\theta(\theta-1) x_0 + (\theta-1)(\theta+b-2-x_0)z + (2-a-\theta)z^2 \\
-= (\theta-1) \Big( \theta + \tfrac{b-2-x_0}{x_0} z +\sum_{j=2}^{\infty} (2-b+\tfrac{(1-a)x_0}{\theta-1})\tfrac{z^j}{(-x_0)^j} \Big) (z+x_0)^{-1}\text{,}
-\end{gather*}
-and the residual for truncation at $n$ is given by
-\begin{equation*}
-q(z) = -x_0 n c_n \tfrac{z^n}{n} - ((b-1+n-x_0)c_n + x_0 c'_n) \tfrac{z^{n+1}}{n+1}\text{.}
-\end{equation*}
-The second row of $S$, i.e. $\sum c'_k z^k$, is annihilated by the similar operator
-\begin{gather*}
-\theta(\theta-1) x_0 + (\theta-1)(\theta+b-1-x_0)z + (1-a-\theta)z^2\text{,}
-\end{gather*}
-and the residual for truncation at $n$ is given by
-\begin{equation*}
-q(z) = -x_0 n c'_n \tfrac{z^n}{n} - (a+n) c_n \tfrac{z^{n+1}}{n+1}\text{.}
-\end{equation*}
-These are easily combined into a bound on $\sum_{k=n}^{\infty} M_k z^k$.
-
-\subsection{continued fraction}
-The inequalities
-\begin{equation*}
-\int_{0}^{\infty} \ee^{-t(1+\frac{b}{x})} t^{a-1}x^{-b} \dd t < \int_{0}^{\infty} \ee^{-t} t^{a-1}(x+t)^{-b} \dd t < \int_{0}^{\infty} \ee^{-t} t^{a-1}x^{-b} \dd t
-\end{equation*}
-give, for $a,b,x>0$,
-\begin{equation}
-\label{equ_0f2_bound}
-(1+\tfrac{b}{x})^{-a} < {}_2 F_0(a,b|\tfrac{-1}{x}) < 1\text{.}
-\end{equation}
-For more accuracy for large $x$, Taylor's form of the remainder gives
-\begin{equation*}
-\Big| (1+\tfrac{t}{x})^{-b} - \sum_{k=0}^{n-1} \frac{(b)_k t^k}{ k! (-x)^k} \Big| \le \frac{(b)_n t^n}{ n!x^n} \text{,}
-\end{equation*}
-which, when integrated, shows that we may take $\ee^{?} = 1$ in \eqref{equ_2f0_asymp} when $a,b,x>0$.
-
-For any integer $n$, we have
-\begin{equation}
-\label{equ_2f0_cf}
-\frac{{}_2 F_0(b,a+1|\tfrac{-1}{x})}{{}_2 F_0(b+1,a+1|\tfrac{-1}{x})} = 1+\frac{a+1}{x} \,_{+} \frac{b+1}{1}  \,_{+} \cdots \,_{+} \frac{a+n}{x} \,_{+} \frac{b+n}{\frac{{}_2 F_0(b+n,a+n+1|\tfrac{-1}{x})}{{}_2 F_0(b+n+1,a+n+1|\tfrac{-1}{x})}}\text{.}
-\end{equation}
-Since the r.h.s remainder is easily bounded by \eqref{equ_0f2_bound}, this gives a rigorous algorithm for the quotient. For general $a,b,x$, \eqref{equ_2f0_asymp} can be used. The asymptotics of this remainder ($\sqrt{n/x}$) can be obtained from the following asmptotic series in $n^{-1/2}$, which follows along the same lines as the derivation of the asymptotic formula for $\Gamma$.
-\begin{equation*}
-{}_2 F_0(a+n,b+n|\tfrac{-1}{x}) = 2^{-1/2} \ee^{n-2\sqrt{n x} + \frac{x}{2}} (\tfrac{x}{n})^{n+\frac{a}{2}+\frac{b}{2}-\frac{1}{4}} \left(1 + \tfrac{12(a-b)^2-3-24(a+b-1)x-4 x^2}{48\sqrt{n x}} + O(\tfrac{1}{n}) \right)\text{.}
-\end{equation*}
-
-
-\subsection{resummation of ${}_2 F_0(1,a_1)$}
-Olver gave an effective absolute error estimate of the form
-\begin{equation}
-\label{equ_2f0_asymp}
-\Big| {}_2 F_0(a,b|\tfrac{-1}{x}) - \sum_{k=0}^{n-1} \frac{(a)_k (b)_k}{ k! (-x)^k} \Big| \le \frac{|(a)_n (b)_n|}{ n! |x|^n} \ee^{?}\text{,}
-\end{equation}
-but this remainder necessarily has a minimal size, so this formula is only useful up to a certain limited precision depending on the sizes of $a$ and $x$. On the other hand, any of the formulas \eqref{equ_2f0_recp} will require many terms for large $|x|$. Thus, more techniques are in order for large $|x|$, but not so large that \eqref{equ_2f0_asymp} applies.
-
-Setting $b=0$ in \eqref{equ_2f0_cf} immedately gives a formula for this case. However, this continued fraction cannot converge for $x<0$ and is ultimately logarithmically convergent where it does converge, so this is also of limited use.
-\eqref{equ_2f0_recp} has the special case
-\begin{align*}
-\ee^{-x} x^{a-1} {}_2 F_0(1,1-a|\tfrac{-1}{x}) = \Gamma(a, x) &= \Gamma(a) - \tfrac{x^a}{a} {}_1 F_1(a;a+1|-x)\\
-&= \Gamma(a) - \tfrac{x^a}{a} \ee^{-x} {}_1 F_1(1;a+1|x)
-\end{align*}
-
-Analytic continuation can be used for an effective algorithm between this and \eqref{equ_2f0_asymp}, and this is simple enough in this special case to deserve special treatment. If we fix $a$ and put
-\begin{equation*}
-e^z \int_0^z  e^{-t} (1+\tfrac{t}{x})^{a-1} \dd t =: \sum_{k=1}^{\infty} c_k(a,x) z^k \quad \quad |z| < |x|
-\end{equation*}
-in the $(1,2)$ entry of a matrix, then the whole matrix can be be calculated as
-\begin{equation}
-\label{equ_gamma_upper_transport}
-S(x,z) := \begin{pmatrix}
-\ee^z & \ee^{x+z} x^{1-a} (\Gamma(a,x) - \Gamma(a,x+z))\\
-0 & (1+\tfrac{z}{x})^{a-1}
-\end{pmatrix} = \sum_{k=0}^{\infty} \prod_{j=k}^{1} \frac{z}{j} \begin{pmatrix} 1 & 1 \\ 0 & \tfrac{a-j}{x} \end{pmatrix}\text{.}
-\end{equation}
-Truncation bounds for the diagonal entries are easy \eqref{equ_f0_maj}, and the $(1,2)$ tail is majorized as
-\begin{align*}
-S_{1,2}(x,z) - \sum_{k=1}^{n-1} c_k z^k & \ll \frac{z^n \ee^{\beta_1 z + \beta_2(- \log(1-\frac{z}{|x|})-\frac{z}{|x|})}}{|x| - z} \left((\gamma_0)^{+} + (\gamma_1-\tfrac{n \beta_1 \gamma_0}{n+1})^{+} z +(\tfrac{n \beta_1^2 \gamma_0 -n |x|^{-2} \beta_2 \gamma_0 -2(n+1)\beta_1 \gamma_1}{2(n+2)})^{+} z^2 \right)\text{,}\\
-\beta_1 &= |\tfrac{1+a+x}{x}|\text{,} \quad \quad \quad
-\beta_2 =  \max_{\theta \ge n} |1+a+\tfrac{a x}{\theta-1}| \le \max(|1+a|, |1+a + \tfrac{a x}{n-1}|)\\
-\gamma_0 &= |x c_n|\text{,} \quad \quad \quad \quad \gamma_1 = |\tfrac{(a-n) c_{n-1}}{n(n+1)}| 
-\end{align*}
-Set $S = S(x_1, x_2-x_1)$. The triple of data $(\ee^{-x_2}, x_2^{1-a}, \Gamma(a, x_2))$ can be moved to a triple at $x_1$ via
-\begin{align*}
-\ee^{-x_1} &= \ee^{-x_2} S_{1,1}\text{,}\\
-x_1^{1-a} &= x_2^{1-a} S_{2,2}\text{,}\\
-\Gamma(a, x_1) &= \Gamma(a,x_2) + \frac{\ee^{-x_2} S_{1,2}}{x_1^{1-a}}\text{,}\\
-{}_2 F_0(1,1-a|\tfrac{-1}{x_1}) S_{1,1} &= S_{1,2}+ {}_2 F_0(1,1-a|\tfrac{-1}{x_2}) S_{2,2}\text{,}
-\end{align*}
-and this constitutes a reverse algorithm. The forward algorithm is similar: Suppose we have the data $(\ee^{x_1}, x_1^{a-1})$ at $x_1$ and would like to calculate $\Gamma(a,x_1)$. We can push the problem to a new point $x_2$ via
-\begin{align*}
-\ee^{x_2} &= \ee^{x_1} S_{1,1}\text{,}\\
-x_2^{a-1} &= x_1^{a-1} S_{2,2}\text{,}\\
-\Gamma(a, x_1) &= \frac{x_1^{a-1} S_{1,2}}{ \ee^{x_2}} + \Gamma(a,x_2)\text{.}
-\end{align*}
-
-\subsection{resummation of ${}_3 F_1(1,a_1,a_2;b_1)$}
-First, with the goal of effectively calculating the tail of the corresponding Laplace integral, we seek an analogue of the asymptotic for the upper gamma function,
-\begin{equation*}
-\int_{z}^{\infty} e^{-t} \left(1+\tfrac{t}{x}\right)^{-a_1} \dd t \sim \ee^{-z} \left(1+\tfrac{z}{x}\right)^{-a_1} \sum_{k=0}^{\infty} \frac{(a_1)_k}{(-z-x)^k} \text{.}
-\end{equation*}
-This is given via various connection formulas by
-\begin{equation}
-\label{equ_3f1_int_tail}
-\begin{alignedat}{3}
-\int_{z}^{\infty} e^{-t} \FFs{2}{F}{1}{a_1,a_2}{b_1}{\tfrac{-t}{x}} \dd t &\sim \frac{\Gamma(b_1)\Gamma(a_2-a_1)}{\Gamma(a_2)\Gamma(b_1-a_1)}\ee^{-z} \left(1+\tfrac{z}{x}\right)^{-a_1} \sum_{k=0}^{\infty} \frac{(a_1)_k}{(-z-x)^k} \sum_{j=0}^{k} \frac{(-x)^j(b_1-a_2)_j}{j!(1+a_1-a_2)_j}\\
-&+\frac{\Gamma(b_1)\Gamma(a_1-a_2)}{\Gamma(a_1)\Gamma(b_1-a_2)}\ee^{-z} \left(1+\tfrac{z}{x}\right)^{-a_2} \sum_{k=0}^{\infty} \frac{(a_2)_k}{(-z-x)^k} \sum_{j=0}^{k} \frac{(-x)^j(b_1-a_1)_j}{j!(1+a_2-a_1)_j} \text{.}
-\end{alignedat}
-\end{equation}
-\begin{remark}
-This formula uses the $p=2$ case of \eqref{nearone} and in fact does not generalize to any ${}_p F_{p-1}$, where possibly slower `convergence' is required for a simple formula:
-\begin{equation*}
-\int_{z}^{\infty} e^{-t} \FFf{p}{F}{p-1}{\bfa; \bfb}{\tfrac{-t}{x}}  \dd t \sim \sum_{i=1}^{p} \frac{\Gamma(\mathbf{b}) \Gamma(\hat{\mathbf{a}}_i-a_i)}{\Gamma(\mathbf{b}-a_i) \Gamma(\hat{\mathbf{a}}_i)} \ee^{-z} \left(\tfrac{z}{x}\right)^{-a_i} \sum_{k=0}^{\infty} \frac{(a_i)_k}{(-z)^k} \sum_{j=0}^{k} \frac{x^j(1+a_i-\mathbf{b})_j}{j!(1+a_i-\hat{\mathbf{a}}_i)_j}\text{.}
-\end{equation*}
-\end{remark}
-Next, since we would like to calculate
-\begin{equation*}
-\FFs{3}{F}{1}{1,a_1,a_2}{b_1}{\tfrac{-1}{x}} = \int_{0}^{\infty} e^{-t} \FFs{2}{F}{1}{a_1,a_2}{b_1}{\tfrac{-t}{x}} \dd t\text{,}
-\end{equation*}
-we need an analogue of \eqref{equ_gamma_upper_transport}. Due to the special properties of the ${}_1 F_{0}$ in that case, we were always able to shift the lower limit of integration to $0$ in that case. This is no longer possible, so we will consider $x$ fixed in addition to $a_1,a_2,b_1$. The analogue of the $(2,2)$ entry of the matrix is the expansion
-\begin{equation*}
-\FFs{2}{F}{1}{a_1,a_2}{b_1}{\tfrac{-t}{x}} =: \sum_{k=0}^{\infty} d_k(z_1) (t-z_1)^k\text{.}
-\end{equation*}
-The $d_k$ satisfy a recurrence of order 2, and the $S$ function is now a 3x3 sum with 7 entries.
-\begin{equation*}
-S(z,t) := \sum_{k=0}^{\infty} \prod_{j=k}^{1} \frac{t}{k} \begin{pmatrix} 1 & 1 & 0\\ 0 & 0 & 1 \\ 0 & -\frac{(k+a_1-1)(k+a_2-1)}{z (z+x)} & \frac{1-b_1-k}{z}+ \frac{b_1-a_1-a_2-k}{z+x} \end{pmatrix}\text{,} \quad |t| < |z|,|z+x|
-\end{equation*}
-When $z=0$, the last row of the displayed matrix should be $0,0,-\tfrac{(a_1+k)(a_2+k)}{(b_1+k)x}$ with convergence $|t| < |x|$.
-
-Finally, suppose we have the data $(\ee^{z_1}, d_0(z_1), d_1(z_1))$ at a point $z_1$. At $z_1=0$ this data is trivial. The data at a new point $z_2$ along with the integral between $z_1$ and $z_2$ is given by
-\begin{equation*}
-\begin{pmatrix}
-\ee^{z_2} & \ee^{z_2} \int_{z_1}^{z_2} e^{-t} {}_2 F_1(\tfrac{-t}{x}) \dd t \\
-0 & d_0(z_2)\\
-0 & d_1(z_2)
-\end{pmatrix} = 
-S(z_1,z_2-z_1)
-\begin{pmatrix}
-1 & 0\\
-0 & d_0(z_1)\\
-0 & d_1(z_1)
-\end{pmatrix}\text{.}
-\end{equation*}
-We simply iterate this along an appropriate path starting at $0$ until \eqref{equ_3f1_int_tail} applies.
-
-\subsection{truncation bounds for ${}_3 F_1(1,a_1,a_2;b_1)$ resummation}
-TODO
-
-\subsection{bad resummation}
-The calculation of ${}_2 F_0$ follows the process in Section \ref{section_negd}. With $\hat{f}(\xi) = \sum_{n=0}^{\infty} \frac{(a)_n (b)_n}{n!^2} \xi^n$, the function $F(x) = \ee^{\omega x} \int_0^x \ee^{-\omega t} \hat{F}(z \omega t) dt$ is annihilated by ($\theta := x \partial_x$)
-\begin{equation*}
-(\theta -1)^2 \theta - w (\theta -1)(z (\theta -2+a)
-   (\theta -2+b)+\theta -1) x + w^2 z (\theta -2+a) (\theta -2+b) x^2
-\end{equation*}
-and for any $x_0$ with $x_0 \left(1-w x_0 z\right)\neq 0$ the function $\tilde{F}(x) = F(x+x_0)$ is annihilated by
-\begin{gather*}
-x_0 \left(1-w x_0 z\right)\theta (\theta -1)(\theta -2)\,+\\
-(\theta-1) (\theta-2) \left(\theta  \left(1-2 w x_0 z\right)-w x_0 (z (a+b-5)+1)+w^2 x_0^2 z-2\right)x \,+\\
-w (\theta -2)
-   \left(-z \theta ^2+\left(-z(a+b-6)+2 w x_0 z-1\right)\theta+w x_0 z (a+b-5)-(a-3)
-   (b-3) z+2\right) x^2\,+\\
-w^2 z (\theta-3+a) (\theta-3+b) x^3
-\end{gather*}
-
-In general, given $\hat{f}(\xi)$ we would like to compute $\lim_{x \to \infty} \omega \ee^{-\omega x}F(x)$ where
-\begin{gather*}
-F(x) := \ee^{\omega x} \int_0^x \ee^{-\omega t} \hat{f}(z (\omega t)^d) dt\text{,}\\
-F'(x) - w F(x) = \hat{f}(z (\omega x)^d)\text{.}
-\end{gather*}
-Initial conditions for $\hat{f}(\xi)$ at $\xi=0$ easily translate to initial condition for $F(x)$ at $x=0$ when combined with $F(0) = 0$. Next, we integrate these initial conditions from $0$ to some $x_0$ to produce $F(x_0), F'(x_0), \dots F^{(r+1)}(x_0)$ for some $r$. Finally, we need to estimate the tail $\int_{x_0}^{\infty} \ee^{-\omega t} \delta(t) dt$ where $\delta(x) = F'(x) - w F(x)$. Bounding the coefficients of the differential equation for $\delta$ gives a crude bound of the form $|\delta(x)| < \ee^{\lambda (x-x_0)} || \langle \delta(x_0), \delta'(x_0), \dots, \delta^{(r)}(x_0) \rangle ||$ for $x>x_0$. If $\lambda < \Re \omega$, then we are done.
-
-
-
-
-
-
 
 
 
