@@ -19,6 +19,7 @@
 %\newcommand{\ee}[0] {e}
 %\newcommand{\ii}[0] {i}
 %\newcommand{\dd}[0] {d}
+%\newcommand{\one} {1}
 
 
 \newcommand{\op}[1]  { \operatorname{ #1 }}
@@ -54,14 +55,28 @@
 
 \newcommand{\ArgKS}[1] {\ArgS{\frac12,\frac12}{1}{#1}}
 
+\newcommand{\Rag}[3] {\left(#1 \Big| \begin{array}{c} #2 \\ #3 \end{array} \right)}
+\newcommand{\RagS}[3] {( #1 | \begin{smallmatrix} #2 \\ #3 \end{smallmatrix})}
+
+
+
 \newcommand{\HypJ}[2] {F_{#1}(#2)}
 \newcommand{\HypJreg}[2] {{\tilde{F}}_{#1}(#2)}
 
 \newcommand{\TwoHead}[3] {{#1}_{#3}^{#2}}
 \newcommand{\TwoArgS}[8] {( \begin{smallmatrix} #1 \\ #2 \end{smallmatrix} | \begin{smallmatrix} #3 \\ #4 \end{smallmatrix} | \begin{smallmatrix} #5 \\ #6 \end{smallmatrix} | {#7}, {#8})}
 
-\newcommand{\HypFfourS}[6] {\TwoHead{F}{2 0}{0 1} \ArgS{{#1},{#2};;}{;{#3};{#4}}{{#5},{#6}}}
-\newcommand{\HypFfour}[6] {\TwoHead{F}{2 0}{0 1}   \Arg{{#1},{#2};;}{;{#3};{#4}}{{#5},{#6}}}
+\newcommand{\appellFoneS}[6] {F_1 \ArgS{{#1};{#2},{#3}}{#4}{{#5},{#6}}}
+\newcommand{\appellFone}[6]  {F_1 \Arg {{#1};{#2},{#3}}{#4}{{#5},{#6}}}
+
+\newcommand{\appellFtwoS}[7] {F_2 \ArgS{{#1};{#2},{#3}}{{#4},{#5}}{{#6},{#7}}}
+\newcommand{\appellFtwo}[7]  {F_2 \Arg {{#1};{#2},{#3}}{{#4},{#5}}{{#6},{#7}}}
+
+\newcommand{\appellFthreeS}[7] {F_3 \ArgS{{#1},{#2};{#3},{#4}}{{#5}}{{#6},{#7}}}
+\newcommand{\appellFthree}[7]  {F_3 \Arg {{#1},{#2};{#3},{#4}}{{#5}}{{#6},{#7}}}
+
+\newcommand{\appellFfourS}[6]    {F_4 \ArgS{{#1};{#2}}{{#3},{#4}}{{#5},{#6}}}
+\newcommand{\appellHypFfour}[6]  {F_4 \Arg {{#1};{#2}}{{#3},{#4}}{{#5},{#6}}}
 
 \newcommand{\FF}[6] {{}_{#1}{#2}_{#3} \left( \begin{array}{c} #4 \\ #5 \end{array} \Big| {#6}  \right)}
 \newcommand{\FFs}[6] {{}_{#1}{#2}_{#3} ( \begin{smallmatrix} #4 \\ #5 \end{smallmatrix} | {#6}  )}
@@ -79,12 +94,18 @@
 \newcommand{\bfx}[0] {\mathbf{x}}
 \newcommand{\bfy}[0] {\mathbf{y}}
 
+\newcommand{\bfalpha}[0] {\pmb{\alpha}}
+\newcommand{\bfgamma}[0] {\pmb{\gamma}}
+\newcommand{\bfbeta}[0]  {\pmb{\beta}}
+\newcommand{\bfdelta}[0] {\pmb{\delta}}
+
+
 \author{}
 \title{Calculating $\, _{p}F_{q}$}
 \date{}
 
 \begin{document}
-\maketitle
+%\maketitle
 
 %\abstract{The generalized hypergeometric function $\FFf{p}{F}{q}{\bfa; \bfb}{z}$ is susceptible to various numerical evaluation techniques. Here we attempt to give effective strategies for unrestricted $z$ while restricting the parameters so that $||\bfa||+||\bfb||$ does not exceed the roughly the working bit precision. The problem of large parameters is \emph{not} considered, and the techiniques considered are rigorous, that is, they produce a proven enclosure of the value of the function.}
 
@@ -96,7 +117,7 @@ For $\mathbf{a}=a_1,\dots,a_p$ and  $\mathbf{b}=b_1,\dots,b_q$, set $(a)_n := \G
 \label{Fdef}
 \FF{p}{F}{q}{\mathbf{a}}{\mathbf{b}}{z} := \sum_{n=0}^{\infty} \frac{(\mathbf{a})_n}{(\mathbf{b})_n} \frac{z^n}{n!}
 \end{equation}
-The function is undefined when any $b_i$ is $0,-1,-2,\dots$, i.e. $\Gamma(\mathbf{b}) := \prod_i \Gamma(b_i)$ is infinite. When either $z$ or $1/\Gamma(\bfa)$ is zero, the series terminates and \eqref{Fdef} provides a perfectly reasonable definition in this case.
+This (unregularized) function is undefined when any $b_i$ is $0,-1,-2,\dots$, i.e. $\Gamma(\mathbf{b}) := \prod_i \Gamma(b_i)$ is infinite. When either $z$ or $1/\Gamma(\bfa)$ is zero, the series terminates and \eqref{Fdef} provides a perfect definition in this case.
 
 Since the difference in parameter counts $q+1-p$ controls the most important properties of these functions, set $d=q+1-p$ for any $p$ and $q$. The series \eqref{Fdef} defines an entire function of $z$ for $d > 0$ and diverges for $d<0$. For $d<2$, the hypergeometric function can be defined in the non-terminating case on a section of the Riemann surface of $\log(-z)$ by
 \begin{equation}
@@ -104,24 +125,20 @@ Since the difference in parameter counts $q+1-p$ controls the most important pro
 \FF{p}{F}{q}{\mathbf{a}}{\mathbf{b}}{z} = \frac{\Gamma(\mathbf{b})}{\Gamma(\mathbf{a})} \int_{-\ii \infty}^{+\ii \infty} \frac{\Gamma(\mathbf{a}+s) \Gamma(-s)}{\Gamma(\mathbf{b}+s)} (-z)^s \frac{ds}{2\pi \ii}\text{,} \quad |\arg(-z)| < (2-d) \tfrac{\pi}{2}\text{.}
 \end{equation}
 When $d=0$ the branch structure is even richer due to a singularity at $z=1$ and the Riemann surface of $\log$ is no longer sufficient to describe a branch. The integer $d$ can also be viewed as a measure of the difficulty in evaluating the function: $d=0$ can be handled by various connection formulas with convergent series, and the function poses more difficulties as $d$ moves away from $0$ due to increasingly more difficult essential singularities. The standard quantity
-$\sigma = \Sigma(\mathbf{b}) - \Sigma(\mathbf{a})$ is also relevent when $d \ge 0$.
+$\sigma = \Sigma(\mathbf{b}) - \Sigma(\mathbf{a})$ is also relevant when $d \ge 0$.
 
-Since functions accept numbers and not points on Riemann surfaces, we will use ${}_p F_{q} = {}_p F_{q}^{+}$ to denote the usual branch with continuity from below $\mathbb{R}_{+}$ and ${}_p^{\,} F_{q}^{-}$ for the non-standard continuity from above $\mathbb{R}_{+}$. For example, $\Head{1}{F}{0}^{-}(a|z) = (-1/z)^a (1-1/z)^{-a}$ and $\FFs{2}{F}{1}{a,b}{c}{z} = (1-z)^{-a} \FFes{2}{F}{1}{-}{a,c-b}{c}{\tfrac{z}{z-1}}$. Whenever a possibly infinite quantity $\Gamma(a_i-a_j)$ appears in a formula \footnote{that is, when the list $\bfa$ has duplicates modulo $\mathbb{Z}$} that formula should be interpreted via a limiting case of the general formula. Also, $\hat{\mathbf{a}}_i$ denotes the length $p-1$ vector with the $i^{\text{th}}$ entry omitted.
+Since functions accept numbers and not points on Riemann surfaces, we will use ${}_p F_{q} = {}_p F_{q}^{+}$ to denote the usual branch with continuity from below $\mathbb{R}_{+}$ and ${}_p^{\,} F_{q}^{-}$ for the non-standard continuity from above $\mathbb{R}_{+}$. For example, being pedatic about the branches, $\Head{1}{F}{0}^{-}(a|z) = (-1/z)^a (1-1/z)^{-a}$ and $\FFs{2}{F}{1}{a,b}{c}{z} = (1-z)^{-a} \FFes{2}{F}{1}{-}{a,c-b}{c}{\tfrac{z}{z-1}}$. Whenever a possibly infinite quantity $\Gamma(a_i-a_j)$ appears in a formula \footnote{that is, when the list $\bfa$ has duplicates modulo $\mathbb{Z}$} that formula should be interpreted via a limiting case of the general formula. Also, $\hat{\mathbf{a}}_i$ denotes the length $p-1$ vector with the $i^{\text{th}}$ entry omitted.
 
 The imaginary unit is denoted by $\ii = \sqrt{-1}$, and $\ee = 2.718\dots$ is Euler's number.
 
 \subsection{more functions}
-The bilateral series $\Head{p}{H}{q}$ is defined in Section \ref{section_bilateral}, and $G$ denotes the standard Meijer $G$-function. The series
-\begin{equation*}
-\sum_{m,n=0}^{\infty} \frac{(\bfa)_{m+n}(\bfa')_{m}(\bfa'')_{n}}{(\bfb)_{m+n}(\bfb')_{m}(\bfb'')_{n}} \frac{x^m}{m!} \frac{y^n}{n!}
-\end{equation*}
-will be notated as $\TwoHead{F}{p,p',p''}{q,q',q''} \ArgS{\bfa;\bfa';\bfa''}{\bfb;\bfb';\bfb''}{x,y}$ and the omission of $p''$ and $q''$ means that $p''=p'$ and $q''=q'$. The definition of these sums outside of their region of absolute convergence will be unspecified, but in the case of Appell's four functions, the following integral representations are a good start.
+The regularized series $\tilde{F}$ has $\Gamma(\bfb+n)$ in place of $(\bfb)_n$. The bilateral series $\Head{p}{H}{q}$ is defined in Section \ref{section_bilateral}, and $G$ denotes the standard Meijer $G$-function. There is a useful $\Head{p}{U}{p}(z) = 1 + u_1 z + \cdots$ divergent series defined in Section \ref{section_pUq_def} that is essentially a Meijer $G$. We will also use Appell's four functions:
 \begin{align*}
-\TwoHead{F}{11}{10} \ArgS{a;b_1;b_2}{c;;}{x,y} &=\\
+\appellFoneS{a}{b_1}{b_2}{c}{x}{y} &=\\
 &=\\
-\TwoHead{F}{11}{01} \ArgS{a;b_1;b_2}{;c_1;c_2}{x,y} &=\\
-\TwoHead{F}{02}{10} \ArgS{;a_1,b_1;a_2,b_2}{c;;}{x,y} &=\\
-\TwoHead{F}{20}{01} \ArgS{a,b;;}{;c_1;c_2}{x(1-y),y(1-x)} &=
+\appellFtwoS{a}{b_1}{b_2}{c_1}{c_2}{x}{y}  &=\\
+\appellFthreeS{a_1}{a_2}{b_1}{b_2}{c}{x}{y}  &=\\
+\appellFfourS{a}{b_1}{b_2}{c}{x}{y}  &=
 \end{align*}
 
 \section{The case $d=0$}
@@ -137,7 +154,7 @@ Here we have several usual transcendental functions, rational possibilities, and
 In general ${}_{p}F_{p-1}(z)$ has singularities at $z=1$ and $z=\infty$ with a standard branch cut along the real axis $[1,\infty]$. For agreement with the usual transcendental functions, the standard value on the branch cut is determined by continuity from below.
 
 \subsection{inside unit circle}
-For arguments sufficiently inside the unit circle, we can just sum the series. Besides the implementation details of how to actually sum the series, there is not much else to say here.
+For arguments sufficiently inside the unit circle, we can just sum the series. Besides the implementation details of how to actually sum the series and bound the error, there is not much else to say here.
 
 \subsection{outside unit circle}
 The residues on the left of \eqref{mbint} give
@@ -153,7 +170,7 @@ The hypergeometric function can be evaluated non-rigorously near the the unit ci
 \label{balanced_anywhere}
 \FF{p}{F}{p-1}{\mathbf{a}}{\mathbf{b}}{z} = (\tfrac12+ \tfrac12 \sqrt{1-z})^{-2 a_p} \sum_{n=0}^{\infty}u_n \left(\frac{1-\sqrt{1-z}}{1+\sqrt{1-z}}\right)^n
 \end{equation}
-However, since computation of the $u_n$s is a bit expensive, it should only be used when absolutely neccessary. Furthermore, the convergence rate is only acceptable sufficiently far away from the branch cut $[1,\infty]$. The algebraic prefactor is not strictly necessary but there is good reason for it. It is present in many quadratic transformation formulas in special cases and has the effect of lowering the order of the recurrence relation for $u_n$ from $2p-1$ to $2p-2$.
+However, since computation of the $u_n$ is a bit expensive, it should only be used when absolutely neccessary. Furthermore, the convergence rate is only acceptable sufficiently far away from the branch cut $[1,\infty]$. The algebraic prefactor is not strictly necessary but there is good reason for it. It is present in many quadratic transformation formulas in special cases, makes the rhs terminate when the lhs does, and has the effect of lowering the order of the recurrence relation for $u_n$ from $2p-1$ to $2p-2$.
 
 \subsubsection{$\Head{2}{F}{1}$}
 First of all, the $u_n$ in \eqref{balanced_anywhere} with $a_p:=a$ are bounded as $u_n \ll n^{2a+2b-2c-1} + n^{2a-2b-1}$ and satisfy
@@ -173,10 +190,10 @@ f_0 = 0\text{,} \quad f_{k+1} &= f_{k} + e_k - \tfrac{k((k+c-b-a)z-(2k+c))-a b z
 Gosper's $f_k \to \Head{2}{F}{1}(a,b;c|z)$ is correct for $\max(|\frac{z}{4}|,|\frac{z^2}{4z-4}|)<1$.
 \end{theorem}
 \begin{remark}
-Fateman cites Gosper claiming that $d_k$ and $e_k$ approach zero like $|\frac{z^2}{4z-4}|^k$, but this is not correct as $\frac{z}{4}$ needs to be thrown in as well. Compare Theorem \ref{thm_4e3_2e1_2e1}.
+Fateman also cites Gosper claiming that $d_k$ and $e_k$ approach zero like $|\frac{z^2}{4z-4}|^k$, but this is not correct as $\frac{z}{4}$ needs to be thrown in as well. Compare Theorem \ref{thm_4e3_2e1_2e1}.
 \end{remark}
 \begin{proof}
-Gosper's 1974 ``Acceleration of Series'' adapted to matrcies: For sequences $A_{k,n}, B_{k,n}, S_{k,n}$ satisfying
+Gosper's 1974 ``Acceleration of Series'' adapted to matrices: For sequences $A_{k,n}, B_{k,n}, S_{k,n}$ satisfying
 \begin{align*}
 \sum_{n \ge 0} A_{k,n} B_{k,n} &= \sum_{n \ge 0} A_{k,n} (B_{k,n}-S_{k,n}) + A_{k,n} S_{k,n}\\
 &= A_{k,0} S_{k,0} + \sum_{n \ge 0} A_{k,n} (B_{k,n}-S_{k,n}) + A_{k,n+1} S_{k,n+1}\\
@@ -284,19 +301,20 @@ This is the most interesting case as the function can fail to be defined at one.
 \label{nearone}
 \FF{p}{F}{p-1}{\mathbf{a}}{\mathbf{b}}{1-z} = \sum_{n=0}^{\infty} u_n \left(\begin{array}{c} \mathbf{a}\\\mathbf{b}\end{array} \right) z^{\sigma+n} + \sum_{n=0}^{\infty} v_n \left(\begin{array}{c} \mathbf{a}\\\mathbf{b}\end{array} \right) z^n
 \end{equation}
-with the $u_1,u_2,\dots$ determined from a recurrence of order $p-1$ by $u_0 = \Gamma(-\sigma)\Gamma(\mathbf{b})/\Gamma(\mathbf{a})$ and the $v_{p-1}, v_p, \dots$ are determined from a recurrence of order $p-1$ by $v_0, \dots, v_{p-2}$. Thus, the difficulty is computing these $v_0, \dots, v_{p-2}$. Gauss derived $v_0 = \Gamma(\sigma)\Gamma(b_1)/\Gamma(b_1-\bfa)$ when $p=2$.
+with the $u_1,u_2,\dots$ determined from a recurrence of order $p-1$ by $u_0 = \Gamma(-\sigma)\Gamma(\mathbf{b})/\Gamma(\mathbf{a})$ and the $v_{p-1}, v_p, \dots$ determined from a recurrence of order $p-1$ by $v_0, \dots, v_{p-2}$. Thus, the difficulty is computing these $v_0, \dots, v_{p-2}$. Gauss derived $v_0 = \Gamma(\sigma)\Gamma(b_1)/\Gamma(b_1-\bfa)$ when $p=2$.
 
 If $\sigma$ is an integer, then at most one $\log(z)$ enters into the series.
 
 \subsubsection{$\Head{2}{F}{1}$}
-This needs special treatment as it serves as a base case for larger $p$. The value at $1$ is known in this case:
+This needs special treatment as it serves as a base case for larger $p$. The value of $v_0$ is known in this case:
 \begin{equation*}
 \Head{2}{F}{1} \ArgS{a,b}{c}{1} = \tfrac{\Gamma(c)\Gamma(c-a-b)}{\Gamma(c-a)\Gamma(c-b)} \quad \text{ follows from } \Head{2}{F}{1} \ArgS{a,b}{c}{z} = \tfrac{\Gamma(c)}{\Gamma(b)\Gamma(c-b)} \int_0^1 t^{b-1} (1-t)^{c-b-1} (1-t z)^{-a} \dd t\text{.}
 \end{equation*}
 $\sigma$ is $c-a-b$. We know from the differential equation that the $u_n$ and $v_n$ series in \eqref{nearone} are hypergeometric. Furthermore, as function of $a,b,c$, the two functions $u_0$ and $v_0$ are analytic where the three hypergeometric function are. The value at $z=0$ determines $v_0$ for $\Re \sigma > 0$ which must hold everywhere by continuation. The value of $u_0$ similarly falls out from multiplying both sides by $z^{-\sigma}$, using $z^{a+b-c} \Head{2}{F}{1}(a,b;c|1-z) = \Head{2}{F}{1}(c-a,c-b;c|1-z)$, and again evaluating at $z=0$. In total,
-\begin{equation*}
+\begin{equation}
+\label{equ_2F1_nearone}
 \Head{2}{F}{1} \ArgS{a,b}{c}{1-z} = \tfrac{\Gamma(c)\Gamma(-\sigma)}{\Gamma(a)\Gamma(b)} z^{\sigma} \Head{2}{F}{1} \ArgS{c-a,c-b}{1+\sigma}{z} + \tfrac{\Gamma(c)\Gamma(\sigma)}{\Gamma(c-a)\Gamma(c-b)} \Head{2}{F}{1} \ArgS{a,b}{1-\sigma}{z}\text{.}
-\end{equation*}
+\end{equation}
 When $\sigma=\pm n$ is an integer, the limiting case takes the form
 \begin{equation*}
 \Head{2}{F}{1} \ArgS{a,b}{c}{1-z} = \begin{cases} \tfrac{\Gamma(c)\Gamma(n)}{\Gamma(a)\Gamma(b)} z^{-n} \sum_{k=0}^{n-1} \tfrac{(c-a)_k(c-b)_k}{(1-n)_k k!} z^k - \tfrac{(-1)^{n}}{n!} \tfrac{\Gamma(c)}{\Gamma(c-a)\Gamma(c-b)} \partial_k \Head{2}{F}{1} \ArgS{a,b}{1+n}{z}\text{,} &\sigma = -n\\
@@ -491,6 +509,7 @@ which consists of $q+1$ divergent series, might useful (recall that $p+d=q+1$). 
 Since just one term ($\zeta=1$) on the right hand side of \eqref{entirerecp} is the overwhelmingly dominant term of the sum in most cases, miscalculations in the summation of the divergent series can easily go unnoticed. Thus it is judicious for testing purposes to express each of the divergent series in terms of convergent series. In doing so we will give a precise definition of $1 + u_1 z + \cdots$ and a correct form of \eqref{entirerecp}. Unfortunately, Wright's results are only useful here when $d$ is $1$ or $2$: the two asymptotically greatest terms have $c_{\zeta}=1$, while the remaining $d-2$ terms of smaller order have larger $c_{\zeta}$. Thus, the non-trivial $c_{\zeta}$ are hidden behind \emph{two} levels of overdominant expansions, and miscalculations of the $c_{\zeta}$ are even more likely to go unnoticed \footnote{The Ma\dots computer algebra systems assume that $c_\zeta = 0$ for $\zeta \neq 1$ and $d>2$.}.
 
 \subsection{the function ${}_p U_q$}
+\label{section_pUq_def}
 The resummation of the divergent series $\Sigma_n u_n z^n$ starts with the function $\hat{U}(\xi) = \sum_{n=0}^{\infty} u_n \xi^n/n!$ with non-zero radius of convergence. Any singularity of $\hat{U}(\xi)$ stands in the way of resumming $\Sigma_n u_n z^n$. With $\xi \partial_{\xi}$ on the left, the differential equation for $\hat{U}(\xi)$ has the form
 \begin{equation*}
 \sum_{i=0}^{q+1} (\xi \partial_\xi)^i \Phi_{i}(\xi)\hat{U}(\xi) = 0\text{,} \quad \text{ where } \quad \xi \Phi_{q+1}(\xi) = (\xi-1)^p ((\xi-1)^d-(-1)^d)\text{.}
@@ -812,10 +831,6 @@ the formulas \eqref{entirerecp2} and \eqref{optimized} require $O(x+m)$ bits of 
 
 \section{The $G$ function}
 
-\newcommand{\bfalpha}[0] {\pmb{\alpha}}
-\newcommand{\bfgamma}[0] {\pmb{\gamma}}
-\newcommand{\bfbeta}[0]  {\pmb{\beta}}
-\newcommand{\bfdelta}[0] {\pmb{\delta}}
 
 The parameters are
 \begin{itemize}
@@ -835,7 +850,7 @@ By the shift $s \to s+1$, the function $G((-1)^{p-m-n}z)$ is a solution to a hyp
 \begin{equation*}
 (z \partial_z - b_1)\cdots (z \partial_z - b_q)-(z \partial_z - a_1) \cdots (z \partial_z - a_p) z = 0\text{.}
 \end{equation*}
-Thus it suffices to connect it to some ${}_p F_q$ \footnote{or limiting cases thereof}.
+Thus it suffices to connect it to some ${}_p F_{q-1}$ \footnote{or limiting cases thereof}.
 
 \subsection{The case $q>p$}
 Set $d = q-p$. Path 2 gives
@@ -919,9 +934,18 @@ Assuming we are on the side of the branch cut where $\log(z-1) = \pm \pi i + \lo
 
 \section{Identities}
 
-Set $\HypJ{a}{z} := \Head{0}{F}{1} \ArgS{}{a}{z}$
+\subsection{notation}
+Much space is saved with the branch--free Bessel function $\HypJ{a}{z} := \Head{0}{F}{1} \ArgS{}{a}{z}$ so that $J_{\nu}(2z) = z^{\nu} \HypJreg{1+\nu}{-z^2}$.\\
+For example, Gosper's strange series
+\begin{equation*}
+\sum_{n=0}^{\infty} \frac{(-1)^n}{n+\frac12} \frac{J_\nu  \left(\sqrt{b^2 + \pi^2(n+\frac12)^2} \right)}{(b^2 + \pi^2(n+\frac12)^2)^{\nu/2}} = \frac{\pi}{2} \frac{J_{\nu}(b)}{b^\nu}
+\end{equation*}
+looks less strange in the form
+\begin{equation*}
+F_a(x) = \sum_{n=0}^{\infty} \frac{(-1)^n}{\tfrac{\pi(2n+1)}{4}} F_a(x-(\tfrac{\pi(2n+1)}{4})^2)
+\end{equation*}
 
-\subsection{integrals and series}
+\subsection{polynomials}
 
 \begin{equation*}
 \frac{\frac{\partial^n}{\partial z^n} z^{a-1+n}(1-z)^{b-a+n}}{z^{a-1}(1-z)^{b-a}} = (a)_n \, \Head{2}{F}{1} \ArgS{-n,b+n}{a}{z}
@@ -932,23 +956,45 @@ Set $\HypJ{a}{z} := \Head{0}{F}{1} \ArgS{}{a}{z}$
 \end{equation*}
 
 \begin{theorem}
+\label{thm_appelF4_sum}
 \begin{align*}
-\tfrac{(1-y)^{b-a}}{(1-x-y)^b} &= \sum_{n=0}^{\infty} \tfrac{(a)_n y^n}{n!} \Head{2}{F}{1} \ArgS{-n,b}{a}{\tfrac{-x}{y}}\\
-\tfrac{(1-x)^{a-b}(1-y)^{1-a}}{1-x-y} &= \sum_{n=0}^{\infty} \tfrac{(a)_n (y-x)^n}{n!} \Head{2}{F}{1} \ArgS{-n,b+n}{a}{\tfrac{x(y-1)}{y-x}}\\
-\Head{2}{F}{1} \ArgS{c,b-c}{a}{x} \Head{2}{F}{1} \ArgS{c,b-c}{1+b-a}{y} &= \sum_{n=0}^{\infty} \tfrac{(b-c)_n (c)_n (y-x)^n}{(1-a+b)_n n!} \Head{2}{F}{1} \ArgS{-n,b+n}{a}{\tfrac{x(y-1)}{y-x}}\\
-\HypFfourS{a}{b}{c_1}{c_2}{x(1-y)}{y(1-x)} &= \sum_{n=0}^{\infty} \tfrac{(a)_n (b)_n (y-x)^n}{(c_2)_n n!} \Head{2}{F}{1} \ArgS{-n,c_1+c_2-1+n}{c_1}{\tfrac{x(y-1)}{y-x}}
+\appellFfourS{a}{b}{c_1}{c_2}{x}{y} &= \sum_{n=0}^{\infty} \tfrac{(a)_n (b)_n x^n}{(c_1)_n n!} \Head2F1 \ArgS{-n,1-c_1-n}{c_2}{\tfrac{y}{x}}\\
+ &= \sum_{n=0}^{\infty} \tfrac{(a)_n (b)_n (x-y)^n}{(c_1)_n n!} \Head2F1 \ArgS{-n,1+c_1+c_2+n}{c_2}{\tfrac{-y}{x-y}}\text{.}
+\end{align*}
+For $k \ge 0$,
+\begin{align*}
+[t^{k}] (1- \tfrac1t u)^{c_1-1} \Head2F1 \ArgS{a,b}{c_1}{(1-\tfrac1t u)(x-t v)} &= \tfrac{(a)_k (b)_k (-v)^k}{(c_1)_k k!} \appellFfourS{a+k}{b+k}{c_1+k}{1+k}{x}{u v}\text{,}\\
+[t^{-k}] (1-\tfrac1t u)^{c_1-1} \Head2F1 \ArgS{a,b}{c_1}{(1-\tfrac1t u)(x-t v)} &= \tfrac{u^k}{(1-c_1)_k k!} \appellFfourS{a}{b}{c_1-k}{1+k}{x}{u v}\text{.}
 \end{align*}
 \end{theorem}
 
+
+\begin{theorem}
+\begin{align*}
+\tfrac{(1-y)^{b-a}}{(1-x-y)^b} &= \sum_{n=0}^{\infty} \tfrac{(a)_n y^n}{n!} \Head{2}{F}{1} \ArgS{-n,b}{a}{\tfrac{-x}{y}}\\
+\tfrac{(1-x)^{a-b}(1-y)^{1-a}}{1-x-y} &= \sum_{n=0}^{\infty} \tfrac{(a)_n (y-x)^n}{n!} \Head{2}{F}{1} \ArgS{-n,b+n}{a}{\tfrac{x(y-1)}{y-x}}\\
+\Head{2}{F}{1} \ArgS{c,b-c}{a}{x} \Head{2}{F}{1} \ArgS{c,b-c}{1-a+b}{y} &= \sum_{n=0}^{\infty} \tfrac{(b-c)_n (c)_n (y-x)^n}{(1-a+b)_n n!} \Head{2}{F}{1} \ArgS{-n,b+n}{a}{\tfrac{x(y-1)}{y-x}}\\
+\HypJ{a}{x y z}\HypJ{1-a+b}{(1-x)(1-y)z} &= \sum_{n=0}^{\infty} \tfrac{(a)_n z^n \HypJ{1+b+2n}{z} }{(1-a+b)_n (b+n)_n n!}\Head{2}{F}{1} \ArgS{-n,b+n}{a}{x} \Head2F1\ArgS{-n,b+n}{a}{y}
+\end{align*}
+\end{theorem}
+
+
+\subsection{addition formulas}
 \begin{theorem}
 \begin{equation*}
+[t^k] \tfrac{(1+t)^n}{(1+\frac1t u)^{a}(1+t v)^{b}} \Head{2}{\tilde{F}}{1} \ArgS{a,b}{n+1}{\tfrac{(1+t)(v+\frac1t u)}{(1+\frac1t u)(1+t v)}} = \Head{2}{\tilde{F}}{1} \ArgS{a,b+k-n}{k+1}{u} \Head{2}{\tilde{F}}{1} \ArgS{a-k,b}{n-k+1}{v}\text{,} \quad n,k \in \mathbb{Z}
+\end{equation*}
+\begin{equation*}
 (1 - \ee^{\ii \theta} \tfrac{v}{u})^{a-1}
-\HypJreg{a}{-(u-\ee^{\ii\theta}v)(u-\ee^{-\ii\theta}v)}  = \sum_{m=-\infty}^{\infty} u^m v^m \ee^{m \ii \theta} \HypJreg{a+m}{-u^2} \HypJreg{1+m}{-v^2}\text{,} \quad |\ee^{\pm \ii \theta} \tfrac{v}{u}| < 1
+\HypJreg{a}{-(u-\ee^{\ii\theta}v)(u-\ee^{-\ii\theta}v)}  = \sum_{k=-\infty}^{\infty} u^k v^k \ee^{k \ii \theta} \HypJreg{a+k}{-u^2} \HypJreg{1+k}{-v^2}\text{,} \quad |\ee^{\pm \ii \theta} \tfrac{v}{u}| < 1
 \end{equation*}
 \begin{equation*}
 \HypJ{1+a}{-(u-\ee^{\ii\theta}v)(u-\ee^{-\ii\theta}v)} = \sum_{m=0}^{\infty} \tfrac{(2a)_m u^m v^m}{(a)_m (1+a)_m m!} \HypJ{1+a+m}{-u^2} \HypJ{1+a+m}{-v^2} \Head{2}{F}{1} \ArgS{-m,2a+m}{\frac{1}{2} + a}{\tfrac{1-\cos \theta}{2}}
 \end{equation*}
 \end{theorem}
+
+
+\subsection{integrals and series}
 
 \begin{theorem}
 \begin{align*}
@@ -960,19 +1006,9 @@ Set $\HypJ{a}{z} := \Head{0}{F}{1} \ArgS{}{a}{z}$
 \end{theorem}
 
 \begin{theorem}
+For even--odd splitting with $d \in \{0, \frac12\}$,
 \begin{align*}
-\int_{0}^{\infty} \ee^{-z t} \HypJ{a}{u t} t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{1}{F}{1}\ArgS{s}{a}{\tfrac{u}{z}})\\
-\int_{0}^{\infty} \ee^{-z t} \HypJ{a}{u t} \HypJ{b}{u t} t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{3}{F}{3}\ArgS{\frac{a+b}{2},\frac{a+b-1}{2},s}{a,b,a+b-1}{\tfrac{4u}{z}})\\
-\int_{0}^{\infty} \ee^{-z t} \Head{2}{F}{0}(a,b|\tfrac{-1}{t}) t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{2}{F}{1} \ArgS{a,b}{1-s}{z}+\tfrac{\Gamma (-s) \Gamma (a+s) \Gamma (b+s)}{\Gamma (a) \Gamma(b)} \Head{2}{F}{1}\ArgS{a+s,b+s}{1+s}{z}\\
-&= \tfrac{\Gamma(b-a) \Gamma(a+s)}{\Gamma(b)} z^{-a-s} \Head{2}{F}{1}\ArgS{a,a+s}{1+a-b}{\tfrac{1}{z}} + \tfrac{\Gamma(a-b)\Gamma (b+s)}{\Gamma (a)} z^{-b-s} \Head{2}{F}{1}\ArgS{b,b+s}{1+b-a}{\tfrac{1}{z}}
-\end{align*}
-\end{theorem}
-
-
-\begin{theorem}
-For $d \in \{0, \frac12\}$,
-\begin{align*}
-\HypJ{a}{- \alpha t} t^{s-1} &= \mathcal{M}_s^{-1}[\alpha^{-s} \tfrac{\Gamma(s) \Gamma(a)}{\Gamma(a-s)}](t)\text{,}\\
+%\HypJ{a}{- \alpha t} t^{s-1} &= \mathcal{M}_s^{-1}[\alpha^{-s} \tfrac{\Gamma(s) \Gamma(a)}{\Gamma(a-s)}](t)\text{,}\\
 \tfrac{2}{\pi} K_v(4 z^{1/4}) + \ee^{2 \pi \ii  d} Y_v(4z^{1/4}) &=
 \csc \pi  v \, (2^{-v} z^{-v/4} (\HypJreg{1-v}{4\sqrt{z}}-e^{2 i \pi  d} \HypJreg{1-v}{-4   \sqrt{z}})\\
 & \quad \quad \quad \quad - 2^v z^{v/4} (\HypJreg{1+v}{4 \sqrt{z}} - \ee^{2 \pi \ii  d} \cos \pi  v  \HypJreg {1+v}{-4\sqrt{z}}))\\
@@ -985,88 +1021,188 @@ For $d \in \{0, \frac12\}$,
 \end{align*}
 \end{theorem}
 
+\begin{theorem}[GR 7.811.1]
+\label{thm_G_conv}
+\begin{equation*}
+\int_0^{\infty} G_{p_1,q_1}^{m_1,n_1} \RagS{z_1 t}{\bfalpha_1; \bfgamma_1}{\bfbeta_1; \bfdelta_1} G_{p_2,q_2}^{m_2,n_2} \RagS{z_2 t}{\bfalpha_2; \bfgamma_2}{\bfbeta_2; \bfdelta_2} \dd t = \tfrac{1}{z_2} G_{p_1+q_2,q_1+p_2}^{m_1+n_2,n_1+m_2} \RagS{\tfrac{z_1}{z_2}}{\bfalpha_1, -\bfbeta_2; -\bfdelta_2, \bfgamma_1}{\bfbeta_1, -\bfalpha_2; -\bfgamma_2, \bfdelta_1}
+\end{equation*}
+\end{theorem}
+
 \begin{theorem}
-For $0 < \Re \, s$,
+\label{thm_int_ja}
+\begin{align*}
+\int_{0}^{\infty} \ee^{-z t} \HypJ{a}{u t} t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{1}{F}{1}\ArgS{s}{a}{\tfrac{u}{z}})\\
+\int_{0}^{\infty} \ee^{-z t} \HypJ{a}{u t} \HypJ{b}{u t} t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{3}{F}{3}\ArgS{\frac{a+b}{2},\frac{a+b-1}{2},s}{a,b,a+b-1}{\tfrac{4u}{z}})\\
+\int_{0}^{\infty} \ee^{-z t} \Head{2}{F}{0}(a,b|\tfrac{-1}{t}) t^{s-1} \dd t & = \Gamma (s) z^{-s} \Head{2}{F}{1} \ArgS{a,b}{1-s}{z}+\tfrac{\Gamma (-s) \Gamma (a+s) \Gamma (b+s)}{\Gamma (a) \Gamma(b)} \Head{2}{F}{1}\ArgS{a+s,b+s}{1+s}{z}\\
+&= \tfrac{\Gamma(b-a) \Gamma(a+s)}{\Gamma(b)} z^{-a-s} \Head{2}{F}{1}\ArgS{a,a+s}{1+a-b}{\tfrac{1}{z}} + \tfrac{\Gamma(a-b)\Gamma (b+s)}{\Gamma (a)} z^{-b-s} \Head{2}{F}{1}\ArgS{b,b+s}{1+b-a}{\tfrac{1}{z}}
+\end{align*}
+\end{theorem}
+
+
+\begin{theorem}[Weber-Schafheitlin discontinuous integral]
+\label{thm_int_jajb}
+For $\alpha,\beta > 0$ and $\Re \, s > 0$,
 \begin{equation*}
 \int_{0}^{\infty} \HypJ{a}{-\alpha t} \HypJ{b}{-\beta t} t^{s-1} \dd t = 
 \begin{cases}
-\alpha^{-s}\tfrac{\Gamma(s) \Gamma(a)}{\Gamma(a-s)}  \Head{2}{F}{1} \ArgS{s,1+s-a}{b}{\tfrac{\beta}{\alpha}}\text{,} & 0 < \beta < \alpha, \quad \Re\, 2s < \Re \, a + b\\
-\alpha^{-s} \tfrac{\Gamma(s) \Gamma(a)\Gamma(b)\Gamma(a+b-2s-1)}{\Gamma(a-s)\Gamma(b-s)\Gamma(a+b-s-1)}\text{,} & \beta = \alpha, \quad \Re \, 2s+1 < \Re \, a + b\\
-\beta^{-s}\tfrac{\Gamma(s) \Gamma(b)}{\Gamma(b-s)}  \Head{2}{F}{1} \ArgS{s,1+s-b}{a}{\tfrac{\alpha}{\beta}}\text{,} & 0 < \alpha < \beta, \quad \Re\, 2s < \Re \, a + b
+\tfrac{\Gamma(s) \Gamma(a)}{\alpha^s \Gamma(a-s)}  \Head{2}{F}{1} \ArgS{s,1+s-a}{b}{\tfrac{\beta}{\alpha}}\text{,} & \alpha > \beta, \quad \Re\, 2s < \Re \, a + b\\
+\tfrac{\Gamma(s) \Gamma(a)\Gamma(b)\Gamma(a+b-2s-1)}{\alpha^s \Gamma(a-s)\Gamma(b-s)\Gamma(a+b-s-1)}\text{,} & \alpha = \beta, \quad \Re \, 2s+1 < \Re \, a + b\\
+\tfrac{\Gamma(s) \Gamma(b)}{\beta^s \Gamma(b-s)}  \Head{2}{F}{1} \ArgS{s,1+s-b}{a}{\tfrac{\alpha}{\beta}}\text{,} & \alpha < \beta, \quad \Re\, 2s < \Re \, a + b
 \end{cases}
 \end{equation*}
 \begin{equation*}
-\int_{0}^{\infty} \HypJ{a}{-\alpha t} \HypJ{b}{-\beta t} t^{b-1} \dd t = \begin{cases}
- 0 \text{,} &0 < \alpha < \beta\\
- \alpha^{1-a} (\alpha-\beta)^{a-b-1} \tfrac{\Gamma(a)\Gamma(b)}{\Gamma(a-b)}\text{,} &0 < \beta < \alpha
-\end{cases} \quad 0 < \Re b < \Re a\text{.}
+\int_{0}^{\infty} \HypJ{a}{-\alpha t} \HypJ{b}{-\beta t} t^{a-1} \dd t =
+\tfrac{\Gamma(a)\Gamma(b)}{\Gamma(b-a)} \tfrac{ ((\beta - \alpha)^{+})^{b-a-1} }{ \beta^{b-1} } \text{,} \quad 0 < \Re a < \Re b\text{.}
 \end{equation*}
+\end{theorem}
+\begin{proof}
+Imitate Theorem \ref{thm_int_ja} and let $z \to 0^+$, or use Theorem \ref{thm_G_conv}, or more boldly just integrate the series in $\beta$ (resp $\alpha$) to produce another absolutely convergent series. It is also not hard to argue from continuity on the boundary $\alpha = \beta$ under the additional convergence criterion.
+\end{proof}
+\begin{remark}
+The third case in the above can be written suggestively in terms of the first as
+\begin{align*}
+\tfrac{\Gamma(s) \Gamma(b)}{\beta^s \Gamma(b-s)}  \Head{2}{F}{1} \ArgS{s,1+s-b}{a}{\tfrac{\alpha}{\beta}} &= \tfrac{\Gamma (a) \Gamma (s)}{\alpha^{s} \Gamma (a-s)}(1-e^{\ii
+   \pi  (b-s)} \tfrac{\sin \pi s}{\sin \pi  b}) \Head2F1 \ArgS{s,1+s-a}{b}{\tfrac{\beta }{\alpha}}\\
+  & - e^{\ii \pi  (b-s)} \tfrac{\beta ^{1-b} \Gamma (a) \Gamma (b-1) \Gamma (b)}{\alpha^{s+1-b} \Gamma (b-s) \Gamma (a+b-s-1)} \Head2F1 \ArgS{1-b+s,2-a-b+s}{2-b}{\tfrac{\beta}{\alpha }}\text{,}
+\end{align*}
+and all three cases can be combined into the succinct
+\begin{equation*}
+\tfrac{\Gamma (a) \Gamma (s)}{\alpha ^{s} \Gamma(a-s)} \Head2F1 \ArgS{s,1+s-a}{b}{\tfrac{\beta }{\alpha}} + \ee ^{\ii \pi (a-s)} \tfrac{\Gamma (a) \Gamma (b)}{\Gamma (a+b-2 s)} \tfrac{((\beta -\alpha)^{+})^{a+b-2s-1}}{\alpha^{a+b-s-1}} \Head2F1 \ArgS{b-s,a+b-s-1}{a+b-2 s}{1-\tfrac{\beta }{\alpha}}\text{.}
+\end{equation*}
+\end{remark}
+
+The easy (impossible triangle with sides $\alpha=1,\beta=\sqrt{x},\gamma=\sqrt{y}$) case of the following is due to Bailey. For the difficult case of a possible triangle the evaluation is given in terms of $F_4(x,y)$ series for $0<x,y<1$ but \emph{outside} the domain of its absolute convergence $\sqrt{x} + \sqrt{y} < 1$. This is because the required known convergent series that continue $F_4$ outside of this range are too messy: H. Exton 1995 ``On the system of partial differential equations associated with Appell's function $F_4$'' defines
+\begin{equation*}
+G \ArgS{a_1,a_2,a_3,a_3}{b_1,b_2}{z_1,z_2} := \sum_{m,n=0}^{\infty} \tfrac{(a_1)_{m+n} (a_2)_{m+n} (a_3)_m (a_4)_m }{(b_1)_{2m+n} (b_2)_{m}} \tfrac{z_1^m z_2^n}{m! n!} \text{,} \quad |z_1| + |z_2| < 2 \sqrt{|z_1|}
+\end{equation*}
+and a complex $K(z_1,z_2)$ series that converges for $\sqrt{|z_1|} + \sqrt{|z_2|} < 1$, and gives a basis of solutions via $G(x,1-y)$ and $K(\frac{(1-y)^2}{4x},\frac{x}{4})$, both of which generously include the $\sqrt{x} + \sqrt{y} > 1$ needed here. For example, \eqref{equ_2F1_nearone} is
+\begin{equation*}
+\tfrac{\Gamma(1+a+b-c_2)\Gamma(1-c_2)}{\Gamma(1+a-c_2)\Gamma(1+b-c_2)} \appellFfourS{a}{b}{c_1}{c_2}{x}{y} + \tfrac{\Gamma(1+a+b-c_2)\Gamma(c_2-1)}{\Gamma(a)\Gamma(b)} y^{1-c_2}\appellFfourS{1+a-c_2}{1+b-c_2}{c_1}{2-c_2}{x}{y}  = G \ArgS{a,b,1+a-c_2,1+b-c_2}{1+a+b-c_2,c_1}{x,1-y}\text{.}
+\end{equation*}
+
+\begin{theorem}
+\label{thm_int_jajbjc}
+Assume wlog $0 < x, y < 1$ and set $\zeta = \frac{1}{2}\ee^{\pi \ii (s-\frac12-b-c)}$:
+\begin{equation*}
+\int_{0}^{\infty} \HypJ{a}{- t} \HypJ{b}{-x t} \HypJ{c}{-y t} t^{s-1} \dd t = 
+\begin{cases}
+\tfrac{\Gamma(s) \Gamma(a)}{\Gamma(a-s)} \appellFfourS{1+s-a}{s}{b}{c}{x}{y} \text{,} \quad \quad \sqrt{x} + \sqrt{y} < 1\\
+\vspace{-8	pt}\\
+\begin{aligned}
+\tfrac{\Gamma (s)\Gamma (a)}{\Gamma(a-s)}(1+\tfrac{\zeta \, \sin \pi s}{\sin \pi b \sin \pi c}) &\appellFfourS{1+s-a}{s}{b}{c}{x}{y}\\
++\tfrac{\zeta \, \Gamma (a) \Gamma (b-1) \Gamma (b)}{\sin \pi  c \, \Gamma (b-s) \Gamma (a+b-s-1)} & x^{1-b}\appellFfourS{1-b+s}{2-a-b+s}{2-b}{c}{x}{y} \quad \text{,} \quad \sqrt{x} + \sqrt{y} > 1\\
++\tfrac{\zeta \, \Gamma (a) \Gamma (c-1) \Gamma (c)}{\sin \pi  b \, \Gamma (c-s) \Gamma (a+c-s-1)} &y^{1-c} \appellFfourS{1-c+s}{2-a-c+s}{b}{2-c}{x}{y}\\
++\tfrac{\zeta \,  \Gamma (a) \Gamma (b-1) \Gamma (b) \Gamma (c-1) \Gamma (c)}{\pi  \Gamma (b+c-s-1) \Gamma
+   (a+b+c-s-2)} & x^{1-b}y^{1-c} \appellFfourS{2-b-c+s}{3-a-b-c+s}{2-b}{2-c}{x}{y}\\
+\end{aligned}
+\end{cases}
+\end{equation*}
+\end{theorem}
+\begin{proof}
+For the first case, ?use a 2d Theorem \ref{thm_G_conv}?, or just boldy integrate the $x,y$ series term--by--term, being assured by the absolute convergence of the result. Bailey replaces a $J_{\nu}$ function with a $K_{\nu}$ function and then transfers back to $J_{\nu}$ using a limit on the imaginary axis. This gives a hint that the integral as a function of the real variables $x$ and $y$ satisfies the $F_4$ equation. However, there is no reason to suppose that the solution can be real-continued past the singular component $1= \pm \sqrt{x} \pm \sqrt{y}$ of the differential equation. The connection coefficients on the other side can be obtained as $\Gamma$ products by looking along $y=1$ and $0<x<4$ using Exton's expansion:
+\begin{equation}
+\label{equ_appelF4_one}
+\begin{aligned}
+\tfrac{\Gamma (s) \Gamma (1+s-a)}{\Gamma (b) \Gamma (c)} \appellFfourS{s}{1+s-a}{b}{c}{x}{1} = \tfrac{\Gamma (s) \Gamma (1+s-a) \Gamma (a+c-2 s-1)}{\Gamma (b) \Gamma (c-s) \Gamma (a+c-s-1)} & \Head{4}{F}{3} \ArgS{1+s-a,s,2+s-a-c,1+s-c}{b,\frac{2-a-c}{2}+s,\frac{3-a-c}{2}+s}{\tfrac{x}{4}}\\
++ \tfrac{\Gamma(\frac{1-a-c}{2}+s)}{2 \, \Gamma(\frac{a+c-1}{2}+b-s)} (-x)^{\frac{a+c-1}{2}-s} & \Head{4}{F}{3} \ArgS{\frac{3-a-c}{2},\frac{1+a-c}{2},\frac{1-a+c}{2},\frac{a+c-1}{2}}{\frac{1}{2},\frac{1+a+c}{2}-s,\frac{a+c-1}{2}+b-s}{\tfrac{x}{4}}\\
++ \tfrac{(a-c) (a+c-2) \Gamma (s-\frac{a+c}{2})}{8 \, \Gamma (\frac{a+c}{2}+b-s)} (-x)^{\frac{a+c}{2}-s} & \Head{4}{F}{3} \ArgS{\frac{a+c}{2},\frac{4-a-c}{2},\frac{2+a-c}{2},\frac{2-a+c}{2}}{\frac{3}{2},\frac{2+a+c}{2}-s,\frac{a+c}{2}+b-s}{\tfrac{x}{4}}
+\end{aligned}
+\end{equation}
+Now, Theorem \ref{thm_0f1_prod} and residues produce $\int_{0}^{\infty} \HypJ{a}{-t} \HypJ{b}{-x t} \HypJ{c}{-t} t^{s-1} \dd t$ as a linear combination of the same three $\Head{4}{F}{3}$s. Doing this along $x=1, 0<y<4$ as well is enough to solve for all four coefficients.
+\end{proof}
+\begin{remark}
+Watson ``a treatise on the Theory of Bessel Functions'' sec 13.46 p 413 eq (7) gives a unified series that works in both cases, but this series has a horribly slow convergence rate.
+\end{remark}
+\begin{remark}
+With a basis of the form $G(x,1-y), G(y,1-x), x^{1-b} L(x,y), y^{1-c} L(x,y)$, the convergence rate is good and the coefficient of $G(y,1-x)$ is actually zero, but Exton's $L$ function is a bit complicated.
+\end{remark}
+\begin{remark}
+It is not clear yet how to calculate $F_4(x,y)$ exactly on $\sqrt{x} + \sqrt{y} = 1$.
+\end{remark}
+\begin{corollary}[via Theorem \ref{thm_f4_reduce}]
+Assume wlog $\alpha > \beta > \gamma > 0$ and specialize $s=\frac{a+b+c}{2}-1$. With
+\begin{equation*}
+\begin{alignedat}{7}
+x &= (\tfrac{\sqrt{\alpha +\beta +\gamma }\sqrt{\alpha +\beta -\gamma }-\sqrt{\alpha -\beta -\gamma } \sqrt{\alpha
+   -\beta +\gamma }}{2 \alpha })^2\text{,}& y &= (\tfrac{\sqrt{\alpha +\beta +\gamma }\sqrt{\alpha +\gamma-\beta }-\sqrt{\alpha -\beta -\gamma } \sqrt{\alpha-\gamma +\beta }}{2 \alpha })^2\text{,}\\
+1-y &= (\tfrac{\sqrt{\alpha +\beta +\gamma }\sqrt{\alpha +\beta -\gamma }+\sqrt{\alpha -\beta -\gamma } \sqrt{\alpha
+   -\beta +\gamma }}{2 \alpha })^2\text{,}& \quad 1-x &= (\tfrac{\sqrt{\alpha +\beta +\gamma }\sqrt{\alpha +\gamma-\beta }+\sqrt{\alpha -\beta -\gamma } \sqrt{\alpha-\gamma +\beta }}{2 \alpha })^2\text{,}
+\end{alignedat}
+\end{equation*}
+\begin{align*}
+&\int_{0}^{\infty} \HypJ{a}{-\alpha^2 t} \HypJ{b}{-\beta^2 t} \HypJ{c}{-\gamma^2 t} t^{\frac{a+b+c}{2}-2} \dd t\\
+&=\tfrac{\Gamma(s) \Gamma (a)}{\alpha^{2s} \Gamma(a-s)} \begin{cases}
+\quad \quad \quad \quad \quad \quad  \Head{2}{F}{1} \ArgS{1+s-a,s}{b}{x} \Head{2}{F}{1} \ArgS{1+s-a,s}{c}{y}\text{,} \, &\beta + \gamma < \alpha\\
+\vspace{-8pt}\\
+\begin{aligned}
+\tfrac{\csc \pi (a-s)}{2} (\ee^{\pi \ii (s+\frac12-a)} \Head2F1 \ArgS{1+s-a,s}{b}{x} & \Head{2}{F}{1} \ArgS{1+s-a,s}{c}{y}\\
+\quad + \ee^{-\pi \ii (s+\frac12-a)} \Head2F1 \ArgS{1+s-a,s}{c}{1-x} & \Head2F1 \ArgS{1+s-a,s}{b}{1-y})
+\end{aligned}
+\text{,} \, &\beta + \gamma > \alpha\\
+\end{cases}
+\end{align*}
+\end{corollary}
+\begin{corollary}[via Theorem \ref{thm_f4_reduce}, GR 6.578.8]
+Assume $\beta > \gamma > 0$ (final case is that of a possible triangle):
+\begin{equation*}
+\int_{0}^{\infty} \HypJreg{a}{-\alpha^2 t} \HypJreg{b}{-\beta^2 t} \HypJreg{b}{-\gamma^2 t} t^{b-1} \dd t = \begin{cases}
+0 \text{,} &\alpha < \beta-\gamma\\
+\frac{((\alpha+\beta-\gamma)(\alpha+\gamma-\beta))^{a-b-1}}{\alpha^{2a-2}\Gamma(a-b)\Gamma(b)} \Head{2}{F}{1} \ArgS{b-\frac12,b-a+1}{2b-1}{\tfrac{4\beta\gamma}{(\alpha+\beta-\gamma)(\alpha+\gamma-\beta)}} \text{,} &\alpha > \beta + \gamma\\
+\frac{((\alpha+\beta-\gamma)(\alpha+\gamma-\beta))^{a-\frac32}}{2\alpha^{2a-2}(\beta \gamma)^{b-\frac12} \Gamma(\frac12) \Gamma(a-\frac12)} \Head{2}{F}{1} \ArgS{b-\frac12,\frac32-b}{a-\frac12}{\tfrac{(\alpha+\beta-\gamma)(\alpha+\gamma-\beta)}{4\beta\gamma}}
+\end{cases}
+\end{equation*}
+[Sonine] No assumptions but $\Re \, a > \tfrac32$ (vanishes iff the triangle is impossible):
+\begin{equation*}
+\int_{0}^{\infty} \HypJreg{a}{-\alpha^2 t} \HypJreg{a}{-\beta^2 t} \HypJreg{a}{-\gamma^2 t} t^{a-1} \dd t = 
+\tfrac{((\beta+\gamma-\alpha)^+(\alpha+\gamma-\beta)^+(\alpha+\beta-\gamma)^+ (\alpha+\beta+\gamma))^{a-\frac32}}{(2\alpha \beta \gamma)^{2a-2} \Gamma(\frac12) \Gamma(a-\frac12)}\text{.}
+\end{equation*}
+\end{corollary}
+
+\begin{theorem}
+\begin{equation*}
+\int_{0}^{\infty} \HypJ{a}{-\alpha t} \tfrac{t^{s-1} \dd t}{(t+z)^b} = \tfrac{\Gamma (a) \Gamma (s-b)}{\Gamma (a+b-s)} \alpha^{b-s} \Head{1}{F}{2}\ArgS{b}{1 + b - s, a + b - s}{ \alpha z} + \tfrac{\Gamma(b-s)\Gamma(s)}{\Gamma(b)} z^{s-b} \Head{1}{F}{2} \ArgS{s}{a, 1 - b + s}{\alpha z}
+\end{equation*}
+\end{theorem}
+\subsection{reductions}
+
+In some cases, a univariate specialization of the $F_4$ is hypergeometric. See Raimundas Vidunas ``Specialization of Appell's functions to univariate hypergeometric functions'', though correct connection coefficients are not given. There is also \eqref{equ_appelF4_one} for a generic $F_4(x,1)$.
+\begin{theorem}
+\label{thm_f4_reduce}
+For $|x|$ and $|y|$ small,
+\begin{align*}
+\appellFfourS{a}{b}{c_1}{c_2}{x(1-y)}{y(1-x)} &= \Head{2}{F}{1}\ArgS{a,b}{c_1}{x} \Head{2}{F}{1}\ArgS{a,b}{c_2}{y}\text{,} \quad \text{ for } \quad c_1+c_2-a-b = 1\text{,}\\
+\appellFfourS{a}{b}{b}{b}{x(1-y)}{y(1-x)} &= \tfrac{1}{(1-x)^{a}(1-y)^{a}} \Head{2}{F}{1}\ArgS{a,1+a-b}{b}{\tfrac{x y}{(x-1)(y-1)}}\text{,}\\
+\appellFfourS{a}{b}{b}{b}{x^2}{y^2} &= \tfrac{1}{(1-x+y)^{a}(1-y+x)^{a}} \Head{2}{F}{1}\ArgS{a,b-\frac12}{2b-1}{\tfrac{4 x y}{(1-x+y) (1-y+x)}}
+\end{align*}
+\end{theorem}
+
+\begin{theorem}
+At least for $0<x<1$,
+\begin{align*}
+\appellFfourS{a}{b}{c}{\frac12}{x^2}{(1-x)^2}
+&= ? \Head{3}{F}{2} \ArgS{2a,2b,c-\frac12}{a+b+\frac12,2c-1}{x}\\
+&+ ? x^{\frac12-a-b} \Head3F2 \ArgS{\frac{1}{2}+a-b,\frac{1}{2}-a+b,c-a-b}{\frac{3}{2}-a-b,2c-a-b-\frac{1}{2}}{x}\\
+&+ ? x^{2 - 2 c} \Head3F2 \ArgS{2 + 2 a - 2 c, 2 + 2 b - 2 c, \frac32 - c}{3 - 2 c, \frac52 + a + b - 2 c}{x}\text{,}\\
+\appellFfourS{a}{b}{c}{a+b-c+\frac32}{x^2}{(1-x)^2} &= ? \Head{2}{F}{1} \ArgS{2a,2b}{2c-1}{x} + ?\\
+\appellFfourS{2a-\frac12}{3a-1}{a+\frac12}{a+\frac12}{x^2}{(1-x)^2} &= ? \Head{2}{F}{1} \ArgS{a,3a-1}{2a}{x}^2 + ?
+\end{align*}
 \end{theorem}
 
 \begin{theorem}
 \begin{align*}
-\int_{0}^{\infty} \HypJ{a}{-\alpha^2 t} \HypJ{b}{-\beta^2 t} \HypJ{c}{-\gamma^2 t} t^{s-1} \dd t &= 
-\alpha^{-2s} \tfrac{\Gamma(s) \Gamma(a)}{\Gamma(a-s)} \HypFfourS{1+s-a}{s}{b}{c}{\tfrac{\beta^2}{\alpha^2}} {\tfrac{\gamma^2}{\alpha^2}} \text{,} \quad 0 < \beta + \gamma < \alpha\text{,}\\
-& !TODO! : 0 < \gamma < \beta < \alpha < \beta + \gamma\\
-\int_{0}^{\infty} \HypJreg{s}{-\alpha^2 t} \HypJreg{s}{-\beta^2 t} \HypJreg{s}{-\gamma^2 t} t^{s-1} \dd t &= 
-\tfrac{((\beta+\gamma-\alpha)^+(\alpha+\gamma-\beta)^+(\alpha+\beta-\gamma)^+ (\alpha+\beta+\gamma))^{s-\frac32}}{(2\alpha \beta \gamma)^{2s-2} \Gamma(\frac12) \Gamma(s-\frac12)}\text{,}  \quad \Re \, s > \tfrac32\text{.}
+\Head3F2 \ArgS{2a,2b,c-\frac12}{a+b+\frac12,2c-1}{1-x} &= \tfrac{\Gamma(a+b+\frac{1}{2}) \Gamma (2 c-1) \Gamma
+   (a+b-c)}{\Gamma (2 a) \Gamma (2 b) \Gamma \left(c-\frac{1}{2}\right)} x^{c-a-b}(1 + O(x))\\
+    - {\scriptstyle \Gamma(\frac12) \Gamma (c) \Gamma(a+b+\frac{1}{2}) \Gamma (c-a-b-1)}
+   &\left(
+   \tfrac{2 x}{\Gamma (a) \Gamma (b) \Gamma(c-a-\frac{1}{2}) \Gamma(c-b-\frac{1}{2})}+\tfrac{a+b-c+1 + 2 a b x}{\Gamma(a+\frac{1}{2})
+   \Gamma(b+\frac{1}{2}) \Gamma (c-a) \Gamma (c-b)} + O(x^2) \right)\text{,}\\
+(1-x)^{\frac12-a-b} \Head3F2 \ArgS{\frac{1}{2}+a-b,\frac{1}{2}-a+b,c-a-b}{\frac{3}{2}-a-b,2c-a-b-\frac{1}{2}}{1-x} &= \tfrac{\Gamma (\frac{3}{2}-a-b) \Gamma (2c-a-b-\frac{1}{2}) \Gamma (a+b-c)}{\Gamma (\frac{1}{2}+a-b) \Gamma(\frac{1}{2}-a+b) \Gamma (c-a-b)} x^{c-a-b}(1+O(x))\\
+ +\tfrac{2^{2 a+2 b-2 c+1} \pi \Gamma(\frac{3}{2}-a-b) \Gamma(2c-a-b-\frac{1}{2})}{a+b-c+1} &\left(\tfrac{2 x}{\Gamma(\frac{1}{2}-a) \Gamma(\frac{1}{2}-b) \Gamma(c-a-\frac{1}{2}) \Gamma(c-b-\frac{1}{2})}+\tfrac{a+b-c+1+2 a b x}{\Gamma (1-a) \Gamma (1-b) \Gamma (c-a) \Gamma (c-b)} + O(x^2)\right)\text{.}
 \end{align*}
 \end{theorem}
 
-\subsection{series}
-\begin{equation*}
-\Head{0}{F}{1}(a|x) = \sum_{n=0}^{\infty} \frac{(-1)^n}{\tfrac{\pi(2n+1)}{4}} \Head{0}{F}{1}(a|x-(\tfrac{\pi(2n+1)}{4})^2)
-\end{equation*}
 
-\subsection{contiguous}
-Recall $\theta = z \frac{\partial}{\partial z}$. The last row of these matrices follows from the hypegeometric differential equation.
-\begin{gather*}
-\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1+1,a_2}{b_1+1}{z}
-=
-\begin{pmatrix}
-1 & \tfrac{1}{a_1}\\
-\frac{a_1 a_2 z}{a_1(1-z)} & \tfrac{a_2 z+a_1-b_1}{a_1(1-z)}
-\end{pmatrix}
-\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1+1}{z}\\
-\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1}{z}
-=
-\begin{pmatrix}
-1 & \tfrac{1}{b_1}\\
-\frac{a_1 a_2 z}{b_1(1-z)} & \tfrac{(a_1+a_2-b_1)z}{b_1(1-z)}
-\end{pmatrix}
-\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1+1}{z}\\
-\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1+1,a_2,a_3}{b_1+1,b_2+1}{z}
-=
-\begin{pmatrix}
-1 & \tfrac{1}{a_1} & 0\\
-0 & 1 & \tfrac{1}{a_1}\\
-\frac{a_1 a_2 a_3 z}{a_1(1-z)} & \frac{(a_2 a_3 +a_1 a_3 + a_1 a_2) z - b_1 b_2}{a_1(1-z)} & \tfrac{(a_2+a_3) z + a_1-b_1-b_2}{a_1(1-z)}
-\end{pmatrix}
-\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_2}{b_1+1,b_2+1}{z}\\
-\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_3}{b_1,b_2+1}{z}
-=
-\begin{pmatrix}
-1 & \tfrac{1}{b_1} & 0\\
-0 & 1 & \tfrac{1}{b_1}\\
-\frac{a_1 a_2 a_3 z}{b_1(1-z)} & \tfrac{(a_2 a_3 +a_1 a_3 + a_1 a_2)z-b_1 b_2}{b_1(1-z)} & \tfrac{(a_1+a_2+a_3-b_1)z-b_2}{b_1(1-z)}
-\end{pmatrix}
-\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_3}{b_1+1,b_2+1}{z}
-\end{gather*}
-
-\begin{theorem}
-Let $\bfm$ and $\bfn$ be integer vectors. There exists a matrix $M$ of rational functions in $z$ of degree bounded by $\sum |\bfm| + \sum |\bfn|$ (?) such that
-\begin{equation*}
-(1 \, \theta \, \dots \, \theta^{p-1})^\intercal \Head{p}{F}{p-1} \ArgS{\bfa + \bfm}{\bfb + \bfn}{z} = M (1 \, \theta \, \dots \, \theta^{p-1})^\intercal \Head{p}{F}{p-1} \ArgS{\bfa}{\bfb}{z}
-\end{equation*}
-thus any $p+1$ such contiguous functions are linearly dependent over $\bbC(z)$.
-\end{theorem}
-
-\subsection{products}
-\begin{equation*}
-(a-b) \Head{1}{F}{2} \ArgS{1}{1+a,1+b}{z} = a \, \Head{0}{F}{1}\ArgS{}{1+a-b}{z} \Head{1}{F}{2} \ArgS{b}{1+b,1+b-a}{z} - b \, \Head{0}{F}{1}\ArgS{}{1+b-a}{z} \Head{1}{F}{2} \ArgS{a}{1+a,1+a-b}{z}
-\end{equation*}
-
-The product of two $\Head{0}{F}{1}$s follows easily from the $\Head{2}{F}{1}(1)$ evaluation.
+The product of two $\Head{0}{F}{1}$s follows easily from the $\Head{2}{F}{1}(1)$ evaluation, and not from Thoerem \ref{thm_4e3_2e1_2e1}.
 \begin{theorem}
 \label{thm_0f1_prod}
 ($\Head{2}{E}{3} = \Head{0}{E}{1} \cdot \Head{0}{E}{1}$):
@@ -1156,7 +1292,7 @@ and the `reciprocal' products:
 
 \subsection{Multiple integral evaluations via the complete elliptic integral}
 \begin{remark}
-The following conversions from $\Head{2}{F}{1}(\frac12, \frac12; 1 | z)$ for $\Re z > \frac12$ are not done correctly in the integral evaluations, so the range of valid parameters is reduced for the $\Head{2}{F}{1}(\frac14, \frac14; 1)$ expressions.
+The following conversions from $\Head{2}{F}{1}(\frac12, \frac12; 1 | z)$ for $\Re z > \frac12$ are not done correctly in the integral evaluations, so the range of validity is reduced for the $\Head{2}{F}{1}(\frac14, \frac14; 1)$ expressions.
 \begin{align*}
 \FFs{2}{F}{1}{\frac14,\frac14}{1}{z} &= \Head{2}{F}{1} \ArgKS{\tfrac12 - \tfrac{\sqrt{1-z}}{2}}\text{,}\\
 \tfrac{4\sqrt{\pi}}{\Gamma(\frac14)^2} \sqrt{1-z} \Head{2}{F}{1} \ArgS{\frac34,\frac34}{\frac32}{1-z} + \FFs{2}{F}{1}{\frac14,\frac14}{1}{z} &= \Head{2}{F}{1} \ArgKS{\tfrac12 + \tfrac{\sqrt{1-z}}{2}}\text{,}\\
@@ -1164,7 +1300,12 @@ The following conversions from $\Head{2}{F}{1}(\frac12, \frac12; 1 | z)$ for $\R
 \sqrt{2} \Head{2}{F}{1} \ArgS{\frac14,\frac34}{1}{1-z} \pm \ii \, \FFs{2}{F}{1}{\frac14,\frac34}{1}{z} &= (1-z)^{-1/4}\Head{2}{F}{1} \ArgKS{\tfrac12 + \tfrac{1}{2\sqrt{1-z}}}
 \end{align*}
 \end{remark}
+
+
+
+
 \begin{theorem} Rank 2:
+\label{thm_double_trig_int}
 \begin{equation*}
 \frac{1}{\pi^2} \iint_0^{\pi} \tfrac{\dd u \, \dd v} {1 - a \cos u - b \cos v - c \cos u \cos v} = \tfrac{1}{\sqrt{1+a-b+c}\sqrt{1-a+b+c}} \Head{2}{F}{1} \ArgKS{1-\tfrac{(1+a+b-c)(1-a-b-c)}{(1+a-b+c)(1-a+b+c)}}
 \end{equation*}
@@ -1179,7 +1320,7 @@ equivalent to $\FFs{3}{F}{2}{\frac12,\frac12,\frac12}{1,1}{z} = \Head{2}{F}{1} \
 
 \begin{theorem} Rank 4:
 \begin{align*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - b \cos u \cos w} &= \HypFfourS{\frac12}{\frac12}{1}{1}{a^2}{b^2}\\
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - b \cos u \cos w} &= \appellFfourS{\frac12}{\frac12}{1}{1}{a^2}{b^2}\\
  &= \prod_{a \leftrightarrow b} \Head{2}{F}{1} \ArgKS{\tfrac{1 + a^2 - b^2-\sqrt{(1-a^2+b^2)^2-4b^2}}{2}}\\
 &= \prod_{a \leftrightarrow b} \Head{2}{F}{1} \ArgKS{a\tfrac{\sqrt{1+a-b}\sqrt{1+a+b}-\sqrt{1-a-b}\sqrt{1-a+b}}{\sqrt{1+a-b}\sqrt{1+a+b}+\sqrt{1-a-b}\sqrt{1-a+b}}}\\
 &= \prod_{a \leftrightarrow b} \Head{2}{F}{1}\ArgS{\frac14,\frac14}{1}{4a b \tfrac{(a+b)\sqrt{1+a-b}\sqrt{1-a+b} + (a-b) \sqrt{1+a+b}\sqrt{1-a-b}}{(a+b)\sqrt{1+a-b}\sqrt{1-a+b} - (a-b) \sqrt{1+a+b}\sqrt{1-a-b}}}
@@ -1188,22 +1329,88 @@ with the corollary
 $\FFs{4}{F}{3}{\frac14,\frac14,\frac34,\frac34}{\frac12,1,1}{z} = \Head{2}{F}{1}\ArgKS{\tfrac{1+\sqrt{-z} -\sqrt{1-z}}{2}} \Head{2}{F}{1}\ArgKS{\tfrac{1-\sqrt{-z} -\sqrt{1-z}}{2}}$ (also by Theorem \ref{thm_4e3_2e1_2e1}).
 \end{theorem}
 
+The conjecture at the end of Glasser and Zucker 1977 ``Extended Watson integrals for the cubic lattices'' seems to be false as the rank seemingly increases to 5 in the obvious $(a,b,c)$ generalizations of the following.
+
 \begin{theorem} Rank 4:
 \begin{align*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - \frac12 b \cos u \cos w - \frac12 b \cos u \cos v} &= \tfrac{1}{1+a} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{1}{2}-\tfrac{(1-a)\sqrt{1-a+b}\sqrt{1-a-b}}{2(1+a)^2} \pm \tfrac{\sqrt{a}\sqrt{4a+ b^2}}{(1+a)^2}}\\
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos v \cos w - \frac12 b \cos u \cos w - \frac12 b \cos u \cos v}
+&= \tfrac{1}{1+a} \appellFfourS{\frac12}{\frac12}{1}{1}{(\tfrac{2\sqrt{a}+\sqrt{4 a+b^2}}{2(a+1)})^2}{(\tfrac{2 \sqrt{a}-\sqrt{4 a+b^2}}{2(a+1)})^2}\\
+&= \tfrac{1}{1+a} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{1}{2}-\tfrac{(1-a)\sqrt{1-a+b}\sqrt{1-a-b}}{2(1+a)^2} \pm \tfrac{\sqrt{a}\sqrt{4a+ b^2}}{(1+a)^2}}\\
 &= \tfrac{1}{1+a} \prod_{\pm} \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{ \tfrac{b^2}{(1+a)^2} \tfrac{(1-a)\sqrt{4a+b^2} \mp 2 \sqrt{a}\sqrt{1-a+b}\sqrt{1-a-b}}{(1-a)\sqrt{4a+b^2} \pm 2 \sqrt{a}\sqrt{1-a+b}\sqrt{1-a-b}} }
 \end{align*}
-The special case $b = 2a$ is recorded by Glasser (quoting Iwata) in the first form.
+The special case $b = 2a$ is recorded by Glasser (quoting Iwata) in the second form.
 \end{theorem}
-
-\begin{theorem} Rank 4: with $x = \tfrac{1-a^2+b^2 - \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}{1+a^2-b^2 + \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}$,
+\begin{proof}
+Use Theorem \ref{thm_double_trig_int} for the $\dd v \dd w$ integral, substitute $\cos \theta = 1-2t$, then expand and apply a quadratic transformation of the $\Head2F1$ to get to a polynomial where Theorem \ref{thm_appelF4_sum} can be used to get to an $F_4$ to which Theorem \ref{thm_f4_reduce} applies.
 \begin{align*}
-\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos u - \frac12 b \cos v - \frac12 b \cos w} &= \tfrac{\sqrt{1+x}\sqrt{b^2+a^2 x}}{b} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{1}{2}-\tfrac{\sqrt{1+x}\sqrt{b^2+b^2 x + a^2 x^2}}{2b} \pm \tfrac{x\sqrt{b^2+a^2 x}}{2b}}\\
-&= \tfrac{\sqrt{1+x}\sqrt{b^2+a^2 x}}{b} \prod_{\pm} \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{\tfrac{a^2 x^2}{b^2}\tfrac{\sqrt{b^2+b^2 x + a^2 x^2} \mp \sqrt{1+x}\sqrt{b^2+a^2 x}}{\sqrt{b^2+b^2 x + a^2 x^2} \pm \sqrt{1+x}\sqrt{b^2+a^2 x}}}\\
+\tfrac{1}{1+a} \int_{0}^{\pi} \Head2F1 \ArgKS{\tfrac{4a+b^2 \cos^2 u}{(1+a)^2}} \tfrac{\dd u}{\pi}
+&= \tfrac{1}{1+a} \int_{0}^{\pi} \Head2F1 \ArgKS{\tfrac{8a+b^2+b^2 \cos \theta}{2(1+a)^2}} \tfrac{\dd \theta}{\pi}\\
+&= \tfrac{1}{1+a} \sum_{n=0}^{\infty} \tfrac{(\frac12)_n^2}{n!^2}\int_{0}^{1} (\tfrac{4a+b^2-b^2 t}{(1+a)^2})^n \tfrac{\dd t}{\pi \sqrt{t}\sqrt{1-t}}\\
+&= \tfrac{1}{1+a} \sum_{n=0}^{\infty} \tfrac{(\frac12)_n^2}{n!^2}(\tfrac{4a+b^2}{(1+a)^2})^n \Head2F1 \ArgS{-n,\frac12}{1}{\tfrac{b^2}{4a+b^2}}\\
+&= \tfrac{1}{1+a} \sum_{n=0}^{\infty} \tfrac{(\frac12)_n^2}{n!^2}(\tfrac{2\sqrt{a} + \sqrt{4a+b^2}}{2(1+a)})^{2n} \Head2F1 \ArgS{-n,-n}{1}{(\tfrac{2\sqrt{a} - \sqrt{4a+b^2}}{2\sqrt{a} + \sqrt{4a+b^2}})^2}
+\end{align*}
+\end{proof}
+
+\begin{theorem} Rank 4: with $x = \tfrac{1-a^2+b^2 - \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}{1+a^2-b^2 + \sqrt{1-a-b} \sqrt{1+a-b} \sqrt{1-a+b} \sqrt{1+a+b}}$ (i.e. $x = (1+x)(b^2 + a^2 x)$),
+\begin{align*}
+\frac{1}{\pi^3} \iiint_0^{\pi} \tfrac{\dd u \, \dd v \, \dd w} {1 - a \cos u - \frac12 b \cos v - \frac12 b \cos w}
+& = \tfrac{1}{\sqrt{1-a^2+b^2}} \appellFfourS{\frac14}{\frac34}{1}{1}{(\tfrac{b+b\sqrt{1-a^2}}{1-a^2+b^2})^2}{(\tfrac{b-b\sqrt{1-a^2}}{1-a^2+b^2})^2}\\
+& = \tfrac{\sqrt{x}}{b} \appellFfourS{\frac12}{\frac12}{1}{1}{-x (\tfrac{b+\sqrt{a^2 x+b^2}}{2 b})^2}{-x (\tfrac{b-\sqrt{a^2 x+b^2}}{2b})^2}\\
+&= \tfrac{\sqrt{x}}{b} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{1}{2}-\tfrac{\sqrt{1+x}\sqrt{b^2+b^2 x + a^2 x^2}}{2b} \pm \tfrac{x\sqrt{b^2+a^2 x}}{2b}}\\
+&= \tfrac{\sqrt{x}}{b} \prod_{\pm} \Head{2}{F}{1} \ArgS{\frac14,\frac14}{1}{- x^2 (\tfrac{1 \pm \sqrt{1-a^2}}{b})^2}\\
 &=\tfrac{2\sqrt{1+x}\sqrt{b^2+a^2 x}}{\sqrt{2b^2 + 2b^2 x + a^2 x^2 + 2b \sqrt{1+x}\sqrt{b^2+b^2 x + a^2 x^2}}} \prod_{\pm} \Head{2}{F}{1} \ArgKS{\tfrac{\sqrt{1+x}\sqrt{b^2+b^2 x+a^2 x^2} \pm x \sqrt{b^2+ a^2 x}-b}{\sqrt{1+x}\sqrt{b^2+b^2 x+a^2 x^2} \pm x \sqrt{b^2+ a^2 x}+b}}
 \end{align*}
-The special case $b = 2a$ is recorded by Glasser (quoting Joyce) in the third form.
+The special case $b = 2a$ is recorded by Glasser (quoting Joyce) in the last form.
 \end{theorem}
+
+\subsection{contiguous}
+Recall $\theta = z \frac{\partial}{\partial z}$. The last row of these matrices follows from the hypegeometric differential equation.
+\begin{gather*}
+\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1+1,a_2}{b_1+1}{z}
+=
+\begin{pmatrix}
+1 & \tfrac{1}{a_1}\\
+\frac{a_1 a_2 z}{a_1(1-z)} & \tfrac{a_2 z+a_1-b_1}{a_1(1-z)}
+\end{pmatrix}
+\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1+1}{z}\\
+\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1}{z}
+=
+\begin{pmatrix}
+1 & \tfrac{1}{b_1}\\
+\frac{a_1 a_2 z}{b_1(1-z)} & \tfrac{(a_1+a_2-b_1)z}{b_1(1-z)}
+\end{pmatrix}
+\begin{pmatrix} 1 \\ \theta \end{pmatrix} \Head{2}{F}{1} \ArgS{a_1,a_2}{b_1+1}{z}\\
+\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1+1,a_2,a_3}{b_1+1,b_2+1}{z}
+=
+\begin{pmatrix}
+1 & \tfrac{1}{a_1} & 0\\
+0 & 1 & \tfrac{1}{a_1}\\
+\frac{a_1 a_2 a_3 z}{a_1(1-z)} & \frac{(a_2 a_3 +a_1 a_3 + a_1 a_2) z - b_1 b_2}{a_1(1-z)} & \tfrac{(a_2+a_3) z + a_1-b_1-b_2}{a_1(1-z)}
+\end{pmatrix}
+\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_2}{b_1+1,b_2+1}{z}\\
+\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_3}{b_1,b_2+1}{z}
+=
+\begin{pmatrix}
+1 & \tfrac{1}{b_1} & 0\\
+0 & 1 & \tfrac{1}{b_1}\\
+\frac{a_1 a_2 a_3 z}{b_1(1-z)} & \tfrac{(a_2 a_3 +a_1 a_3 + a_1 a_2)z-b_1 b_2}{b_1(1-z)} & \tfrac{(a_1+a_2+a_3-b_1)z-b_2}{b_1(1-z)}
+\end{pmatrix}
+\begin{pmatrix} 1 \\ \theta \\ \theta^2 \end{pmatrix} \Head{3}{F}{2} \ArgS{a_1,a_2,a_3}{b_1+1,b_2+1}{z}
+\end{gather*}
+
+\begin{theorem}
+Let $\bfm$ and $\bfn$ be integer vectors. There exists a matrix $M$ of rational functions in $z$ of degree bounded by $\sum |\bfm| + \sum |\bfn|$ (?) such that
+\begin{equation*}
+(1 \, \theta \, \dots \, \theta^{p-1})^\intercal \Head{p}{F}{p-1} \ArgS{\bfa + \bfm}{\bfb + \bfn}{z} = M (1 \, \theta \, \dots \, \theta^{p-1})^\intercal \Head{p}{F}{p-1} \ArgS{\bfa}{\bfb}{z}
+\end{equation*}
+thus any $p+1$ such contiguous functions are linearly dependent over $\bbC(z)$.
+\end{theorem}
+
+\subsection{misc}
+\begin{equation*}
+(a-b) \Head{1}{F}{2} \ArgS{1}{1+a,1+b}{z} = a \, \Head{0}{F}{1}\ArgS{}{1+a-b}{z} \Head{1}{F}{2} \ArgS{b}{1+b,1+b-a}{z} - b \, \Head{0}{F}{1}\ArgS{}{1+b-a}{z} \Head{1}{F}{2} \ArgS{a}{1+a,1+a-b}{z}
+\end{equation*}
+
 
 \section{${}_0 F_1$, ${}_1 F_1$ and ${}_2 F_0$} This includes all Bessel functions, Airy functions, and confluent functions, and one confusing aspect of these cases is that the ${}_p U_{q}$ series are themselves hypergeometric.
 \begin{align*}
@@ -1259,7 +1466,7 @@ These last two are slightly cleaner in the equivalent form with $H_{\nu}^{(i)}(z
 which we recognize simply as a different branch \eqref{equ_2f0_branch} of the ${}_2 F_0$s, matching the branch of the l.h.s. As long as $\arg z \ne \pi$, the correction matrices differ from the identity by a exponentially small amount.
 
 \subsubsection{parameter derivative}
-$\frac{\partial}{\partial b} \Head{0}{F}{1}(b|z)$ satisfies an inhomogenous $\Head{0}{E}{1}(b)$ equation. Using the method of variation of parameters and Theorem \ref{thm_0f1_prod} to evaluate the integrals produces
+$\frac{\partial}{\partial b} \Head{0}{F}{1}(b|z)$ satisfies an inhomogenous $\Head{0}{E}{1}(b|z)$ equation. Using the method of variation of parameters and Theorem \ref{thm_0f1_prod} to evaluate the integrals produces
 \begin{align*}
 \tfrac{\partial}{\partial b} \Head{0}{F}{1}\ArgS{}{1+b}{z} &= (\tfrac{1}{2 b} + \tfrac{z}{1-b^2} \Head{3}{F}{4}\ArgS{1,1,\frac32}{2,2,2-b,2+b}{4z})\Head{0}{F}{1}\ArgS{}{1+b}{z}-\tfrac{1}{2b}\Head{2}{F}{3}\ArgS{b,\frac12+b}{1+b,1+b,1+2 b}{4 z}\Head{0}{F}{1}\ArgS{}{1-b}{z}\text{,}\\
 \tfrac{\partial}{\partial b} \Head{2}{F}{0}\ArgS{\frac12+b,\frac12-b}{}{z} &= -2 b z \Head{4}{F}{1} \ArgS{\frac12, \frac12, \frac12 +b, \frac12-b}{\frac32}{4 z^2} \Head{2}{F}{0} \ArgS{\frac12+b, \frac12-b}{}{z} - 2 b z^2 \Head{2}{U}{3}\ArgS{b,\frac12+b}{1+b, 1+b,1+2b}{z} \Head{2}{F}{0} \ArgS{\frac12+b,\frac12-b}{}{-z}\text{.}
@@ -1438,7 +1645,7 @@ For any integer $n$, we have
 \label{equ_2f0_cf}
 \frac{{}_2 F_0(b,a+1|\tfrac{-1}{x})}{{}_2 F_0(b+1,a+1|\tfrac{-1}{x})} = 1+\frac{a+1}{x} \,_{+} \frac{b+1}{1}  \,_{+} \cdots \,_{+} \frac{a+n}{x} \,_{+} \frac{b+n}{\frac{{}_2 F_0(b+n,a+n+1|\tfrac{-1}{x})}{{}_2 F_0(b+n+1,a+n+1|\tfrac{-1}{x})}}\text{.}
 \end{equation}
-Since the r.h.s remainder is easily bounded by \eqref{equ_0f2_bound}, this gives a rigorous algorithm for the quotient. For general $a,b,x$, \eqref{equ_2f0_asymp} can be used. The asymptotics of this remainder ($\sqrt{n/x}$) can be obtained from the following asmptotic series in $n^{-1/2}$, which follows along the same lines as the derivation of the asymptotic formula for $\Gamma$.
+Since the rhs remainder is easily bound by \eqref{equ_0f2_bound}, this gives a rigorous algorithm for the quotient. For general $a,b,x$, \eqref{equ_2f0_asymp} can be used. The size of this remainder ($\sqrt{n/x}$) can be obtained from the following asymptotic series in $n^{-1/2}$, which follows along the same lines as the derivation of the asymptotic formula for $\Gamma$.
 \begin{equation*}
 {}_2 F_0(a+n,b+n|\tfrac{-1}{x}) = 2^{-1/2} \ee^{n-2\sqrt{n x} + \frac{x}{2}} (\tfrac{x}{n})^{n+\frac{a}{2}+\frac{b}{2}-\frac{1}{4}} \left(1 + \tfrac{12(a-b)^2-3-24(a+b-1)x-4 x^2}{48\sqrt{n x}} + O(\tfrac{1}{n}) \right)\text{.}
 \end{equation*}
@@ -1493,6 +1700,8 @@ x_2^{a-1} &= x_1^{a-1} S_{2,2}\text{,}\\
 \end{align*}
 
 \subsection{resummation of ${}_3 F_1(1,a_1,a_2;b_1)$}
+We would like to calculate this $\Head3F1(-1/x)$ when $x$ is so large that the convergent series in $x$ require too many terms but not so large that a truncation of the divergent series delivers enough precision.
+
 First, with the goal of effectively calculating the tail of the corresponding Laplace integral, we seek an analogue of the asymptotic for the upper gamma function,
 \begin{equation*}
 \int_{z}^{\infty} e^{-t} \left(1+\tfrac{t}{x}\right)^{-a_1} \dd t \sim \ee^{-z} \left(1+\tfrac{z}{x}\right)^{-a_1} \sum_{k=0}^{\infty} \frac{(a_1)_k}{(-z-x)^k} \text{.}
